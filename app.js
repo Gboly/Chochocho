@@ -8,6 +8,7 @@ import runDb from "./config/db.config.js"
 import User from "./models/User.js"
 import authRouter from "./Routes/auth.js"
 import userRouter from "./Routes/user.js"
+import postRouter from "./Routes/post.js"
 
 dotenv.config()
 const app = express()
@@ -21,6 +22,7 @@ app.use(morgan("common"))
 
 app.use("/auth", authRouter)
 app.use("/user", userRouter)
+app.use("/post", postRouter)
 
 
 
