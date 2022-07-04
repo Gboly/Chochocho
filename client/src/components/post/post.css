@@ -1,0 +1,114 @@
+.post-container{
+    background-color: #fff;
+    margin: 0.5rem 0 0;
+    border-bottom: 1px solid #f4f5f7;
+    border-top: 1px solid #f4f5f7;
+    font-weight: 500;   
+}
+.post-wrapper{    
+    margin: 0.6rem 1rem;
+}
+.post-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.post-top-left{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    flex: 10;
+}
+.poster-img{
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    
+}
+.poster{
+    display: flex;
+    flex-flow: column nowrap;
+    width: 84%;
+}
+.poster-name{
+    font-weight: 700;
+}
+.post-time{
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+.post-top-right{
+    flex: 2;
+    display: flex;
+    justify-content: end;
+}
+.ptr-icon{
+    font-size: 1.5rem;
+}
+.post-text{
+    font-size: 0.9rem;
+}
+.post-media-container{
+    width:100%;
+}
+.post-media{
+    width: inherit;    
+    object-fit: contain;
+    border-radius: 1.2rem;    
+}
+.post-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+.post-bottom-left{
+    display: flex;
+    flex-flow: row nowrap;   
+}
+.likes-count, .like-count-remainder{
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: -0.22rem;
+}
+.likes-count:first-of-type{
+    margin-left: 0;
+}
+.like-count-remainder{
+    background-color: #c32aa3;
+    color: #fff;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;justify-content: center;
+}
+.post-bottom-right{
+    font-size: 0.8rem;    
+}
+.comments-count{
+    margin-right: 1rem;
+}
+.post-interaction{
+    display: flex;
+    justify-content: space-between;    
+}
+.pi-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
+}
+.pi-icon{
+    margin-right: 0.5rem;
+    font-size: 1.5rem;    
+}
+.pi-icon-flip{
+    transform: scaleX(-1);
+    
+    outline: black;
+}
+hr{
+    font-weight: lighter;  
+}

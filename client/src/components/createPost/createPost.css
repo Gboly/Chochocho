@@ -1,0 +1,79 @@
+.create-container{
+    background-color: #fff;
+    margin: 0.5rem 0 0;
+    border-bottom: 1px solid #f4f5f7;
+    border-top: 1px solid #f4f5f7;       
+}
+.create-wrapper{
+    margin: 0.6rem 1rem;
+}
+.create-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.create-avi{
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.create-input{
+    box-sizing: border-box;
+    width: 87%;
+    background-color:#f4f5f7;
+    border-radius: 0.5rem;
+    border: none;
+    height: 2.2rem;
+    padding: 0 1rem;    
+}
+.create-input::placeholder{
+    font-size: 0.7rem;
+}
+.create-input:focus{
+    outline: none;
+}
+.create-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 900;
+}
+.create-bottom-left{
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 7;
+    justify-content: space-between;
+}
+.create-bottom-left-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 4
+}
+.cbli-icon{
+    font-size: 1rem;
+    flex: 4;
+}
+.cbli-desc{
+    font-size: 0.7rem;
+    flex: 8;
+}
+.create-bottom-right{
+    flex: 5;
+    display: flex;
+    justify-content: end;
+}
+.cbr-button{
+    padding: 0.5rem 0.75rem;
+     
+    color: #fff;
+    background-color: #c32aa3;
+    border-radius: 0.35rem;
+    outline: none;
+    border: none;
+}
+.cbr-button:focus{
+    outline: none;
+}
