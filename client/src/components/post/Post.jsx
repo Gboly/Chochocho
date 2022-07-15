@@ -3,10 +3,10 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import ReplyOutlinedIcon from '@mui/icons-material/ReplyOutlined';
-import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
-import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
-import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
-import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
+// import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
+// import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
+// import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
+// import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 import mude from "../../mude.png"
 import tess from "../../tess.png"
 import midex from "../../midex.png"
@@ -43,9 +43,9 @@ export default function Post() {
                     </p>
                     <div className="post-media-container">
                         <img 
-                        src="https://images.pexels.com/photos/3561145/pexels-photo-3561145.jpeg?auto=compress&cs=tinysrgb&w=300" 
+                        src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80" 
                         alt="post" 
-                        className="post-media" />
+                        className="post-media" />                       
                     </div>
                 </div>
                 <div className="post-bottom">
@@ -76,7 +76,7 @@ export default function Post() {
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr className="post-hr" />
             <div className="post-interaction">
                 <span className="pi-item">
                     <icon className="pi-icon">

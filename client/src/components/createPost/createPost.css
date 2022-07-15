@@ -4,12 +4,14 @@
     border-bottom: 1px solid #f4f5f7;
     border-top: 1px solid #f4f5f7;       
 }
+.create-container{
+    border-radius: 0.8rem;
+}
 .create-wrapper{
     margin: 0.6rem 1rem;
 }
 .create-top{
-    display: flex;
-    justify-content: space-between;
+    display: flex;    
     align-items: center;
     margin-bottom: 1rem;
 }
@@ -18,18 +20,23 @@
     height: 2.2rem;
     border-radius: 50%;
     object-fit: cover;
+    margin-right: 1rem;
 }
 .create-input{
     box-sizing: border-box;
-    width: 87%;
+    width: calc(100% - 3.2rem);
     background-color:#f4f5f7;
     border-radius: 0.5rem;
     border: none;
     height: 2.2rem;
-    padding: 0 1rem;    
+    padding: 0 1rem;
+    font-family: "roboto", sans-serif;
+    color: inherit;
+    font-weight: 450;   
 }
 .create-input::placeholder{
-    font-size: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 400;
 }
 .create-input:focus{
     outline: none;
@@ -43,27 +50,25 @@
 .create-bottom-left{
     display: flex;
     flex-flow: row nowrap;
-    flex: 7;
+    flex: 8;
     justify-content: space-between;
 }
 .create-bottom-left-item{
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    align-items: center;    
     flex: 4
 }
 .cbli-icon{
-    font-size: 1rem;
-    flex: 4;
+    font-size: 1rem;    
+    margin-right: 0.5rem;
 }
 .cbli-desc{
-    font-size: 0.7rem;
-    flex: 8;
+    font-size: 0.7rem;    
 }
 .create-bottom-right{
-    flex: 5;
+    flex: 4;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 .cbr-button{
     padding: 0.5rem 0.75rem;

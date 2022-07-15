@@ -1,6 +1,6 @@
 import "./nav.css"
-import chatImg from "../../chat.png"
 import avi2 from "../../avatar-square.png"
+import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
 
 export default function Nav(){
   return (
@@ -15,7 +15,7 @@ export default function Nav(){
           </span>          
         </div>
         <div className="nav-right">        
-        <img src={chatImg} alt="speech bubble icons" className="chat-icon" />
+        <LocalPostOfficeOutlinedIcon />
         </div>
       </div>
     </nav>

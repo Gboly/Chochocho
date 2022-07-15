@@ -1,10 +1,13 @@
 .nav-container{
-    background-color: #fff;
-    border-bottom: 1px solid #f4f5f7;
-    border-top: 1px solid #f4f5f7;
+    background-color: #fff;   
+    position: sticky;
+    top: 0rem;
+    z-index: 99;
+    box-sizing: border-box;
+    padding: 0.5rem 0 ;
 }
 .nav-wrapper{
-    margin: 0.5rem 1rem;
+    margin: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;

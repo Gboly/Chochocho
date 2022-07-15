@@ -1,0 +1,25 @@
+.profile-md-container{    
+    background-color: #f4f5f7;
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    /* background-color: #fff;    */
+}
+.profile-md-main{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 3vw;
+    margin-left: 3vw;    
+}
+.profile-md-main-wrapper{
+    /* flex: 7.5; */
+    margin-top: 0.7rem;
+    border-radius: 1rem;
+}
+.profile-rightbar-container{
+    /* flex: 4.5; */
+    width: 35vw;
+}
+.profile-md-main-wrapper{
+    background-color: #f4f5f7;
+}
