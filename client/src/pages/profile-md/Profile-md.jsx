@@ -5,7 +5,7 @@ import Rightbar from "../../components/rightbar/Rightbar"
 import Sidebar from "../../components/sidebar/Sidebar"
 
 
-export default function HomeMd() {
+export default function ProfileMd() {
   return (
     <div className="profile-md-container">
         <div className="profile-md-wrapper">
