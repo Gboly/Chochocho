@@ -3,15 +3,26 @@ import avi2 from "../../avatar-square.png"
 import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
+import CreatePostHeader from "../createPost-header/CreatePostHeader";
+import { useState,createContext } from "react";
 
 
-export default function CreatePost() {
-  return (
-    <div className="create-container">
+export default function CreatePost({createPost, openCreatePost, closeCreatePostWithin}) {
+    const [options, setOptions] = useState(false)
+
+    const openOptions = ()=> setOptions(true)
+    const closeOptions = ()=> options && setOptions(false)
+        
+  return (    
+    <div className={`create-container ${createPost && "create-container-focus" }`} onClick={closeOptions} >
         <form className="create-wrapper">
-            <div className="create-top">
+            {createPost && <CreatePostHeader {...{openOptions, options, closeCreatePostWithin}} />}
+            <div className="create-middle" >
                 <img src={avi2} alt="avatar" className="create-avi" />
-                <input type="text" placeholder="What's happening?" className="create-input" />
+                {createPost 
+                 ? <textarea rows={7} placeholder="What's happening?" className="create-textarea" />
+                 : <input type="text" placeholder="What's happening?" className="create-input" onClick={openCreatePost} />
+                 }
             </div>
             <div className="create-bottom">
                 <div className="create-bottom-left">
@@ -42,6 +53,6 @@ export default function CreatePost() {
                 </div>
             </div>
         </form>
-    </div>
+    </div>    
   )
 }

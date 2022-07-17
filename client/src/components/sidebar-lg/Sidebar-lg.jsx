@@ -5,10 +5,8 @@ import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined
 import ExploreOutlinedIcon from '@mui/icons-material/ExploreOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import avi2 from "../../avatar-square.png"
 import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
-// import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-// import {faMessage} from "@fortawesome/free-regular-svg-icons"
+import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
 
 
 
@@ -26,10 +24,10 @@ export default function SidebarLg() {
             <div className="sidebar-lg-bottom">
                 <div className="sidebar-lg-bottom-item">
                     <icon className="sbi-lg-icon">
-                        <PermIdentityOutlinedIcon />
+                        <OtherHousesOutlinedIcon />
                     </icon>
                     <span className="sbi-lg-desc">
-                        Feed
+                        Home
                     </span>
                 </div>
                 <div className="sidebar-lg-bottom-item">

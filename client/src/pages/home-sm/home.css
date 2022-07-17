@@ -3,3 +3,23 @@
     height: 100%;
     font-family: 'Roboto', sans-serif;
 }
+.hidden-body{
+    overflow-y: hidden;
+}
+.home-posts-container-focus{    
+    margin-top: 6.838rem;
+}
+.home-createposts-container-focus{
+    position: relative;
+    width: 100%;
+}
+.home-focusOnCreatePost{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #808080;
+    opacity: 0.6;
+    z-index: 999;
+}

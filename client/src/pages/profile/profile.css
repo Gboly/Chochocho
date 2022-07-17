@@ -6,29 +6,51 @@
 .profile-top{
     background-color: #fff;
     border-radius: 1rem;
+    position: relative;
+}
+.profile-back-button{
+    position: absolute;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255,255,255,0.8);
+    outline: none;
+    border: none;
+    color: #808080;
+    font-size: 1.2rem;
+    top: 1rem;
+    left: 1rem;
+    font-weight: 900;
+}
+.profile-back-button:focus{
+    outline: none;
 }
 .profile-coverphoto{
     width: 100%;
     object-fit: cover;
-    height: 20vh;
+    height: 25vh;
 }
 .profile-top-absolute{
     display: flex;
     justify-content: space-between;
-    margin: 0 1rem 1rem;    
+    margin: 0 1rem 1rem;
+    align-items: center;   
 }
 .profile-avatar{
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 7rem;
+    height: 7rem;
     object-fit: cover;
     border-radius: 50%;
 }
 .profile-avatar-container{
-    width: 3.5rem;
-    height: 3.5rem;
+    width: 7rem;
+    height: 7rem;
     border-radius: 50%;
     border: 3px solid #fff;
-    margin-top: -2rem;
+    margin-top: -4rem;
 }
 .edit-profile{
     padding: 0 1rem;
@@ -38,6 +60,7 @@
     background-color: #fff;
     color: #808080;
     font-family: 'Roboto', sans-serif;
+    height: 2rem;
 }
 .profile-username, .profile-bio{
     margin: 1rem

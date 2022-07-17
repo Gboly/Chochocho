@@ -6,7 +6,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 70%;
+    width: 17rem;
     height: 100vh;
     z-index: 999;
     /* transition: 3s ease-out; */    
@@ -18,7 +18,7 @@
     margin: 0.5rem 1rem;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-between;    
+    justify-content: space-between;
 }
 .sidebar-top{
     flex: 3;

@@ -6,12 +6,19 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined';
 import coverPhoto from "../../cover-photo.png"
 import avi2 from "../../avatar-square.png"
+import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
+import { Link } from "react-router-dom";
 
 export default function Profile() {
   return (
     <div className="profile-container">
         <div className="profile-wrapper">
             <div className="profile-top">
+                <Link to="/" >
+                    <button className="profile-back-button">
+                        <ArrowBackOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
+                    </button>
+                </Link>
                 <img src={coverPhoto} alt="profile cover" className="profile-coverphoto" />
                 <div className="profile-top-absolute">
                     <div className="profile-avatar-container">

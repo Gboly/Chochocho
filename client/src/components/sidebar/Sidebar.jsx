@@ -7,12 +7,17 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avi2 from "../../avatar-square.png"
 import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
-// import {FontAwesomeIcon} from "@fortawesome/react-fontawesome"
-// import {faMessage} from "@fortawesome/free-regular-svg-icons"
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function Sidebar() {
+    const navigate = useNavigate()
+
+    const handleClick =(e)=>{
+        const id = e.target.id       
+        navigate(`/${id}`)
+    }
   return (
     <div className="sidebar-container">
         <div className="sidebar-wrapper">
@@ -24,7 +29,7 @@ export default function Sidebar() {
             </div>
             <hr className="sidebar-hr" />
             <div className="sidebar-bottom">
-                <div className="sidebar-bottom-item">
+                <div id="profile" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <PermIdentityOutlinedIcon />
                     </icon>
@@ -32,7 +37,7 @@ export default function Sidebar() {
                         Profile
                     </span>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="community" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <PeopleAltOutlinedIcon />
                     </icon>
@@ -40,7 +45,7 @@ export default function Sidebar() {
                         Community
                     </span>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="chats" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <LocalPostOfficeOutlinedIcon />
                     </icon>
@@ -48,7 +53,7 @@ export default function Sidebar() {
                         Chats
                     </span>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="notification" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <NotificationsOutlinedIcon />
                     </icon>
@@ -57,7 +62,7 @@ export default function Sidebar() {
                     </span>
                     <div className="sidebar-notification-count"></div>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="explore" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <ExploreOutlinedIcon />
                     </icon>
@@ -65,7 +70,7 @@ export default function Sidebar() {
                         Explore
                     </span>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="settings" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <SettingsOutlinedIcon />
                     </icon>
@@ -73,7 +78,7 @@ export default function Sidebar() {
                         Settings
                     </span>
                 </div>
-                <div className="sidebar-bottom-item">
+                <div id="log-out" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <LogoutOutlinedIcon />
                     </icon>
