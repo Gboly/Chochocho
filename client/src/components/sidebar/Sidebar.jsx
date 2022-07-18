@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 export default function Sidebar() {
     const navigate = useNavigate()
 
-    const handleClick =(e)=>{
-        const id = e.target.id       
+    const handleClick =(e)=>{        
+        const id = e.currentTarget.id       
         navigate(`/${id}`)
     }
   return (
@@ -25,7 +25,7 @@ export default function Sidebar() {
                 <img src={avi2} alt="avatar" className="sidebar-avi" />
                 <p className="sidebar-username">
                     Ahmed Quamordeen Gbolahan
-                </p>                
+                </p>
             </div>
             <hr className="sidebar-hr" />
             <div className="sidebar-bottom">
@@ -36,7 +36,7 @@ export default function Sidebar() {
                     <span className="sbi-desc">
                         Profile
                     </span>
-                </div>
+                </div>                
                 <div id="community" className="sidebar-bottom-item" onClick={handleClick}>
                     <icon className="sbi-icon">
                         <PeopleAltOutlinedIcon />

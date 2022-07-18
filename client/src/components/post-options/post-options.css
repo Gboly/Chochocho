@@ -1,0 +1,27 @@
+.post-options-container{
+    background-color: #fff;
+    position: absolute;
+    top: 2.8rem;
+    right: -0.5rem;
+    box-shadow: 0 0 10px rgba(128,128,128,0.25);    
+    border-radius: 0.5rem;
+    z-index: 89;
+}
+.post-options-wrapper{
+    margin: 0.8rem 1.2rem 0.8rem 0.6rem;
+}
+.post-option{
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.post-option-icon{
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+}
+.post-option-desc{
+    margin-left: 0.6rem;
+}

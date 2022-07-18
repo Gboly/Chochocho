@@ -2,6 +2,7 @@
     background-color: #fff;    
     border-bottom: 1px solid #f4f5f7;
     border-top: 1px solid #f4f5f7;
+    border-right: 1px solid rgba(0,0,0,0.1);
     font-weight: 500;
     position: absolute;
     top: 0;
@@ -61,16 +62,17 @@
     box-sizing: border-box;
     border-radius: 0.5rem;
     position: relative;
+    cursor: pointer;
 }
 .sidebar-bottom-item:hover{
     color: #fff;
-    background-color: #867883;
+    background-color: #867883;    
 }
 .sbi-icon{
     margin-right: 1rem;
 }
 .sidebar-notification-count{
-    background-color: red;
+    background-color: #c32aa3;
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;

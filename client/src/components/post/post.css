@@ -5,12 +5,13 @@
     border-top: 1px solid #f4f5f7;
     font-weight: 500; 
     border-radius: 1rem;  
+    position: relative;
 }
 .post-container:last-of-type{
     margin-bottom: 1rem;
 }
 .post-wrapper{
-    margin: 0.6rem 1rem;
+    margin: 1rem 1rem 0.5rem;
 }
 .post-top{
     display: flex;
@@ -28,6 +29,7 @@
     border-radius: 50%;
     /* object-fit: cover; */
     margin-right: 1rem;
+    cursor: pointer;
 }
 .poster{
     display: flex;
@@ -35,6 +37,7 @@
 }
 .poster-name{
     font-weight: 700;
+    cursor: pointer
 }
 .post-time{
     font-size: 0.8rem;
@@ -42,6 +45,7 @@
 }
 .ptr-icon{
     font-size: 1.5rem;
+    cursor: pointer
 }
 .post-text{
     font-size: 0.9rem;
@@ -57,6 +61,7 @@
     max-height: 22rem;
     object-fit: cover;
     border-radius: 1.2rem;
+    cursor: pointer;
 }
 .post-bottom{
     display: flex;
@@ -75,6 +80,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin-left: -0.22rem;
+    cursor: pointer;
 }
 .likes-count:first-of-type{
     margin-left: 0;
@@ -104,7 +110,17 @@
 }
 .pi-icon{
     margin-right: 0.5rem;
-    font-size: 1.5rem;    
+    font-size: 1.5rem;
+    cursor: pointer;  
+}
+#like:hover{
+    color: #c32aa3;
+}
+#comment:hover{
+    color: #2a55c3;
+}
+#share:hover{
+    color: #2ac34b;
 }
 .pi-icon-flip{
     transform: scaleX(-1);    

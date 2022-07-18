@@ -7,22 +7,23 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
-
+import { useNavigate } from "react-router-dom";
 
 
 export default function SidebarLg() {
+
+    const navigate = useNavigate()
+
+    const handleClick = (e)=>{
+        const id = e.currentTarget.id       
+        navigate(`/${id}`)
+    }
+
   return (
     <div className="sidebar-lg-container">
-        <div className="sidebar-lg-wrapper">
-            {/* <div className="sidebar-lg-top">
-                <img src={avi2} alt="avatar" className="sidebar-lg-avi" />
-                <p className="sidebar-lg-username">
-                    Ahmed Quamordeen Gbolahan
-                </p>
-            </div>
-            <hr className="sidebar-lg-hr" /> */}
+        <div className="sidebar-lg-wrapper">           
             <div className="sidebar-lg-bottom">
-                <div className="sidebar-lg-bottom-item">
+                <div id="" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <OtherHousesOutlinedIcon />
                     </icon>
@@ -30,7 +31,7 @@ export default function SidebarLg() {
                         Home
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="profile" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <PermIdentityOutlinedIcon />
                     </icon>
@@ -38,7 +39,7 @@ export default function SidebarLg() {
                         Profile
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="community" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <PeopleAltOutlinedIcon />
                     </icon>
@@ -46,7 +47,7 @@ export default function SidebarLg() {
                         Community
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="chats" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <LocalPostOfficeOutlinedIcon />
                     </icon>
@@ -54,16 +55,16 @@ export default function SidebarLg() {
                         Chats
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="notification" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <NotificationsOutlinedIcon />
                     </icon>
                     <span className="sbi-lg-desc">
                         Notification
                     </span>
-                    <div className="sidebar-lg-notification-count"></div>
+                    <div className="sidebar-lg-notification-count" />
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="explore" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <ExploreOutlinedIcon />
                     </icon>
@@ -71,7 +72,7 @@ export default function SidebarLg() {
                         Explore
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="settings" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <SettingsOutlinedIcon />
                     </icon>
@@ -79,7 +80,7 @@ export default function SidebarLg() {
                         Settings
                     </span>
                 </div>
-                <div className="sidebar-lg-bottom-item">
+                <div id="log-out" className="sidebar-lg-bottom-item" onClick={handleClick}>
                     <icon className="sbi-lg-icon">
                         <LogoutOutlinedIcon />
                     </icon>

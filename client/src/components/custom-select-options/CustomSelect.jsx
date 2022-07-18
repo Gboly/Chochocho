@@ -1,5 +1,6 @@
 import "./custom-select.css"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -17,7 +18,11 @@ const sx={
 export default function CustomSelect({openOptions, options}) {
   
     const [currentOption, setCurrentOption] = useState("Friends")
-       
+    
+    const handleClick = ()=>{
+        openOptions()
+    }
+
     const handleChange = (e)=>{
         console.log(e.target)
         setCurrentOption(e.target.value)
@@ -25,12 +30,15 @@ export default function CustomSelect({openOptions, options}) {
  
   return (    
     <div className="custom-select-option-container">
-        <div className="custom-select" onClick={openOptions} >
+        <div className="custom-select" onClick={handleClick} >
             <span className="custom-select-currentValue">
                 {currentOption}
             </span>
             <i className="custom-select-expand-icon">
-                <ExpandMoreIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
+                {options 
+                ? <ExpandLessIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
+                : <ExpandMoreIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
+                }
             </i>
         </div>
         { options && <div className="custom-options">

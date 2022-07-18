@@ -3,9 +3,15 @@ import Nav  from "../../components/navbar/Nav"
 import Profile from "../profile/Profile"
 import Rightbar from "../../components/rightbar/Rightbar"
 import Sidebar from "../../components/sidebar/Sidebar"
-
+import { useEffect } from "react"
 
 export default function ProfileMd() {
+
+  useEffect(() => {
+    document.body.className = "" 
+  }, [])
+  
+  
   return (
     <div className="profile-md-container">
         <div className="profile-md-wrapper">

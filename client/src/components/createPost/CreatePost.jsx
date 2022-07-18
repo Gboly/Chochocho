@@ -4,11 +4,14 @@ import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
 import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import CreatePostHeader from "../createPost-header/CreatePostHeader";
-import { useState,createContext } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export default function CreatePost({createPost, openCreatePost, closeCreatePostWithin}) {
     const [options, setOptions] = useState(false)
+
+    const navigate = useNavigate()
 
     const openOptions = ()=> setOptions(true)
     const closeOptions = ()=> options && setOptions(false)
@@ -18,7 +21,7 @@ export default function CreatePost({createPost, openCreatePost, closeCreatePostW
         <form className="create-wrapper">
             {createPost && <CreatePostHeader {...{openOptions, options, closeCreatePostWithin}} />}
             <div className="create-middle" >
-                <img src={avi2} alt="avatar" className="create-avi" />
+                <img src={avi2} alt="avatar" className="create-avi" onClick={()=>{navigate("/profile")}} />
                 {createPost 
                  ? <textarea rows={7} placeholder="What's happening?" className="create-textarea" />
                  : <input type="text" placeholder="What's happening?" className="create-input" onClick={openCreatePost} />

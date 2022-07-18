@@ -24,7 +24,7 @@ export default function App() {
     useEffect(()=>{
         const mediaQuery = window.matchMedia("(min-width: 701px)");      
         handleMdMqy(mediaQuery);
-        mediaQuery.addEventListener("change", handleMdMqy)        
+        mediaQuery.addEventListener("change", handleMdMqy)      
     },[handleMdMqy])
 
     useEffect(()=>{

@@ -8,8 +8,14 @@ import coverPhoto from "../../cover-photo.png"
 import avi2 from "../../avatar-square.png"
 import ArrowBackOutlinedIcon from '@mui/icons-material/ArrowBackOutlined';
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 export default function Profile() {
+
+    useEffect(() => {
+        document.body.className = "" 
+      }, [])
+
   return (
     <div className="profile-container">
         <div className="profile-wrapper">
