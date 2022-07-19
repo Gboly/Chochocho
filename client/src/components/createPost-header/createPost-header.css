@@ -1,7 +1,13 @@
 .create-top{
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center;    
+}
+.create-top-styled{
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 99999;
 }
 .create-hr{
     margin: 0.5rem -1rem;

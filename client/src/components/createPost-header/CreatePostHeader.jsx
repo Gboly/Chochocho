@@ -11,7 +11,7 @@ export default function CreatePostHeader({openOptions, options, closeCreatePostW
     }
 
   return (
-    <>
+    <div className="create-top-styled">
         <div className="create-top">
             <span className="create-top-description">
                 Create a post
@@ -27,6 +27,6 @@ export default function CreatePostHeader({openOptions, options, closeCreatePostW
             </i>                
         </div>
         <hr className="create-hr" />
-    </>
+    </div>
   )
 }

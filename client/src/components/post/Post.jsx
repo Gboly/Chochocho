@@ -15,6 +15,7 @@ import avi2 from "../../avatar-square.png"
 import PostOptions from "../post-options/PostOptions";
 import PostShare from "../post-share/PostShare";
 import { useEffect, useState } from "react";
+import video from "../../video.mp4"
 
 
 export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}) {
@@ -70,10 +71,12 @@ export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, c
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a est vitae massa convallis sodales. In aliquet id velit sit amet tincidunt. Curabitur rutrum eu mauris at efficitur. Integer felis sem, pharetra non ligula non, tincidunt dignissim metus. Donec fermentum ac magna sed dictum. Proin id imperdiet augue.
                     </p>
                     <div className="post-media-container">
-                        <img 
-                        src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8YmVhdXRpZnVsJTIwaG91c2V8ZW58MHx8MHx8&w=1000&q=80" 
+                        <video 
+                        src={video}
                         alt="post" 
-                        className="post-media" />                       
+                        className="post-media" controls>
+                        
+                        </video>                       
                     </div>
                 </div>
                 <div className="post-bottom">

@@ -62,10 +62,10 @@ export default function Home() {
             {sidebar && <Sidebar />}
             <div className="home-body-container" onClick={hideSidebar}>
             <Story />
-            <div className={createPost && "home-createposts-container-focus"} ref={createPostNode}>
-            <CreatePost {...{openCreatePost, closeCreatePostWithin, createPost}} />
+            <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
+            <CreatePost {...{openCreatePost, closeCreatePostWithin, createPost, focusCreateContainerClassName: "create-container-focus-sm"}} />
             </div>
-            <div className={createPost && "home-posts-container-focus"}>
+            <div className={createPost ? "home-posts-container-focus" : ""}>
             <Post {...{activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}} />
                         <Post {...{activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}} />
                         <Post {...{activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}} />

@@ -62,7 +62,7 @@ export default function HomeMd() {
             <div className="home-md-main" onClick={hideSidebar}>
                 <div className="home-md-main-wrapper">
                     <div className={createPost && "home-createposts-container-focus"} ref={createPostNode}>
-                        <CreatePost {...{openCreatePost, closeCreatePostWithin, createPost}} />
+                        <CreatePost {...{openCreatePost, closeCreatePostWithin, createPost, focusCreateContainerClassName: "create-container-focus"}} />
                     </div>
                     <div className={createPost && "home-posts-container-focus"}>
                         <Post {...{activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}} />
