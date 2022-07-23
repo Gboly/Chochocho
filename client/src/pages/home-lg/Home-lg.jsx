@@ -5,6 +5,7 @@ import Post from "../../components/post/Post"
 import SidebarLg from "../../components/sidebar-lg/Sidebar-lg"
 import Rightbar from "../../components/rightbar/Rightbar"
 import ReportPost from "../../components/report-post/ReportPost"
+import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 
@@ -116,6 +117,7 @@ export default function HomeLg() {
               </div>
               <div className="home-lg-main-wrapper">
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
+                <FollowUnfollowPoster />
                 <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
                     <CreatePost {...{
                       openCreatePost, 

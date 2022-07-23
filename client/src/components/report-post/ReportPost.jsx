@@ -12,7 +12,7 @@ export default function ReportPost({closeReportPost}) {
     }
   return (
     <div className="report-post-container">
-        <div className="report-post-wrapper">            
+        <div className="report-post-wrapper">         
             <div className="create-top">
                 <span className="create-top-description">
                     Report an issue
