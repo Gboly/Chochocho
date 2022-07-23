@@ -14,37 +14,35 @@ import midex from "../../midex.png"
 import avi2 from "../../avatar-square.png"
 import PostOptions from "../post-options/PostOptions";
 import PostShare from "../post-share/PostShare";
-import { useEffect, useState } from "react";
-import video from "../../video.mp4"
+import { useState } from "react";
 
-
-export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, closePostPopUp}) {
-    const [postOptions, setpostOptions] = useState(false)
-    const [isLiked, setisLiked] = useState(false)
-    const [postShare, setpostShare] = useState(false)
+export default function Post({
+    index, 
+    openPostOptions, 
+    openPostShare, 
+    postOptions, 
+    postShare, 
+    getPostPopUpNode, 
+    openReportPost,
+    fileType,
+    fileUrl
+    }) {
+    const [isLiked, setisLiked] = useState(false)   
     
-    useEffect(()=>{
-        if(!closePostPopUp){
-            postOptions && setpostOptions(false)
-            postShare && setpostShare(false)
-        }        
-    }, [closePostPopUp, setpostOptions, postOptions, postShare])
-
-    const openPostOptions = ()=>{
-        setpostOptions(true)
-        activateOutsideClosePostPopUp()
-    }
     const likePost = ()=>{
         setisLiked(!isLiked)
     }
-    const openPostShare = ()=>{
-        setpostShare(true)
-        activateOutsideClosePostPopUp()
+    const handlePostOptions = (e)=>{
+        openPostOptions(e.currentTarget.id)
     }
+    const handlePostShare = (e)=>{
+        openPostShare(e.currentTarget.id)
+    } 
+
 
   return (
     <main className="post-container">
-        {postOptions &&<PostOptions getPostOptionsNode={getPostPopUpNode} />}
+        {postOptions &&<PostOptions getPostOptionsNode={getPostPopUpNode} openReportPost={openReportPost}  />}
         {postShare &&<PostShare getPostShareNode={getPostPopUpNode} />}
         <div className="post-wrapper">
             <div className="post-main">
@@ -61,7 +59,7 @@ export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, c
                         </div>
                     </div>
                     <div className="post-top-right">
-                        <i className="ptr-icon" onClick={openPostOptions}>
+                        <i id={`${index}`} className="ptr-icon" onClick={handlePostOptions}>
                             <MoreHorizOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
                         </i>
                     </div>
@@ -71,12 +69,17 @@ export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, c
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a est vitae massa convallis sodales. In aliquet id velit sit amet tincidunt. Curabitur rutrum eu mauris at efficitur. Integer felis sem, pharetra non ligula non, tincidunt dignissim metus. Donec fermentum ac magna sed dictum. Proin id imperdiet augue.
                     </p>
                     <div className="post-media-container">
-                        <video 
-                        src={video}
-                        alt="post" 
-                        className="post-media" controls>
-                        
-                        </video>                       
+                        {fileType.startsWith("video") 
+                            && <video 
+                            src={fileUrl}
+                            alt="post" 
+                            className="post-media" controls >                        
+                        </video>}
+                        {fileType.startsWith("image")
+                            && <img 
+                            src={fileUrl}
+                            alt="post"
+                            className="post-media" /> }
                     </div>
                 </div>
                 <div className="post-bottom">
@@ -128,8 +131,8 @@ export default function Post({activateOutsideClosePostPopUp, getPostPopUpNode, c
                         
                     </span> */}
                 </span>
-                <span className="pi-item" id="share" onClick={openPostShare}>
-                    <i className="pi-icon pi-icon-flip">
+                <span className="pi-item share" id={`${index}`} onClick={handlePostShare}>
+                    <i className="pi-icon">
                         <IosShareOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit", outline: "inherit"}} />
                     </i>
                     {/* <span className="pi-text">

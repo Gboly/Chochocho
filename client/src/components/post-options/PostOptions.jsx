@@ -8,7 +8,7 @@ import { useRef, useEffect, useState } from "react";
 
 
 
-export default function PostOptions({getPostOptionsNode}) {
+export default function PostOptions({getPostOptionsNode, openReportPost}) {
     //This actually needs to be saved in a DB
     const [followingPost, setfollowingPost] = useState(false)   
     
@@ -44,7 +44,7 @@ export default function PostOptions({getPostOptionsNode}) {
                     Turn {followingPost ? "off" : "on"} notification for this post
                 </span>
             </div>
-            <div className="post-option">
+            <div className="post-option" onClick={openReportPost}>
                 <i className="post-option-icon">
                     <ReportOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
                 </i>

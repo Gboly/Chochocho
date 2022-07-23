@@ -1,19 +1,11 @@
 import "./custom-select.css"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import FormRadioOptions from "../form-radio-options/FormRadioOptions";
+
 import { useState } from "react";
 
-const sx={
-    color: "#c32aa3",
-    '&.Mui-checked': {
-      color: "#c32aa3",
-    },
-}
+
 
 export default function CustomSelect({openOptions, options}) {
   
@@ -23,8 +15,7 @@ export default function CustomSelect({openOptions, options}) {
         openOptions()
     }
 
-    const handleChange = (e)=>{
-        console.log(e.target)
+    const handleChange = (e)=>{        
         setCurrentOption(e.target.value)
     }   
  
@@ -41,32 +32,12 @@ export default function CustomSelect({openOptions, options}) {
                 }
             </i>
         </div>
-        { options && <div className="custom-options">
-            <div className="custom-options-item">
-            <FormControl>
-              <FormLabel id="demo-radio-buttons-group-label" />
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                name="controlled-radio-buttons-group"
-                value={currentOption}
-                onChange={handleChange}
-              >
-                <FormControlLabel 
-                value="Friends" 
-                control={<Radio size="small" sx={currentOption==="Friends" && sx} />} 
-                label="Friends" />
-                <FormControlLabel 
-                value="Public" 
-                control={<Radio size="small" sx={currentOption==="Public" && sx} />} 
-                label="Public" />
-                <FormControlLabel 
-                value="Only me" 
-                control={<Radio size="small" sx={currentOption==="Only me" && sx} />} 
-                label="Only me" />
-              </RadioGroup>
-            </FormControl>
-            </div>
-        </div>}
+        { options && <FormRadioOptions {...{
+          options:["Friends", "Public", "Only me"],
+          handleChange,
+          currentOption,
+          optionsContainerClassName: "custom-options"
+          }} />}
     </div>    
   )
 }

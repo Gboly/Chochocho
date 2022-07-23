@@ -4,12 +4,12 @@
     border-top: 1px solid #f4f5f7;
     border-right: 1px solid rgba(0,0,0,0.1);
     font-weight: 500;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 17rem;
     height: 100vh;
-    z-index: 999;
+    z-index: 9999;
     /* transition: 3s ease-out; */    
 }
 /* body{
@@ -19,10 +19,27 @@
     margin: 0.5rem 1rem;
     display: flex;
     flex-flow: column nowrap;
-    justify-content: space-between;
+    justify-content: space-between;    
 }
 .sidebar-top{
     flex: 3;
+    position: relative;
+}
+.sidebar-close-button{
+    position: absolute;
+    right: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    color: #808080;
+    border: none;
+    background-color: inherit;
+    line-height: 0;
+    cursor: pointer;
+}
+.sidebar-close-button:hover{
+    padding: 0.12rem;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 50%;  
 }
 .sidebar-avi{
     width: 3rem;

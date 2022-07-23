@@ -54,14 +54,16 @@
     width:100%;
     /* display: flex; */
     /* flex-flow: row wrap;
-    gap: 2%; */
+    gap: 2%; */   
+    line-height: 0;
 }
 .post-media{
     width: 100%;   
-    max-height: 22rem;
-    object-fit: cover;
-    border-radius: 1.2rem;
-    cursor: pointer;
+    max-height: 24rem;
+    object-fit: contain;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 1.2rem;    
+    cursor: pointer;    
 }
 .post-media-playing{
     object-fit: contain;
@@ -122,13 +124,9 @@
 #comment:hover{
     color: #2a55c3;
 }
-#share:hover{
+.share:hover{
     color: #2ac34b;
 }
-.pi-icon-flip{
-    transform: scaleX(-1);    
-    outline: black;
-}
-.post-hr{    
+.post-hr{
     border-color: rgba(0,0,0,0.1);    
 }

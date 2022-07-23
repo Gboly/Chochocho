@@ -7,7 +7,7 @@
     position: sticky;
     top: 0;
     background-color: #fff;
-    z-index: 99999;
+    z-index: 9999;
 }
 .create-hr{
     margin: 0.5rem -1rem;
@@ -24,9 +24,11 @@
 }
 .create-top-description{
     font-weight: 500;
+    cursor:context-menu;   
 }
 .create-close-icon{
     font-size: 1.2rem;
     display: flex;
     align-items: center;
+    cursor: pointer;
 }

@@ -7,6 +7,7 @@
     align-items: center;
     border-radius: 0.5rem;
     color: #c32aa3;
+    cursor: pointer;
 }
 .custom-select-expand-icon{
     font-size: 1.5rem;

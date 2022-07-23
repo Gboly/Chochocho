@@ -10,9 +10,9 @@ export default function Rightbar() {
     <div className="rightbar-container">
         <div className="rightbar-wrapper">
             <div className="rightbar-search-container">
-                <icon className="rightbar-search-icon">
+                <i className="rightbar-search-icon">
                     <SearchOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
-                </icon>
+                </i>
                 <input type="text" placeholder="Search friends" className="rightbar-search-input" />
             </div>
             <div className="rightbar-story">
@@ -23,9 +23,9 @@ export default function Rightbar() {
                     <span className="rfh-title">
                         Friends
                     </span>
-                    <icon className="rfh-icon">
+                    <i className="rfh-icon">
                     <MoreHorizOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
-                    </icon>
+                    </i>
                 </div>
                 <div className="rightbar-friends-list">
                     <div className="rfl-item">

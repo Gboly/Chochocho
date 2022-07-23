@@ -6,55 +6,60 @@ import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import CreatePostHeader from "../createPost-header/CreatePostHeader";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import WriteAlt from "../write-alt/WriteAlt";
 
    
 
-export default function CreatePost({createPost, openCreatePost, closeCreatePostWithin, focusCreateContainerClassName}) {
-    const [options, setOptions] = useState(false)
-    const [fileName, setfileName] = useState("")
+export default function CreatePost({
+        createPost,
+        openCreatePost,
+        closeCreatePostWithin,
+        focusCreateContainerClassName,
+        altContainerHeight,
+        openCreateAlt,
+        closeCreateAlt,
+        createAlt,
+        fileType,
+        fileUrl,
+        getFile,
+        removePicture
+    }) {
+    const [options, setOptions] = useState(false)    
     const [textValue, settextValue] = useState("")
     const [placeholder, setplaceholder] = useState(true)
-    const [fileUrl, setfileUrl] = useState("")
-
+ 
+    
     const customTextAreaNode = useRef()
+    const fileInputNode = useRef()
 
     const navigate = useNavigate()
 
-    useEffect(()=>{        
+    useEffect(()=>{
         textValue ? setplaceholder(false) : setplaceholder(true)
-        createPost && customTextAreaNode.current.focus()
-        // fileName && console.log(fileName);
-    }, [textValue, fileName, createPost])
-
-    const readUploadedMedia = useCallback(fileObject=>{
-        const reader = new FileReader()
-        reader.addEventListener("load", (e)=>{
-            console.log(e)
-            console.log(e.target);
-            console.log(e.target.result);
-            setfileUrl(e.target.result)
-        })
-        reader.readAsDataURL(fileObject)
-    },[])
+        createPost && customTextAreaNode.current.focus()       
+    }, [textValue, createPost])
 
     const openOptions = ()=> setOptions(true)
     const closeOptions = ()=> options && setOptions(false)
-    const getFile = (e)=>{
-        const value = e.target.files[0]
-        readUploadedMedia(value)
-        // setfileName(value)
-        // console.log(e.target.files[0].name + "..." + e.target.files[0].size )              
-    }
+ 
     const getTextValue = (e)=>{
-        const value = e.target.textContent 
+        const value = e.target.textContent
         settextValue(value)
     }
- 
-    
+    const handleGetFile = ()=>{
+        getFile(fileInputNode.current)
+    }
+    const handleRemovePicture = ()=>{
+        removePicture(fileInputNode.current)
+    }
+       
         
   return (    
-    <div className={`create-container ${createPost ? focusCreateContainerClassName : "" }`} onClick={closeOptions} >
-        <form className="create-wrapper">
+    <div id={createAlt ? "create-container-forAlt" : ""} className={`create-container ${createPost ? focusCreateContainerClassName : "" }`} onClick={closeOptions} >
+        {createAlt 
+        ? <WriteAlt {...{closeCreateAlt, fileUrl, altContainerHeight }} />
+        : null}
+        <form className={` ${createPost ? "create-wrapper-focus" : "create-wrapper" }`}>
             {createPost && <CreatePostHeader {...{openOptions, options, closeCreatePostWithin}} />}
             <div className={`create-middle ${createPost ? "create-middle-focus" : ""}`}>
                 <div className={`create-middle-text ${createPost ? "create-middle-text-focus" : ""}`} >
@@ -71,7 +76,28 @@ export default function CreatePost({createPost, openCreatePost, closeCreatePostW
                 </div>
                 {createPost 
                     ? <div className="create-middle-media-container">
-                        <video src={fileUrl} alt="post" className="create-middle-media"  controls />                    
+                        {
+                            fileType.startsWith("video")
+                            ?   <>
+                                    <video src={fileUrl} alt="post" className="create-middle-media"  controls />
+                                    <div onClick={handleRemovePicture} className="media-option-custom-icon remove-video-icon">
+                                        ✖
+                                    </div>
+                                </>
+                            :   fileType.startsWith("image")
+                                ?   <>
+                                        <div className="media-container-options">
+                                            <div onClick={handleRemovePicture} className="media-option-custom-icon remove-picture-icon">
+                                                ✖
+                                            </div>
+                                            <div onClick={openCreateAlt} className="media-option-custom-icon alt-text-icon">
+                                                +ALT
+                                            </div>
+                                        </div>
+                                        <img src={fileUrl} alt="post" className="create-middle-media" />
+                                    </>
+                                :   null
+                        }                    
                       </div> 
                     : null
                 }
@@ -86,7 +112,7 @@ export default function CreatePost({createPost, openCreatePost, closeCreatePostW
                             </i>
                             <span className="cbli-desc">Media</span>
                         </label>
-                        <input name="media-upload" id="media-upload" type="file" className="upload-file" onChange={getFile} />                  
+                        <input ref={fileInputNode} name="media-upload" id="media-upload" type="file" className="upload-file" onChange={handleGetFile} />                  
                     </div>
                     <div className="create-bottom-left-item">
                         <i className="cbli-icon">

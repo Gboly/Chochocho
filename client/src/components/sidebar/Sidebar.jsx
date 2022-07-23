@@ -7,21 +7,32 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import avi2 from "../../avatar-square.png"
 import LocalPostOfficeOutlinedIcon from '@mui/icons-material/LocalPostOfficeOutlined';
-import { useNavigate } from "react-router-dom";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import { useNavigate} from "react-router-dom";
+import { useEffect, useRef  } from "react";
 
 
 
-export default function Sidebar() {
+export default function Sidebar({hideSidebar, getPostPopUpNode}) {
     const navigate = useNavigate()
+    const sidebarNode = useRef()
+
+    useEffect(()=>{
+        getPostPopUpNode(sidebarNode.current)
+    },[getPostPopUpNode])
 
     const handleClick =(e)=>{        
-        const id = e.currentTarget.id       
+        const id = e.currentTarget.id     
         navigate(`/${id}`)
     }
+   
   return (
-    <div className="sidebar-container">
+    <div className="sidebar-container" ref={sidebarNode}>
         <div className="sidebar-wrapper">
             <div className="sidebar-top">
+                <button className="sidebar-close-button" onClick={hideSidebar}>
+                    <CloseOutlinedIcon style={{color:"inherit", fontSize: "inherit", margin: "inherit"}} />
+                </button>
                 <img src={avi2} alt="avatar" className="sidebar-avi" />
                 <p className="sidebar-username">
                     Ahmed Quamordeen Gbolahan
@@ -30,66 +41,66 @@ export default function Sidebar() {
             <hr className="sidebar-hr" />
             <div className="sidebar-bottom">
                 <div id="profile" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <PermIdentityOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Profile
                     </span>
                 </div>                
                 <div id="community" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <PeopleAltOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Community
                     </span>
                 </div>
                 <div id="chats" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <LocalPostOfficeOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Chats
                     </span>
                 </div>
                 <div id="notification" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <NotificationsOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Notification
                     </span>
                     <div className="sidebar-notification-count"></div>
                 </div>
                 <div id="explore" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <ExploreOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Explore
                     </span>
                 </div>
                 <div id="settings" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <SettingsOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Settings
                     </span>
                 </div>
                 <div id="log-out" className="sidebar-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
                         <LogoutOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
                         Logout
                     </span>
                 </div>
                 {/* <div className="sidebar-bottom-item">
-                    <icon className="sbi-icon">
+                    <i className="sbi-icon">
 
-                    </icon>
+                    </i>
                     <span className="sbi-desc">
 
                     </span>

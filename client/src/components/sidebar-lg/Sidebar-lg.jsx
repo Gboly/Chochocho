@@ -24,66 +24,66 @@ export default function SidebarLg() {
         <div className="sidebar-lg-wrapper">           
             <div className="sidebar-lg-bottom">
                 <div id="" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <OtherHousesOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Home
                     </span>
                 </div>
                 <div id="profile" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <PermIdentityOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Profile
                     </span>
                 </div>
                 <div id="community" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <PeopleAltOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Community
                     </span>
                 </div>
                 <div id="chats" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <LocalPostOfficeOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Chats
                     </span>
                 </div>
                 <div id="notification" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <NotificationsOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Notification
                     </span>
                     <div className="sidebar-lg-notification-count" />
                 </div>
                 <div id="explore" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <ExploreOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Explore
                     </span>
                 </div>
                 <div id="settings" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <SettingsOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Settings
                     </span>
                 </div>
                 <div id="log-out" className="sidebar-lg-bottom-item" onClick={handleClick}>
-                    <icon className="sbi-lg-icon">
+                    <i className="sbi-lg-icon">
                         <LogoutOutlinedIcon />
-                    </icon>
+                    </i>
                     <span className="sbi-lg-desc">
                         Logout
                     </span>
