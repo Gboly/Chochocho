@@ -25,7 +25,8 @@ export default function Post({
     getPostPopUpNode, 
     openReportPost,
     fileType,
-    fileUrl
+    fileUrl,
+    openffPoster
     }) {
     const [isLiked, setisLiked] = useState(false)   
     
@@ -42,7 +43,7 @@ export default function Post({
 
   return (
     <main className="post-container">
-        {postOptions &&<PostOptions getPostOptionsNode={getPostPopUpNode} openReportPost={openReportPost}  />}
+        {postOptions &&<PostOptions {...{getPostOptionsNode: getPostPopUpNode, openReportPost, openffPoster}}  />}
         {postShare &&<PostShare getPostShareNode={getPostPopUpNode} />}
         <div className="post-wrapper">
             <div className="post-main">

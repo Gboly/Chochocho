@@ -1,6 +1,6 @@
 import "./follow-unfollow-poster.css"
 
-export default function FollowUnfollowPoster() {
+export default function FollowUnfollowPoster({closeffPoster}) {
   return (
     <div className='ffPost-container'>
       <div className='ffPost-wrapper'>
@@ -11,7 +11,7 @@ export default function FollowUnfollowPoster() {
           Their posts will no longer show up on your home timeline.
         </main>
         <footer className="ffPost-footer">
-          <button className="ffPost-button ffPost-cancel">
+          <button className="ffPost-button ffPost-cancel" onClick={closeffPoster}>
             Cancel
           </button>
           <button className="ffPost-button ffPost-submit">

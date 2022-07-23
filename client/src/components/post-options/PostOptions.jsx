@@ -8,9 +8,9 @@ import { useRef, useEffect, useState } from "react";
 
 
 
-export default function PostOptions({getPostOptionsNode, openReportPost}) {
+export default function PostOptions({getPostOptionsNode, openReportPost, openffPoster}) {
     //This actually needs to be saved in a DB
-    const [followingPost, setfollowingPost] = useState(false)   
+    const [followingPost, setfollowingPost] = useState(false) 
     
     const postOptionsNode = useRef()
 
@@ -52,7 +52,7 @@ export default function PostOptions({getPostOptionsNode, openReportPost}) {
                     Report this post
                 </span>
             </div>
-            <div className="post-option">
+            <div className="post-option" onClick={openffPoster}>
                 <i className="post-option-icon">
                     <PersonRemoveOutlinedIcon style={{fontSize: "inherit", color: "inherit", fontWeight: "inherit"}} />
                 </i>
