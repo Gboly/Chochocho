@@ -6,6 +6,7 @@ import Post from "../../components/post/Post"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Rightbar from "../../components/rightbar/Rightbar"
 import ReportPost from "../../components/report-post/ReportPost"
+import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 export default function HomeMd() {
@@ -20,16 +21,17 @@ export default function HomeMd() {
     const [targetPost, setTargetPost] = useState("")
     const [fileUrl, setfileUrl] = useState("")
     const [fileType, setfileType] = useState("")
+    const [ffPoster, setFfPoster] = useState(false)
    
     const createPostNode = useRef()
     const postPopUpNode = useRef()
 
     useEffect(()=>{
-        if(sidebar || createPost || reportPost){document.body.className = "hidden-body"}
+        if(sidebar || createPost || reportPost || ffPoster){document.body.className = "hidden-body"}
         else {
           document.body.className = ""
         }
-    }, [sidebar, createPost, reportPost])
+    }, [sidebar, createPost, reportPost, ffPoster])
 
     function displaySidebar(){
         setSidebar(true)
@@ -50,7 +52,7 @@ export default function HomeMd() {
   }
     const closeAnyPopUpByTappingOutside = (e)=>{
       if(opaqueOverlay){
-        if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost){
+        if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost && !ffPoster){
           createAlt && setCreateAlt(false)
           createPost && setCreatePost(false)            
           setOpaqueOverlay(false)
@@ -113,6 +115,16 @@ export default function HomeMd() {
       setfileUrl("")
       fileInputNode.value = ""
     }
+    const openffPoster = ()=>{
+      setFfPoster(true)
+      setOpaqueOverlay(true)
+      setTransparentOverlay(false)
+      setpostOptions(false) 
+    }
+    const closeffPoster = ()=>{
+      setFfPoster(false)
+      setOpaqueOverlay(false)
+    }
   
   return (
     <div className="home-md-container" onClick={(transparentOverlay || opaqueOverlay) ? closeAnyPopUpByTappingOutside : null}>
@@ -123,6 +135,7 @@ export default function HomeMd() {
             <div className="home-md-main" >
                 <div className="home-md-main-wrapper">
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
+                {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}   
                     <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
                         <CreatePost {...{
                           openCreatePost,
@@ -152,7 +165,9 @@ export default function HomeMd() {
                         openPostShare, 
                         openReportPost,
                         fileUrl,
-                        fileType }} />
+                        fileType,
+                        openffPoster
+                         }} />
                     )
                     }
                     </div>  

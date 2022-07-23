@@ -20,16 +20,17 @@ export default function HomeLg() {
     const [targetPost, setTargetPost] = useState("")
     const [fileUrl, setfileUrl] = useState("")
     const [fileType, setfileType] = useState("")
+    const [ffPoster, setFfPoster] = useState(false)
    
     const createPostNode = useRef()
     const postPopUpNode = useRef()
 
     useEffect(()=>{
-        if(createPost || reportPost){document.body.className = "hidden-body"}
+        if(createPost || reportPost || ffPoster){document.body.className = "hidden-body"}
         else {
           document.body.className = ""
         }
-    }, [createPost, reportPost])
+    }, [createPost, reportPost, ffPoster])
 
     const openCreatePost = ()=>{
         setCreatePost(true)
@@ -42,9 +43,9 @@ export default function HomeLg() {
   }
     const closeAnyPopUpByTappingOutside = (e)=>{
         if(opaqueOverlay){
-          if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost){
+          if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost && !ffPoster){
             createAlt && setCreateAlt(false)
-            createPost && setCreatePost(false)            
+            createPost && setCreatePost(false)          
             setOpaqueOverlay(false)
           }
         }
@@ -67,9 +68,9 @@ export default function HomeLg() {
     }
     const openReportPost = ()=>{
       setReportPost(true)
-      setTransparentOverlay(false)
-      setpostOptions(false)
       setOpaqueOverlay(true)
+      setTransparentOverlay(false)
+      setpostOptions(false)      
     }
     const closeReportPost = ()=>{
       setReportPost(false)
@@ -104,6 +105,16 @@ export default function HomeLg() {
       setfileUrl("")
       fileInputNode.value = ""
     }
+    const openffPoster = ()=>{
+      setFfPoster(true)
+      setOpaqueOverlay(true)
+      setTransparentOverlay(false)
+      setpostOptions(false) 
+    }
+    const closeffPoster = ()=>{
+      setFfPoster(false)
+      setOpaqueOverlay(false)
+    }
  
 
   return (
@@ -117,7 +128,7 @@ export default function HomeLg() {
               </div>
               <div className="home-lg-main-wrapper">
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
-                <FollowUnfollowPoster />
+                {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
                 <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
                     <CreatePost {...{
                       openCreatePost, 
@@ -147,7 +158,9 @@ export default function HomeLg() {
                         openPostShare, 
                         openReportPost,
                         fileUrl,
-                        fileType }} />
+                        fileType,
+                        openffPoster
+                         }} />
                     )
                     }                    
                 </div>   

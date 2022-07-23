@@ -5,6 +5,7 @@ import CreatePost from "../../components/createPost/CreatePost"
 import Post from "../../components/post/Post"
 import Sidebar from "../../components/sidebar/Sidebar"
 import ReportPost from "../../components/report-post/ReportPost"
+import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
 import { useEffect, useState, useRef, useCallback } from "react"
 
 
@@ -20,16 +21,17 @@ export default function Home() {
   const [targetPost, setTargetPost] = useState("")
   const [fileUrl, setfileUrl] = useState("")
   const [fileType, setfileType] = useState("")
+  const [ffPoster, setFfPoster] = useState(false)
    
   const createPostNode = useRef()
   const postPopUpNode = useRef()
 
     useEffect(()=>{
-      if(sidebar || createPost){document.body.className = "hidden-body"}
+      if(sidebar || createPost || reportPost || ffPoster){document.body.className = "hidden-body"}
       else{
         document.body.className = ""
       }
-    }, [sidebar, createPost, reportPost])
+    }, [sidebar, createPost, reportPost, ffPoster])
 
   function displaySidebar(){
     setSidebar(true)
@@ -50,7 +52,7 @@ export default function Home() {
   }
   const closeAnyPopUpByTappingOutside = (e)=>{
     if(opaqueOverlay){
-      if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost){
+      if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost && !ffPoster){
         createAlt && setCreateAlt(false)
         createPost && setCreatePost(false)            
         setOpaqueOverlay(false)
@@ -113,6 +115,16 @@ export default function Home() {
     setfileUrl("")
     fileInputNode.value = ""
   }
+  const openffPoster = ()=>{
+    setFfPoster(true)
+    setOpaqueOverlay(true)
+    setTransparentOverlay(false)
+    setpostOptions(false) 
+  }
+  const closeffPoster = ()=>{
+    setFfPoster(false)
+    setOpaqueOverlay(false)
+  }
  
 
   return (
@@ -123,6 +135,7 @@ export default function Home() {
             {sidebar && <Sidebar {...{hideSidebar, getPostPopUpNode}} />}            
               <Story />
               {reportPost && <ReportPost closeReportPost={closeReportPost} />}
+              {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
               <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
               <CreatePost {...{
                 openCreatePost,
@@ -153,7 +166,9 @@ export default function Home() {
                         openReportPost,
                         postOptions,
                         fileUrl,
-                        fileType }} />
+                        fileType,
+                        openffPoster
+                         }} />
                     )
                     }
               </div>                       
