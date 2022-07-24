@@ -6,6 +6,7 @@ import Post from "../../components/post/Post"
 import Sidebar from "../../components/sidebar/Sidebar"
 import ReportPost from "../../components/report-post/ReportPost"
 import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
+import PostImageFullscreen from "../../components/post-image-fullscreen/PostImageFullscreen"
 import { useEffect, useState, useRef, useCallback } from "react"
 
 
@@ -136,6 +137,7 @@ export default function Home() {
               <Story />
               {reportPost && <ReportPost closeReportPost={closeReportPost} />}
               {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
+              <PostImageFullscreen />
               <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
               <CreatePost {...{
                 openCreatePost,
