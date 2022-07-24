@@ -163,8 +163,7 @@ export default function Home() {
                         getPostPopUpNode, 
                         openPostOptions, 
                         openPostShare, 
-                        openReportPost,
-                        postOptions,
+                        openReportPost,                        
                         fileUrl,
                         fileType,
                         openffPoster
