@@ -1,8 +1,7 @@
 import "./post-image-fullscreen.css"
-import tess from "../../tess.png"
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 
-export default function PostImageFullscreen({fileUrl, closePifs, getFullscreenImageNode}) {
+export default function PostImageFullscreen({fileUrl, closePifs}) {
 
     const fullScreenImageNode = useRef()
    

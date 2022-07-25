@@ -23,16 +23,17 @@ export default function HomeLg() {
     const [fileType, setfileType] = useState("")
     const [ffPoster, setFfPoster] = useState(false)
     const [postImageFullscreen, setPostImageFullscreen] = useState(false) 
-   
-    const createPostNode = useRef()
+    const [postImageAlt, setPostImageAlt] = useState(false)
+
+    const elementOnOpaqueOverlayNode = useRef()
     const postPopUpNode = useRef()
 
     useEffect(()=>{
-        if(createPost || reportPost || ffPoster){document.body.className = "hidden-body"}
+        if(opaqueOverlay){document.body.className = "hidden-body"}
         else {
           document.body.className = ""
         }
-    }, [createPost, reportPost, ffPoster])
+    }, [opaqueOverlay])
 
     const openCreatePost = ()=>{
         setCreatePost(true)
@@ -44,13 +45,17 @@ export default function HomeLg() {
       setOpaqueOverlay(false)
   }
     const closeAnyPopUpByTappingOutside = (e)=>{
-        if(opaqueOverlay){
-          if((!createPostNode.current.contains(e.target) || !e.target === createPostNode.current) && !reportPost && !ffPoster){
-            createAlt && setCreateAlt(false)
-            createPost && setCreatePost(false)          
-            setOpaqueOverlay(false)
-          }
-        }
+      if(opaqueOverlay){
+        if(  !(elementOnOpaqueOverlayNode.current.contains(e.target) || e.target === elementOnOpaqueOverlayNode.current) 
+          && !reportPost 
+          && !ffPoster
+            ){
+          createAlt && setCreateAlt(false)
+          createPost && setCreatePost(false)
+          postImageAlt && setPostImageAlt(false)
+          setOpaqueOverlay(false)
+        }           
+      }
         if (transparentOverlay){
           if(!postPopUpNode.current.contains(e.target) || !e.target === postPopUpNode.current){
             postOptions && setpostOptions(false)
@@ -123,6 +128,17 @@ export default function HomeLg() {
     const closePifs = ()=>{
       setPostImageFullscreen(false)
     }
+    const openPostImageAlt = ()=>{
+      setPostImageAlt(true)
+      setOpaqueOverlay(true)    
+    }
+    const closePostImageAlt = ()=>{
+      setPostImageAlt(false)
+      setOpaqueOverlay(false)
+    }
+    const getElemOnOpaqueNode = (node)=>{
+      elementOnOpaqueOverlayNode.current = node
+    }
  
 
   return (
@@ -138,7 +154,7 @@ export default function HomeLg() {
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
                 {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
                 {postImageFullscreen && <PostImageFullscreen fileUrl={fileUrl} closePifs={closePifs} />}
-                <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
+                <div className={createPost ? "home-createposts-container-focus" : ""}>
                     <CreatePost {...{
                       openCreatePost, 
                       closeCreatePostWithin,
@@ -151,7 +167,8 @@ export default function HomeLg() {
                       fileType,
                       fileUrl,
                       getFile,
-                      removePicture
+                      removePicture,
+                      getElemOnOpaqueNode
                       }} />
                 </div>
                 <div className={createPost ? "home-posts-container-focus" : ""}>
@@ -169,7 +186,11 @@ export default function HomeLg() {
                         fileUrl,
                         fileType,
                         openffPoster,
-                        openPifs
+                        openPifs,
+                        openPostImageAlt,
+                        closePostImageAlt,
+                        postImageAlt,
+                        getElemOnOpaqueNode
                          }} />
                     )
                     }                    
