@@ -3,16 +3,19 @@
         top: 0;
         left: 0;
         z-index: 999999;
-        background-color: burlywood;
+        background-color: rgba(128,128,128,0.95);
         width: 100vw;
         height: 100vh;
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: center;        
         line-height: 0;
 }
 .pifs-image{
     width: 100%;
     object-fit: contain;
     max-height: 100vh;
+}
+.remove-video-icon{
+    background-color: rgba(0,0,0,0.45);
 }

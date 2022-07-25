@@ -26,7 +26,8 @@ export default function Post({
     openReportPost,
     fileType,
     fileUrl,
-    openffPoster
+    openffPoster,
+    openPifs
     }) {
     const [isLiked, setisLiked] = useState(false)   
     
@@ -38,7 +39,7 @@ export default function Post({
     }
     const handlePostShare = (e)=>{
         openPostShare(e.currentTarget.id)
-    } 
+    }  
 
 
   return (
@@ -80,7 +81,7 @@ export default function Post({
                             && <img 
                             src={fileUrl}
                             alt="post"
-                            className="post-media" /> }
+                            className="post-media" onClick={openPifs} /> }
                     </div>
                 </div>
                 <div className="post-bottom">

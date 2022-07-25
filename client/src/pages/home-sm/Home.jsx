@@ -23,9 +23,10 @@ export default function Home() {
   const [fileUrl, setfileUrl] = useState("")
   const [fileType, setfileType] = useState("")
   const [ffPoster, setFfPoster] = useState(false)
+  const [postImageFullscreen, setPostImageFullscreen] = useState(false) 
    
   const createPostNode = useRef()
-  const postPopUpNode = useRef()
+  const postPopUpNode = useRef() 
 
     useEffect(()=>{
       if(sidebar || createPost || reportPost || ffPoster){document.body.className = "hidden-body"}
@@ -126,6 +127,12 @@ export default function Home() {
     setFfPoster(false)
     setOpaqueOverlay(false)
   }
+  const openPifs = ()=>{
+    setPostImageFullscreen(true)    
+  }
+  const closePifs = ()=>{
+    setPostImageFullscreen(false)
+  }
  
 
   return (
@@ -137,7 +144,7 @@ export default function Home() {
               <Story />
               {reportPost && <ReportPost closeReportPost={closeReportPost} />}
               {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
-              <PostImageFullscreen />
+              {postImageFullscreen && <PostImageFullscreen fileUrl={fileUrl} closePifs={closePifs} />}
               <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
               <CreatePost {...{
                 openCreatePost,
@@ -168,7 +175,8 @@ export default function Home() {
                         openReportPost,                        
                         fileUrl,
                         fileType,
-                        openffPoster
+                        openffPoster,
+                        openPifs
                          }} />
                     )
                     }
