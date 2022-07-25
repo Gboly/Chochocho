@@ -7,6 +7,7 @@ import Sidebar from "../../components/sidebar/Sidebar"
 import Rightbar from "../../components/rightbar/Rightbar"
 import ReportPost from "../../components/report-post/ReportPost"
 import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
+import PostImageFullscreen from "../../components/post-image-fullscreen/PostImageFullscreen"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 export default function HomeMd() {
@@ -22,6 +23,7 @@ export default function HomeMd() {
     const [fileUrl, setfileUrl] = useState("")
     const [fileType, setfileType] = useState("")
     const [ffPoster, setFfPoster] = useState(false)
+    const [postImageFullscreen, setPostImageFullscreen] = useState(false) 
    
     const createPostNode = useRef()
     const postPopUpNode = useRef()
@@ -125,6 +127,12 @@ export default function HomeMd() {
       setFfPoster(false)
       setOpaqueOverlay(false)
     }
+    const openPifs = ()=>{
+      setPostImageFullscreen(true)    
+    }
+    const closePifs = ()=>{
+      setPostImageFullscreen(false)
+    }
   
   return (
     <div className="home-md-container" onClick={(transparentOverlay || opaqueOverlay) ? closeAnyPopUpByTappingOutside : null}>
@@ -136,6 +144,7 @@ export default function HomeMd() {
                 <div className="home-md-main-wrapper">
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
                 {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}   
+                {postImageFullscreen && <PostImageFullscreen fileUrl={fileUrl} closePifs={closePifs} />}
                     <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
                         <CreatePost {...{
                           openCreatePost,
@@ -166,7 +175,8 @@ export default function HomeMd() {
                         openReportPost,
                         fileUrl,
                         fileType,
-                        openffPoster
+                        openffPoster,
+                        openPifs
                          }} />
                     )
                     }

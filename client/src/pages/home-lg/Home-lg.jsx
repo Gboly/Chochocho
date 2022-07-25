@@ -6,6 +6,7 @@ import SidebarLg from "../../components/sidebar-lg/Sidebar-lg"
 import Rightbar from "../../components/rightbar/Rightbar"
 import ReportPost from "../../components/report-post/ReportPost"
 import FollowUnfollowPoster from "../../components/follow-unfollow-poster/FollowUnfollowPoster"
+import PostImageFullscreen from "../../components/post-image-fullscreen/PostImageFullscreen"
 import { useState, useEffect, useRef, useCallback } from "react"
 
 
@@ -21,6 +22,7 @@ export default function HomeLg() {
     const [fileUrl, setfileUrl] = useState("")
     const [fileType, setfileType] = useState("")
     const [ffPoster, setFfPoster] = useState(false)
+    const [postImageFullscreen, setPostImageFullscreen] = useState(false) 
    
     const createPostNode = useRef()
     const postPopUpNode = useRef()
@@ -115,6 +117,12 @@ export default function HomeLg() {
       setFfPoster(false)
       setOpaqueOverlay(false)
     }
+    const openPifs = ()=>{
+      setPostImageFullscreen(true)    
+    }
+    const closePifs = ()=>{
+      setPostImageFullscreen(false)
+    }
  
 
   return (
@@ -129,6 +137,7 @@ export default function HomeLg() {
               <div className="home-lg-main-wrapper">
                 {reportPost && <ReportPost closeReportPost={closeReportPost} />}
                 {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
+                {postImageFullscreen && <PostImageFullscreen fileUrl={fileUrl} closePifs={closePifs} />}
                 <div className={createPost ? "home-createposts-container-focus" : ""} ref={createPostNode}>
                     <CreatePost {...{
                       openCreatePost, 
@@ -159,7 +168,8 @@ export default function HomeLg() {
                         openReportPost,
                         fileUrl,
                         fileType,
-                        openffPoster
+                        openffPoster,
+                        openPifs
                          }} />
                     )
                     }                    
