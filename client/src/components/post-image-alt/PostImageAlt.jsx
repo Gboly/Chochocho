@@ -1,8 +1,16 @@
 import "./post-image-alt.css"
+import { useEffect, useRef } from "react"
 
-export default function PostImageAlt() {
+export default function PostImageAlt({closePostImageAlt, getElemOnOpaqueNode}) {
+
+    const piaNode = useRef()
+
+    useEffect(()=>{
+        getElemOnOpaqueNode(piaNode.current)
+    },[getElemOnOpaqueNode])
+
   return (
-    <div className="pia-container">
+    <div className="pia-container" ref={piaNode}>
         <div className="pia-wrapper">
             <header className="pia-header">
                 Image description
@@ -106,7 +114,7 @@ Reheat food made by someone else to at least 200F/84C for 10 min
 
 Disinfect all packaging before opening
             </p>
-            <button className="pia-dismiss">
+            <button className="pia-dismiss" onClick={closePostImageAlt}>
                 Dismiss
             </button>
         </div>

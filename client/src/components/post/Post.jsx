@@ -28,9 +28,13 @@ export default function Post({
     fileType,
     fileUrl,
     openffPoster,
-    openPifs
+    openPifs,
+    openPostImageAlt,
+    closePostImageAlt,
+    postImageAlt,
+    getElemOnOpaqueNode
     }) {
-    const [isLiked, setisLiked] = useState(false)   
+    const [isLiked, setisLiked] = useState(false) 
     
     const likePost = ()=>{
         setisLiked(!isLiked)
@@ -40,14 +44,14 @@ export default function Post({
     }
     const handlePostShare = (e)=>{
         openPostShare(e.currentTarget.id)
-    }  
+    }
 
 
   return (
     <main className="post-container">
         {postOptions &&<PostOptions {...{getPostOptionsNode: getPostPopUpNode, openReportPost, openffPoster}}  />}
         {postShare &&<PostShare getPostShareNode={getPostPopUpNode} />}
-        <PostImageAlt />
+        {postImageAlt && <PostImageAlt getElemOnOpaqueNode={getElemOnOpaqueNode} closePostImageAlt={closePostImageAlt} />}
         <div className="post-wrapper">
             <div className="post-main">
                 <div className="post-top">
@@ -73,7 +77,7 @@ export default function Post({
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a est vitae massa convallis sodales. In aliquet id velit sit amet tincidunt. Curabitur rutrum eu mauris at efficitur. Integer felis sem, pharetra non ligula non, tincidunt dignissim metus. Donec fermentum ac magna sed dictum. Proin id imperdiet augue.
                     </p>
                     <div className="post-media-container">
-                        {fileType.startsWith("video") 
+                        {fileType.startsWith("video")
                             && <video 
                             src={fileUrl}
                             alt="post" 
@@ -85,7 +89,7 @@ export default function Post({
                             src={fileUrl}
                             alt="post"
                             className="post-media" onClick={openPifs} />
-                            <button className="post-img-alt-button">
+                            <button className="post-img-alt-button" onClick={openPostImageAlt}>
                                 ALT
                             </button>                            
                             </> 

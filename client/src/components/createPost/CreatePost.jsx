@@ -22,7 +22,8 @@ export default function CreatePost({
         fileType,
         fileUrl,
         getFile,
-        removePicture
+        removePicture,
+        getElemOnOpaqueNode
     }) {
     const [options, setOptions] = useState(false)    
     const [textValue, settextValue] = useState("")
@@ -31,6 +32,11 @@ export default function CreatePost({
     
     const customTextAreaNode = useRef()
     const fileInputNode = useRef()
+    const createPostNode = useRef()
+
+    useEffect(()=>{
+        getElemOnOpaqueNode(createPostNode.current)
+    }, [getElemOnOpaqueNode])
 
     const navigate = useNavigate()
 
@@ -55,7 +61,7 @@ export default function CreatePost({
        
         
   return (    
-    <div id={createAlt ? "create-container-forAlt" : ""} className={`create-container ${createPost ? focusCreateContainerClassName : "" }`} onClick={closeOptions} >
+    <div ref={createPostNode} id={createAlt ? "create-container-forAlt" : ""} className={`create-container ${createPost ? focusCreateContainerClassName : "" }`} onClick={closeOptions} >
         {createAlt 
         ? <WriteAlt {...{closeCreateAlt, fileUrl, altContainerHeight }} />
         : null}

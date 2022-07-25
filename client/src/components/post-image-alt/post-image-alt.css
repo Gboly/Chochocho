@@ -4,10 +4,12 @@
     left: 50%;
     transform: translateX(-50%);
     max-height: calc(100vh - 8rem);
-    width: 25rem;
+    width: 95vw;
     background-color: #fff;
     border-radius: 1rem;
     overflow-y: scroll;
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 .pia-container::-webkit-scrollbar{
     width: 0.3rem;    
@@ -40,4 +42,9 @@
     font-size: 1.1rem;
     font-weight: 700;
     font-family: inherit;
+}
+@media screen and (min-width: 500px) {
+    .pia-container{
+        width: 30rem;
+    }
 }
