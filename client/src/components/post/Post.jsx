@@ -4,6 +4,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import IosShareOutlinedIcon from '@mui/icons-material/IosShareOutlined';
+import PostImageAlt from "../post-image-alt/PostImageAlt";
 // import GifBoxOutlinedIcon from '@mui/icons-material/GifBoxOutlined';
 // import PermMediaOutlinedIcon from '@mui/icons-material/PermMediaOutlined';
 // import SentimentSatisfiedOutlinedIcon from '@mui/icons-material/SentimentSatisfiedOutlined';
@@ -46,6 +47,7 @@ export default function Post({
     <main className="post-container">
         {postOptions &&<PostOptions {...{getPostOptionsNode: getPostPopUpNode, openReportPost, openffPoster}}  />}
         {postShare &&<PostShare getPostShareNode={getPostPopUpNode} />}
+        <PostImageAlt />
         <div className="post-wrapper">
             <div className="post-main">
                 <div className="post-top">
@@ -78,10 +80,16 @@ export default function Post({
                             className="post-media" controls >                        
                         </video>}
                         {fileType.startsWith("image")
-                            && <img 
+                            && <>
+                            <img 
                             src={fileUrl}
                             alt="post"
-                            className="post-media" onClick={openPifs} /> }
+                            className="post-media" onClick={openPifs} />
+                            <button className="post-img-alt-button">
+                                ALT
+                            </button>                            
+                            </> 
+                        }
                     </div>
                 </div>
                 <div className="post-bottom">
