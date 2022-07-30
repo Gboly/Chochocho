@@ -24,9 +24,11 @@ export default function HomeLg() {
     const [ffPoster, setFfPoster] = useState(false)
     const [postImageFullscreen, setPostImageFullscreen] = useState(false) 
     const [postImageAlt, setPostImageAlt] = useState(false)
+    const [playbackSpeed, setPlaybackSpeed] = useState(false)
+    const [globalPlaybackRateState, setPlaybackRate] = useState("1x")
 
     const elementOnOpaqueOverlayNode = useRef()
-    const postPopUpNode = useRef()
+    const elementOnTransparentOverlayNode = useRef()
 
     useEffect(()=>{
         if(opaqueOverlay){document.body.className = "hidden-body"}
@@ -56,16 +58,20 @@ export default function HomeLg() {
           setOpaqueOverlay(false)
         }           
       }
-        if (transparentOverlay){
-          if(!postPopUpNode.current.contains(e.target) || !e.target === postPopUpNode.current){
-            postOptions && setpostOptions(false)
-            postShare && setpostShare(false)
-            setTransparentOverlay(false)
-          }  
-        }
-    }   
-    const getPostPopUpNode = (popUpNode)=>{
-      postPopUpNode.current = popUpNode
+      if (transparentOverlay){
+        if(!elementOnTransparentOverlayNode.current.contains(e.target) || !e.target === elementOnTransparentOverlayNode.current){
+          postOptions && setpostOptions(false)
+          postShare && setpostShare(false)
+          playbackSpeed && setPlaybackSpeed(false)
+          setTransparentOverlay(false)
+        }  
+      }
+    }
+    const getElemOnOpaqueNode = (node)=>{
+      elementOnOpaqueOverlayNode.current = node
+    }
+    const getElemOnTransParentNode = (popUpNode)=>{
+      elementOnTransparentOverlayNode.current = popUpNode
     }
     const openCreateAlt = ()=>{
       setCreateAlt(true)
@@ -136,9 +142,19 @@ export default function HomeLg() {
       setPostImageAlt(false)
       setOpaqueOverlay(false)
     }
-    const getElemOnOpaqueNode = (node)=>{
-      elementOnOpaqueOverlayNode.current = node
+    const openPlaybackspeed = (target)=>{
+      setPlaybackSpeed(true)
+      setTransparentOverlay(true)
+      setTargetPost(target)
     }
+    const closePlaybackSpeed = ()=>{
+      setPlaybackSpeed(false)
+      setTransparentOverlay(false)      
+    }
+    const setGlobalPlayBackRateState = (rate)=>{
+      setPlaybackRate(rate)
+    }
+ 
  
 
   return (
@@ -172,14 +188,15 @@ export default function HomeLg() {
                       }} />
                 </div>
                 <div className={createPost ? "home-posts-container-focus" : ""}>
-                    { ["a","b","c","d","e"].map((value, index)=>
+                    { ["a","b","c","d","e", "f", "g", "h", "i", "j", "k"].map((value, index)=>
                       <Post 
                       key={index} 
                       postOptions = {targetPost === `${index}` && postOptions} 
                       postShare = {targetPost === `${index}` && postShare}
+                      playbackSpeed = {targetPost === `${index}` && playbackSpeed}
                       {...{ 
                         index, 
-                        getPostPopUpNode, 
+                        getElemOnTransParentNode, 
                         openPostOptions, 
                         openPostShare, 
                         openReportPost,
@@ -190,7 +207,11 @@ export default function HomeLg() {
                         openPostImageAlt,
                         closePostImageAlt,
                         postImageAlt,
-                        getElemOnOpaqueNode
+                        getElemOnOpaqueNode,
+                        openPlaybackspeed,
+                        closePlaybackSpeed,
+                        globalPlaybackRateState, 
+                        setGlobalPlayBackRateState                      
                          }} />
                     )
                     }                    

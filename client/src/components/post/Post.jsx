@@ -15,6 +15,7 @@ import midex from "../../midex.png"
 import avi2 from "../../avatar-square.png"
 import PostOptions from "../post-options/PostOptions";
 import PostShare from "../post-share/PostShare";
+import CustomVideoControls from "../custom-video-controls/CustomVideoControls";
 import { useState } from "react";
 
 export default function Post({
@@ -23,7 +24,7 @@ export default function Post({
     openPostShare, 
     postOptions, 
     postShare, 
-    getPostPopUpNode, 
+    getElemOnTransParentNode, 
     openReportPost,
     fileType,
     fileUrl,
@@ -32,7 +33,12 @@ export default function Post({
     openPostImageAlt,
     closePostImageAlt,
     postImageAlt,
-    getElemOnOpaqueNode
+    getElemOnOpaqueNode,
+    openPlaybackspeed,
+    playbackSpeed,
+    closePlaybackSpeed,
+    globalPlaybackRateState, 
+    setGlobalPlayBackRateState
     }) {
     const [isLiked, setisLiked] = useState(false) 
     
@@ -49,8 +55,8 @@ export default function Post({
 
   return (
     <main className="post-container">
-        {postOptions &&<PostOptions {...{getPostOptionsNode: getPostPopUpNode, openReportPost, openffPoster}}  />}
-        {postShare &&<PostShare getPostShareNode={getPostPopUpNode} />}
+        {postOptions &&<PostOptions {...{getPostOptionsNode: getElemOnTransParentNode, openReportPost, openffPoster}}  />}
+        {postShare &&<PostShare getPostShareNode={getElemOnTransParentNode} />}
         {postImageAlt && <PostImageAlt getElemOnOpaqueNode={getElemOnOpaqueNode} closePostImageAlt={closePostImageAlt} />}
         <div className="post-wrapper">
             <div className="post-main">
@@ -78,11 +84,16 @@ export default function Post({
                     </p>
                     <div className="post-media-container">
                         {fileType.startsWith("video")
-                            && <video 
-                            src={fileUrl}
-                            alt="post" 
-                            className="post-media" controls >                        
-                        </video>}
+                            && <CustomVideoControls {...{
+                            getPlaybackSpeedNode: getElemOnTransParentNode, 
+                            openPlaybackspeed, 
+                            playbackSpeed, 
+                            index, 
+                            closePlaybackSpeed, 
+                            globalPlaybackRateState, 
+                            setGlobalPlayBackRateState,
+                            fileUrl
+                            }} />}
                         {fileType.startsWith("image")
                             && <>
                             <img 

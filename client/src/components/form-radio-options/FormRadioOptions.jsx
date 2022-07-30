@@ -5,13 +5,15 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
+
 const sx={
     color: "#c32aa3",    
     '&.Mui-checked': {
       color: "#c32aa3",
     },
 }
-export default function FormRadioOptions({options, currentOption, handleChange, optionsContainerClassName}) {
+
+export default function FormRadioOptions({options, currentOption, handleChange, optionsContainerClassName, sxx}) {
   return (
     <div className={optionsContainerClassName}>
             <div className="custom-options-item">
@@ -28,7 +30,8 @@ export default function FormRadioOptions({options, currentOption, handleChange, 
                     value={option}
                     control={<Radio size="small" sx={currentOption===option ? sx : {}} />} 
                     label={option}
-                    key={index} />)
+                    key={index}
+                    sx={sxx} />)
                 })
                 }
               </RadioGroup>

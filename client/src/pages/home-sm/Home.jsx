@@ -25,9 +25,11 @@ export default function Home() {
   const [ffPoster, setFfPoster] = useState(false)
   const [postImageFullscreen, setPostImageFullscreen] = useState(false)
   const [postImageAlt, setPostImageAlt] = useState(false)
-   
-  const postPopUpNode = useRef()
+  const [playbackSpeed, setPlaybackSpeed] = useState(false)
+  const [globalPlaybackRateState, setPlaybackRate] = useState("1x")
+
   const elementOnOpaqueOverlayNode = useRef()
+  const elementOnTransparentOverlayNode = useRef()
 
     useEffect(()=>{
       if(sidebar || opaqueOverlay){document.body.className = "hidden-body"}
@@ -67,16 +69,20 @@ export default function Home() {
       }           
     }
     if (transparentOverlay){
-      if(!postPopUpNode.current.contains(e.target) || !e.target === postPopUpNode.current){
+      if(!elementOnTransparentOverlayNode.current.contains(e.target) || !e.target === elementOnTransparentOverlayNode.current){
+        sidebar && setSidebar(false)
         postOptions && setpostOptions(false)
         postShare && setpostShare(false)
-        sidebar && setSidebar(false)
+        playbackSpeed && setPlaybackSpeed(false)
         setTransparentOverlay(false)
-      }
+      }  
     }
   }
-  const getPostPopUpNode = (popUpNode)=>{
-    postPopUpNode.current = popUpNode
+  const getElemOnOpaqueNode = (node)=>{
+    elementOnOpaqueOverlayNode.current = node
+  }
+  const getElemOnTransParentNode = (popUpNode)=>{
+    elementOnTransparentOverlayNode.current = popUpNode
   }
   const openCreateAlt = ()=>{
     setCreateAlt(true)
@@ -147,16 +153,26 @@ export default function Home() {
     setPostImageAlt(false)
     setOpaqueOverlay(false)
   }
-  const getElemOnOpaqueNode = (node)=>{
-    elementOnOpaqueOverlayNode.current = node
+  const openPlaybackspeed = (target)=>{
+    setPlaybackSpeed(true)
+    setTransparentOverlay(true)
+    setTargetPost(target)
   }
+  const closePlaybackSpeed = ()=>{
+    setPlaybackSpeed(false)
+    setTransparentOverlay(false)      
+  }
+  const setGlobalPlayBackRateState = (rate)=>{
+    setPlaybackRate(rate)
+  }
+
 
   return (
     <div className="home-container" onClick={(transparentOverlay || opaqueOverlay) ? closeAnyPopUpByTappingOutside : null}>
       <div className={opaqueOverlay ? "home-focusOnCreatePost" : transparentOverlay ? "home-focusOnPostOptions" : null } />
         <div className="home-wrapper">
             <Nav displaySidebar={displaySidebar} />
-            {sidebar && <Sidebar {...{hideSidebar, getPostPopUpNode}} />}            
+            {sidebar && <Sidebar {...{hideSidebar, getPostPopUpNode: getElemOnTransParentNode}} />}            
               <Story />
               {reportPost && <ReportPost closeReportPost={closeReportPost} />}
               {ffPoster && <FollowUnfollowPoster closeffPoster={closeffPoster} />}
@@ -184,9 +200,10 @@ export default function Home() {
                       key={index} 
                       postOptions = {targetPost === `${index}` && postOptions} 
                       postShare = {targetPost === `${index}` && postShare}
+                      playbackSpeed = {targetPost === `${index}` && playbackSpeed}
                       {...{ 
                         index, 
-                        getPostPopUpNode, 
+                        getElemOnTransParentNode, 
                         openPostOptions, 
                         openPostShare, 
                         openReportPost,                        
@@ -197,7 +214,11 @@ export default function Home() {
                         openPostImageAlt,
                         closePostImageAlt,
                         postImageAlt,
-                        getElemOnOpaqueNode
+                        getElemOnOpaqueNode,
+                        openPlaybackspeed,
+                        closePlaybackSpeed,
+                        globalPlaybackRateState, 
+                        setGlobalPlayBackRateState
                          }} />
                     )
                     }
