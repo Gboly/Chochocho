@@ -1,0 +1,12 @@
+.rightbar-search-icon{
+    font-size: 1.2rem;
+    line-height: 0;
+}
+.rightbar-search-input{
+    border: none;
+    padding: 0 0.5rem;
+    width: 100%;
+}
+.rightbar-search-input:focus{
+    outline: none;
+}

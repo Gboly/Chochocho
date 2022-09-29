@@ -1,0 +1,25 @@
+.post-top-left{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;  
+}
+.poster-img{
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    /* object-fit: cover; */
+    margin-right: 1rem;
+    cursor: pointer;
+}
+.poster{
+    display: flex;
+    flex-flow: column nowrap;
+}
+.poster-name{
+    font-weight: 700;
+    cursor: pointer
+}
+.post-time{
+    font-size: 0.8rem;
+    font-weight: 300;
+}

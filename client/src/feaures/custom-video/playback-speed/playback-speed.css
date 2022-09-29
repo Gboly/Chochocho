@@ -1,0 +1,25 @@
+.playback-speed-container{
+    position: absolute;
+    background-color: black;
+    color: #808080;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(128,128,128,0.4);
+    border-radius: 1rem;
+    width: 15rem;    
+    bottom: 2.5rem;
+    right: -0.5rem;
+    cursor: default;
+    z-index: 9999;    
+}
+.playback-speed-wrapper{
+    margin: 1rem;
+}
+.playback-speed-header{
+    font-weight: 700;
+    margin: 1.5rem 0 2rem;
+    text-align: center;
+}
+.playback-speed-options{
+    /* text-align: left; */
+    /* margin-left: 1rem;padding: 0; */
+}

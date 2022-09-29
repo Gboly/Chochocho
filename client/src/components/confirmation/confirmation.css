@@ -1,0 +1,23 @@
+.quote{
+    padding: 1rem 1.5rem;
+    background-color: #fff;
+    border-left: 10px solid rgba(195, 42, 163, 0.6);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0.4rem;
+    position: fixed;
+    top: 4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: comeIn 2s;
+    z-index: 99999;
+}
+@keyframes comeIn {
+    0%{
+        top: 0;
+        opacity: 0.5;
+    }
+    100%{
+        top: 4rem;
+        opacity: 1;
+    }
+}

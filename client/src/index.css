@@ -1,0 +1,15 @@
+body, #root, .pages-container{
+    margin: 0;
+    width: 100vw;
+    max-width: 100vw;
+    background-color: #f4f5f7;
+    height: 100%;
+    color: #808080;
+    font-family: 'Roboto', sans-serif;
+    overflow: hidden;
+    scroll-behavior: smooth;
+    scroll-snap-type: mandatory;
+}
+::-webkit-scrollbar{
+    width: 0;
+}

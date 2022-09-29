@@ -1,0 +1,24 @@
+.post-bottom-left{
+    display: flex;
+    flex-flow: row nowrap;   
+}
+.likes-indicator{
+    margin-left: -0.22rem;
+    line-height: 0;
+}
+.likes-count:first-of-type{
+    margin-left: 0;
+}
+.like-count-remainder{
+    background-color: #c32aa3;
+    color: #fff;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+}
+.like-count-remainder:hover{
+    transform: scale(1.1);
+}

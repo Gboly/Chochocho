@@ -1,0 +1,35 @@
+.custom-select{
+    font-size: 0.85rem;
+    background-color: #f4f5f7;
+    padding: 0.3rem 0.5rem;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    border-radius: 0.5rem 0.5rem 0 0;
+    color: #c32aa3;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+.custom-select-expand-icon{
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
+    display: flex;
+    align-items: center;
+    color: #808080;
+}
+.custom-options{
+    background-color: #fff;
+    position: absolute;
+    /* box-sizing: border-box; */
+    padding-left: 0.5rem;
+    /* margin-top: 0.5rem; */
+    border-radius: 0 0 0.5rem 0.5rem;
+    width: inherit;
+    box-sizing: border-box;
+    box-shadow: 2px 2px 5px #808080;
+    z-index: 999;
+}
+.custom-select-option-container{
+    width: 7rem;
+}

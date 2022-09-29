@@ -1,0 +1,78 @@
+.notification-block-container{
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(121, 121, 121, 0.2);
+    height: fit-content;
+    cursor: pointer;
+    background-color: #fff;
+    position: relative;
+}
+.notification-block-container:last-of-type{
+    border: none;
+}
+.notification-block-container:hover{
+    background-color: rgba(195, 42, 163, 0.05);
+    border: none;
+}
+/* .notification-block-container::after{
+    content: "";
+    height: fit-content;
+    width: 100%;
+    padding: 4rem;
+    position: absolute;
+    top: 1rem;
+} */
+.notification-block-container > div {
+    display: flex;
+    align-items: center;
+}
+.notification-block-container > div > img{
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-left: 1rem;
+    margin-right: 0.6rem;
+}
+.notification-block-container > div > div {
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.viewed-notification{
+    opacity: 0.55;
+}
+.notification-block-container > div > div > p {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 0;
+    margin-bottom: 0.4rem;
+}
+.notification-block-container > div > div > span {
+    opacity: 0.7;
+    font-size: 0.8rem;
+    font-weight: lighter;
+}
+.notification-block-container > button{
+    width: 6rem;
+    padding: 0.76rem 0;
+    border: none;
+    border-radius: 0.4rem;
+    background-color: #2ac399;
+    font-size: 0.85rem;
+    color: #fff;
+    cursor: pointer;
+    background-color: #c32aa3;
+}
+#following{
+    color: inherit;
+    background-color: inherit;
+    border: 1px solid rgba(121, 121, 121, 0.4);
+   }
+.notification-block-container > i {
+    color: #c32aa3;
+    font-size: 0.65rem;
+}

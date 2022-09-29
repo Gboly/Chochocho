@@ -1,0 +1,38 @@
+.custom-switch-container{
+    display: flex;
+    justify-content: space-between;
+}
+.custom-switch-container > span{
+    line-height: 1.5rem;
+}
+.switch-track{
+    width: 2rem;
+    height: 1rem;
+    border-radius: 0.6rem;
+    display: flex;
+    align-items: center;
+    transition-duration: 0.5s;
+}
+.switch-thumb{
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    box-shadow: 0 0 5px gray;
+    transition-duration: 0.5s;
+}
+.switch-track-on{    
+    background-color: #c32aa3;
+    border: 0.1rem solid #c32aa3;
+}
+.switch-thumb-on{
+    background-color: #fff;
+    transform: translateX(1rem);   
+}
+.switch-track-off{    
+    background-color: #fff;
+    border: 0.1rem solid rgba(121, 121, 121, 0.6);
+}
+.switch-thumb-off{
+    background-color: rgba(121, 121, 121, 0.6);
+    transform: translateX(0);
+}

@@ -1,0 +1,6 @@
+.notification-option{
+    display: flex;
+    gap: 5rem;
+    justify-content: space-between;
+    font-size: 1rem;
+}

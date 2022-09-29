@@ -1,0 +1,169 @@
+.edit-profile-container{
+    z-index: 9999;
+    position: absolute;
+    width: 100%;
+    max-width: 40rem;
+    max-height: calc(100vh - 10%);
+    padding: 0 1rem;
+    background-color: #fff;
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%);
+    border-radius: 1rem;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+.edit-profile-container::-webkit-scrollbar{
+    width: 0.2rem;
+    /* position: absolute;
+    left: 5rem; */
+}
+.edit-profile-container::-webkit-scrollbar-thumb{
+    background-color: rgba(195, 42, 163, 0.3);
+}
+.edit-profile-container > div:first-of-type{
+    position: sticky;
+    top: 0;
+    z-index: 9;
+}
+.edit-profile-coverphoto{
+    width: 100%;
+    object-fit: cover;
+    height: 10rem;
+    cursor: pointer;
+    border-radius: 1rem 1rem 0 0;
+}
+.edit-profile-avatar-wrapper{
+    border-radius: 50%;
+    margin: -3rem 1rem 1rem;
+    width: fit-content;
+    line-height: 0;
+}
+.edit-profile-avatar{
+    width: 5rem;
+    height: 5rem;
+    object-fit: cover;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.edit-profile-image-wrapper {
+    position: relative;
+}
+.edit-profile-image-wrapper > input{
+    display: none;
+}
+.edit-profile-image-wrapper > label{
+    position: absolute;
+    top: 50%;
+    left: 50%;    
+    transform: translate(-50%);
+}
+.edit-profile-image-wrapper > label > i{
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    border-radius: 50%; 
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 0;
+    box-shadow: 0 0 10px rgba(121, 121, 121, 0.15);   
+}
+.edit-profile-image-wrapper > label > i:hover{
+    opacity: 0.9;
+}
+.edit-profile-avatar-wrapper > label{
+    left: 4.8rem ;
+}
+.edit-profile-avatar-wrapper > label > i{
+    width: 1.5rem;
+    height: 1.5rem;
+}
+.edit-profile-container > form{
+    margin: 0.6rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+}
+.edit-profile-container > form > div{
+    width: 48%;
+    min-width: 17rem;
+    margin-bottom: 1.2rem;
+}
+.edit-profile-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+.edit-profile-container textarea, .edit-profile-container input {
+    padding: 1rem 0.5rem;
+    box-sizing: border-box;
+    resize: none;
+    border-radius: 0.4rem;
+    height: 5rem;
+    width: 100%;
+    border: 1px solid rgba(121, 121, 121, 0.7);
+}
+.edit-profile-container input {
+    height: 3rem;
+}
+.edit-profile-container > form > div > textarea:focus, .edit-profile-container input:focus {
+    outline: 1px solid #c32aa3;
+    border: none;
+}
+.edit-profile-container > form > div:last-of-type{
+  margin-top: 2rem;
+display: flex;
+justify-content: flex-end;
+width: 100%;
+gap: 1rem;
+}
+.edit-profile-container > form > div:last-of-type > button:first-of-type{
+    border: none;
+    background-color: #fff;
+    color: inherit;
+    font-weight: 500;
+}
+.edit-profile-container > form > div:last-of-type > button:last-of-type{
+    border: none;
+    background-color: #c32aa3;
+    color: #fff;
+}
+.edit-profile-container > form > div:last-of-type > button{
+    border-radius: 0.4rem;
+    padding: 0.45rem 1rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+.edit-profile-container > form > div:last-of-type > button:first-of-type:hover{
+    border: 1px solid rgba(121, 121, 121, 0.4);
+}
+.edit-profile-container > form > div:last-of-type > button:last-of-type:hover{
+    opacity: 0.7;
+}
+@media screen and (max-width: 750px) {
+    .edit-profile-container{       
+        max-height: calc(100vh - 10%);       
+        top: auto;
+        bottom: 0;
+        border-radius: 1rem 1rem 0 0;
+        animation: slideInFromBottom 1s;
+    }
+}
+@media screen and (max-width: 617px) {
+.edit-profile-container > form > div{
+    width: 100%;
+    min-width: 100%;
+}   
+}
+
+@keyframes slideInFromBottom {
+    0%{
+        max-height: 1px;
+    }
+    100%{
+        max-height: calc(100vh - 10%);
+    }
+}

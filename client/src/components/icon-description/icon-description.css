@@ -1,0 +1,22 @@
+.create-bottom-left-item, .cbli-media-upload{
+    display: flex;
+    align-items: center;
+    margin-right: 0.5rem;
+    cursor: pointer;
+}
+.cbli-media-upload{
+    margin-right: 0;
+}
+.create-bottom-left-item:hover, .cbli-media-upload:hover{
+    color: #c32aa3;
+}
+.cbli-icon{
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+.cbli-desc{
+    font-size: 0.8rem;
+}
+.upload-file{
+    display: none;
+}

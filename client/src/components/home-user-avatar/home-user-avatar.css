@@ -1,0 +1,6 @@
+.home-user-avatar{
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    background-color: rgba(195, 42, 163, 0.4);
+}

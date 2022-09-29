@@ -1,0 +1,15 @@
+.custom-placeholder{
+    position: absolute;
+    z-index: -5;
+    font-weight: 400;
+}
+.custom-textarea{
+    /* border: none; */
+    font-weight: 500;
+    position: relative;
+    font-size: 1rem;
+    color: inherit;
+}
+.custom-textarea:focus{
+    outline: none;
+}

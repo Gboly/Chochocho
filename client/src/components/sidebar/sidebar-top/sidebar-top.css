@@ -1,0 +1,48 @@
+.sidebar-top{
+    flex: 3;
+    position: relative;
+}
+.sidebar-close-button{
+    position: absolute;
+    right: 0;
+    padding: 0;
+    font-size: 1.5rem;
+    color: #808080;
+    border: none;
+    background-color: inherit;
+    line-height: 0;
+    cursor: pointer;
+}
+.sidebar-close-button:hover{
+    padding: 0.12rem;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 50%;  
+}
+.sidebar-top > div{
+    width: fit-content;
+    border-radius: 50%;
+}
+.sidebar-avi{
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.sidebar-chat-img{
+    width: 1.2rem;
+    height: 1.2rem;
+    filter: opacity(0.5) drop-shadow(0 0 0 #808080);    
+}
+.sidebar-username{
+    margin-top: 0.2rem;
+    letter-spacing: 0.00rem;
+    font-weight: 700;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+.sidebar-hr{ 
+    border-color: rgba(0,0,0,0.1);
+    width: 100%;
+    flex: 1;
+    margin-bottom: 2rem;
+}

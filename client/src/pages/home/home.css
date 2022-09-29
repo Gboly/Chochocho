@@ -1,0 +1,110 @@
+.home-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex: 7;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    top: 3rem;
+    height: 100vh
+}
+.outlet-no-scroll{
+    overflow-y: hidden;
+}
+.home-main-wrapper, .home-create-post-container{
+    width: 40rem;
+    position: relative;
+}
+.home-main-wrapper{
+    height: fit-content;
+    padding-bottom: 4rem;
+    box-sizing: border-box;
+}
+.home-wrapper::-webkit-scrollbar{
+    width: 0.2rem;
+}
+.home-wrapper::-webkit-scrollbar-thumb{
+    background-color: rgba(195, 42, 163, 0.3)    
+}
+.home-story{
+    display: none;
+}
+.rightbar-container{
+    background-color: #fff;   
+    /* position: fixed;
+    top: 3rem;
+    right: 0;
+    height: calc(100vh - 3rem); */
+   position: relative;
+    top: 3rem;
+    left: 0;
+    height: 100vh;
+    overflow-y: scroll;
+    width: 35rem;
+    /* z-index: -1; */
+    flex: 3.5;
+}
+
+
+
+/* @media screen and (max-width: 1500px) {
+    .home-main-wrapper, .home-posts-container-focus{
+        left: calc(50% - 5rem);
+    }
+    .home-createposts-container-focus{  
+        left: calc(50% + 15rem);
+    }
+} */
+@media screen and (max-width: 1310px) {
+    .home-main-wrapper, .home-create-post-container, .home-create-post-container-active {
+        width: 35rem 
+    }
+   
+}
+@media screen and (max-width: 1240px) {
+    .home-main-wrapper, .home-create-post-container, .story-container, .home-create-post-container-active{
+        width: 41.5rem;     
+    }
+    /* .home-wrapper{
+        flex: 10.5;
+    } */
+    .home-story{
+        display: block;
+    }
+    .rightbar-container{
+        display: none;
+    }
+}
+@media screen and (max-width: 960px) {
+    .home-main-wrapper, .home-create-post-container, .story-container, .home-create-post-container-active{
+        width: 31.5rem;
+    }
+}
+@media screen and (max-width: 750px) {
+    .home-main-wrapper{
+        width: 90%;
+        /* position: relative;
+        left: 50%; */
+    }
+    .home-create-post-container, .story-container{
+        width: 100%;
+    }
+    .home-create-post-container-active{
+        position: absolute;
+        /* top: 0; */
+        /* z-index: 99; */
+        /* width: calc(100vw - 10%); */
+        /* left: 50%;
+        transform: translateX(-50%); */
+        width: 95%;
+    }
+}
+@media screen and (max-width: 560px) {
+    .home-main-wrapper{
+        width: 98%;
+    }
+    .home-create-post-container-active{
+        width: 99%;
+    }
+}

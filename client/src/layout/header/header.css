@@ -1,0 +1,42 @@
+.nav-container{
+    background-color: rgba(255,255,255,0.87);   
+    position: fixed;
+    top: 0;
+    z-index: 99;
+    box-sizing: border-box;
+    padding: 0.5rem 0 ;
+    width: 100%;  
+}
+.nav-wrapper{
+    margin: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 2rem;
+}
+.nav-right, .nav-left{
+    line-height: 0;
+}
+.avi{
+    width: 2rem;
+    height: 2rem;
+    border-radius: 30%;
+    object-fit: cover;
+}
+.chat-icon{
+    width: 1.2rem;
+    height: 1.2rem;
+    filter: opacity(0.5) drop-shadow(0 0 0 #808080);
+}
+.app-name{    
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: 0.2rem;
+    color: #c32aa3;
+}
+
+@media screen and (min-width: 751px) {
+    .nav-left{    
+        display: none;
+    }
+}

@@ -1,0 +1,46 @@
+import { createPostSlice } from "../../feaures/posts/create-post/createPostSlice";
+import { postExcerptSlice } from "../../feaures/posts/post-excerpt/postExcerptSlice";
+
+export const {
+  openCreatePost,
+  closeCreatePost,
+  openEditPost,
+  closeEditPost,
+  showVisibilityOptions,
+  hideVisibiltyOptions,
+  setVisibilityValue,
+  readUploadedMedia,
+  removeMedia,
+  openWriteAlt,
+  closeWriteAlt,
+  setAltValue,
+  writePost,
+} = createPostSlice.actions;
+
+export const {
+  openPostOption,
+  closePostOption,
+  openPostShare,
+  closePostShare,
+  openReportPost,
+  closeReportPost,
+  setReportValue,
+  openFollowPoster,
+  closeFollowPoster,
+  openBlockPoster,
+  closeBlockPoster,
+  hidePost,
+  unhidePost,
+  removePost,
+  openFullscreen,
+  closeFullscreen,
+  openAltMessage,
+  closeAltMessage,
+  openDeletePost,
+  closeDeletePost,
+  openPlaybackSpeed,
+  closePlaybackSpeed,
+  setPlaybackRate,
+  openEngagedUsersList,
+  closeEngagedUsersList,
+} = postExcerptSlice.actions;

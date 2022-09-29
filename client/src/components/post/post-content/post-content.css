@@ -1,0 +1,43 @@
+.post-text{
+    font-size: 0.9rem;
+}
+.post-media-container{
+    width:100%;
+    /* display: flex; */
+    /* flex-flow: row wrap;
+    gap: 2%; */   
+    line-height: 0;
+    position: relative;
+}
+.post-media{
+    width: 100%;   
+    max-height: 30rem;
+    object-fit: cover;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 1.2rem;    
+    cursor: pointer;    
+}
+.post-img-alt-button{
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0.7rem;
+    border-radius: 0.35rem;
+    border: none;
+    background-color: rgba(0,0,0,0.4);
+    color: #fff;
+    padding: 0.2rem 0.5rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+.post-img-alt-button:hover{
+    opacity: 0.75;
+}
+.post-img-alt-button:focus{
+    outline: none;
+}
+.post-media:focus{
+    outline: none;
+}
+.post-media-playing{
+    object-fit: contain;
+}

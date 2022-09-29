@@ -1,0 +1,104 @@
+.user-cameo-container{
+    width: 100%;
+    background-color: inherit;
+    display: flex;
+    gap: 1rem;
+}
+.user-cameo-container > section:first-of-type {
+    width: fit-content;
+}
+.user-cameo-container > section:last-of-type{
+    width: 100%;
+}
+.cameo-top{
+    height: 2.8rem;
+    /* display: flex;
+    justify-content: space-between; */
+    width: 100%;
+    position: relative;
+}
+.cameo-top > div {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
+    height: inherit;
+    display: inline-block;
+}
+.button-based{
+    /* 100% - (width of button + 1rem space) */
+    width: calc(100% - 9rem);
+}
+.icon-based{
+    /* 100% - (width of icon + 1rem space) */
+    width: calc(100% - 2.5rem);
+}
+.cameo-header-no-aside, .cameo-header-aside{
+    display: flex;
+    align-items: center;
+    /* gap: 0.5rem; */
+    width: 100%;
+    /* overflow: hidden;
+    text-overflow: ellipsis; */
+}
+.cameo-header-aside{
+    gap: 0.5rem;
+}
+.cameo-header-aside > header{
+    width: fit-content;
+}
+.cameo-header-no-aside > header{
+    font-weight: 700;
+    font-size: 1.02rem;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.cameo-header-aside > span{
+    opacity: 0.9;
+    font-size: 0.95rem;
+}
+.cameo-sub-header{
+    opacity: 0.75;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.round-button{
+    width: 8rem;
+    height: 2.5rem;
+    max-height: 2.5rem;
+    border-radius: 1.25rem;
+    background-color: #c32aa3;
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+.round-button:hover{
+    opacity: 0.8;
+}
+.unblock{
+    background-color: #1b1b1b;
+}
+.user-cameo-container i{
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+}
+
+@media screen and (max-width: 480px) {
+    .user-cameo-container button{
+        width: 6rem;
+        border-radius: 1.25rem;
+    }
+    .button-based {
+        /* 100% - (width of button + 1rem space) */
+        width: calc(100% - 7rem);
+    }
+}

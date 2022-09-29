@@ -1,0 +1,9 @@
+.spinner{
+    color: #c32aa3;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    /* position: absolute;
+    left: 50%;
+    transform: translateX(-50%); */
+}

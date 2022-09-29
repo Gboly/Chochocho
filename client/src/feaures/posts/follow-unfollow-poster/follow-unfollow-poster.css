@@ -1,0 +1,43 @@
+.ffPost-container{   
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(128,128,128,0.5);    
+    background-color: #fff;
+    border-radius: 1rem;
+    width: 20rem;
+    text-align: center;  
+}
+.ffPost-wrapper{
+    margin: 1rem;
+}
+.ffPost-header{
+    font-size: 1.2rem;
+}
+.ffPost-main{
+    opacity: 0.7;
+    margin: 1.5rem 0;
+}
+.ffPost-footer{
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;    
+}
+.ffPost-button{
+    padding: 0.7rem 1rem;
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+.ffPost-button:hover{
+    opacity: 0.8;
+}
+.ffPost-submit{
+    background-color: #c32aa3;
+    color: #fff;
+    margin-left: 1rem;
+}
+.ffPost-cancel{
+    border: 1px solid rgba(128,128,128,0.5);    
+}

@@ -1,0 +1,38 @@
+.report-post-container{   
+    z-index: 9999;
+    box-shadow: 0 0 10px rgba(128,128,128,0.5);    
+    background-color: #fff;
+    border-radius: 1rem;
+}
+.report-post-wrapper{
+    margin: 0rem 1rem 1rem;
+}
+.report-options-container{
+     width: 80vw;      
+}
+.report-post-bottom{
+    display: flex;
+    justify-content: flex-end;
+    padding-top: 0.5rem;
+}
+.report-button{
+    padding: 0.7rem 1rem;
+    border: none;
+    background-color: inherit;
+    color: inherit;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+.report-button:hover{
+    opacity: 0.8;
+}
+.report-submit{
+    background-color: #c32aa3;
+    color: #fff;
+}
+@media screen and (min-width: 570px) {
+    .report-options-container{
+        width: 28rem;      
+   } 
+}

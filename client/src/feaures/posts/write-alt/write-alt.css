@@ -1,0 +1,106 @@
+.write-alt-container{
+    /* position: fixed;
+    margin-top: 4rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 99999999999; */
+    background-color: #fff;
+    width: 30%;
+    height: calc(100vh - 4rem);
+    border-radius: 1rem;
+    padding-bottom: 1rem;
+}
+.write-alt-wrapper{
+    display: flex;
+    flex-flow: column nowrap;
+    height: inherit;
+    margin: 0.5rem 1rem 0;
+}
+.write-alt-top{
+    flex: 0.8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wat-left{
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+}
+.wat-left-icon{
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.wat-left-icon:hover{
+    background-color: rgba(128,128,128,0.2);
+}
+.wat-left-desc{
+    font-size: 1.2rem;
+}
+.wat-right{
+    border: none;
+    background-color: #c32aa3;
+    color: #fff;
+    padding: 0.4rem 0.5rem;
+    border-radius: 0.3rem;
+    cursor: pointer;
+}
+.wat-right:focus{
+    outline: none;
+}
+.wat-right:disabled{
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.write-alt-center{
+    flex: 9.2;
+    width: 100%;
+    /* background-color: blueviolet; */
+    display: flex;
+    align-items: center;
+    height: 73%;
+}
+.alt-picture{
+    width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+}
+.write-alt-bottom{
+    flex: 1;
+    position: relative;
+    padding-top: 1rem;
+    box-sizing: border-box;
+}
+.alt-custom-placeholder{
+    top: 1rem;
+}
+.alt-custom-textarea{
+    border-bottom: 2px solid rgba(128,128,128,0.5);
+    border-radius: 0.1rem;
+    max-height: 6.1rem;
+    overflow-y:scroll;
+}
+.alt-custom-textarea:focus{
+    border-bottom: 2px solid #c32aa3;
+}
+.alt-character-limit-indicator{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+}
+.altText-excession{
+    color: red;
+}
+
+@media screen and (min-width: 750px) {
+    .write-alt-container{
+        height: calc(100vh - 6.5rem);
+        top: 0;
+    }
+}

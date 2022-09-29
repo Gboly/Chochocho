@@ -1,0 +1,35 @@
+#1
+I've two sidebars beacause of what i want to achieve with framer motion. For small screens, the sidebar pops out only when it is toggled. and for larger screen, it doesn't require the animation presence. The issue arises from the fact that sideabar for lg screens has a display of none at 750px so the animation that i want to give the sidebar for sm screen just wouldn't work since the element is not there.
+
+#2
+Used in multiple pages. Reason why its in layout component.
+
+#3
+Make sure to get authUser from backend with req.user
+
+#4
+Handle notification after backend setup. Toggle between "Turn on ..." and "Turn off ..."
+
+#5
+-14rem because that's the width of the sidebar.
+
+#6
+Having the classname right inside the motion.div was ineffective. It ignores the display: none given to "sidebar-lg. This is the reason why i created a parent div to handle the situation
+
+#7
+I'm leveraging on useMemo to update the opaque overlay data because sidebar needs a key due to its animatePresence feature, the key needs to be updated and that can only be done within the component. Therefore, useMemo for optimized data.
+
+#8
+When opening fullscreen for either cover photo or avatar, the dimension of the image shouldn't be the same as the default fullscreen sizes. The avatar needs to maintain it's circular shapeand the coverphoto should be a rectangle. You can either do this by making modifcation to the image and generating a new src for this modified image would be sent to the fullscreen. Theother way is to use conditionals in the fullscreen component to give respective width and height to the avatar and coverphoto
+
+#9
+moving right and image has reached left border ||
+moving left and image has reached right border ||
+moving top and image has reached bottom border ||
+moving bottom and image has reached top border ||
+
+#10
+Search filter => Normally, i would use a reduce method here since i'm supposed to filter through the users to compare their username and displayname against the searchText and then render usercameo only when the condition is meant. The issue here now is that i cannot use useSelector to fetch the user details based on their userIds since it's not directly inside a Component. Therefore, i'm creating a kind of middle-man component that handles the situation.
+
+#11
+This was initially used for like and repost only which is why it is placed within the post excerpt. Now following and followers has been added to it, i"m leaving it here. 

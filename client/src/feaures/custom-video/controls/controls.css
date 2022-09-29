@@ -1,0 +1,104 @@
+.cvc-main{
+    position: absolute;
+    bottom: 0;
+    /* height: 8.0971659919028340080971659919028%; */
+    background: linear-gradient(transparent, rgba(0,0,0,0.4), rgba(0,0,0,0.7));
+    border-radius:0 0 1.2rem 1.2rem;
+   
+    width: 100%;
+    box-sizing: border-box;
+    padding: 1.6rem 0.7rem 1rem ;
+    color: #fff;
+    z-index: 9;
+    /* backface-visibility: visible; */
+}
+.cvc-progress-container{
+    position: relative;
+}
+.cvc-progress, .cvc-progress-hover{
+    width: 100%;
+    height: 0.2rem;
+    margin-bottom: 0.7rem;
+    display: block;
+    background-color: rgba(225,225,225,0.2);
+    border-radius: 1rem;
+    border: none;
+    cursor: pointer;
+}
+.cvc-progress-hover{
+    height: 0.3rem;
+}
+.cvc-progress::-moz-progress-bar, .cvc-progress-hover::-moz-progress-bar{
+    background-color: rgba(225,225,225,0.2);
+    border-radius: 1rem;
+    height: 0.2rem;
+    border: none;
+}
+.cvc-progress-hover::-moz-progress-bar{
+    height: 0.3rem;
+}
+.cvc-progress::-webkit-progress-bar, .cvc-progress-hover::-webkit-progress-bar{
+    background-color: rgba(225,225,225,0.2);
+    border-radius: 1rem;
+    height: 0.2rem;
+    border: none;
+}
+.cvc-progress-hover::-webkit-progress-bar{
+    height: 0.3rem;
+}
+.cvc-progress::-webkit-progress-value, .cvc-progress-hover::-webkit-progress-value{
+    background-color: #fff;
+    border-radius: 1rem;
+    height: 0.2rem;
+    border: none;
+}
+.cvc-progress-hover::-webkit-progress-value{
+    height: 0.3rem;    
+}
+.cvc-current-time-indicator{
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    transform: translateY(-40%);        
+    cursor: pointer;
+}
+/* .cvc-progress-bar{
+    width: 10%;
+    height: 100%;
+    display: inline-block;
+    background-color: aqua;
+} */
+/* .cvc-progress::-webkit-progress-inner-element{
+    background-color: red;
+} */
+.cvc-buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.cvc-buttons button{
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    padding: 0;
+    line-height: 0;
+    cursor: pointer;
+    z-index: 9999;
+}
+.cvc-buttons-right, .cvc-buttons-left{
+    display: flex;
+    align-items: center;
+}
+.cvc-buttons-right > span, .cvc-buttons-left > span{
+    font-weight: 400;
+    font-size: 0.95rem;
+    margin-right: -0.3rem;
+    user-select: none;   
+}
+.cvc-buttons-right > *, .cvc-buttons-left > * {
+    margin-left: 1rem;
+}

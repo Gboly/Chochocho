@@ -1,0 +1,26 @@
+/* .follow-detail{
+    margin: 1rem;
+    display: flex;
+    flex-flow: row wrap;
+    gap: 5%;
+    margin-bottom: 0;
+    padding-bottom: 1rem;
+}
+.following-count, .followers-count{
+    margin-right: 0.3rem;
+} */
+.follow-detail{
+    margin-top: 1.2rem;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.follow-detail-item{
+    border: none;
+    outline: none;
+}
+.count{
+    margin-right: 0.5rem;   
+}

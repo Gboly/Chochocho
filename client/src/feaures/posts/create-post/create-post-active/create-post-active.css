@@ -1,0 +1,127 @@
+.create-container-focus{
+    z-index: 999;
+    box-shadow: 0 0 10px rgba(128,128,128,0.5);
+    width: inherit;
+    position: absolute;
+    top: 0rem;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: calc(100vh - 7.5rem);
+}
+.create-container-focus::-webkit-scrollbar{
+    width: 0.25rem;     
+}
+.create-container-focus::-webkit-scrollbar-thumb{    
+    background-color: gray;
+}
+.create-wrapper-focus{
+    margin: 0.6rem 0.75rem 0.6rem 1rem;
+}
+.create-top{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.create-top-styled{
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 9999;
+}
+.create-hr{
+    margin: 0.5rem -1rem;
+    border-color: rgba(0,0,0,0.07);
+}
+.create-select-section{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+.create-select-section > div {
+    width: 7rem;
+}
+.create-top-instruction{
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+}
+.create-top-description{
+    font-weight: 500;
+    cursor:context-menu;   
+}
+.create-close-icon{
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.create-custom-placeholder{
+    top: 0;
+    left: 3.2rem;
+}
+.create-textarea{
+    box-sizing: border-box;
+    width: calc(100% - 3.2rem);
+    padding: 0;
+}
+/* .create-middle-focus{
+    min-height: 7rem; 
+} */
+/* .create-middle-text-focus{
+    margin-bottom: 2rem;
+} */
+.create-middle-media-container{ 
+    margin-bottom: 1rem;
+    position: relative;
+    min-height: 5rem; 
+}
+.media-load-spinner{
+    top: 0.5rem;
+}
+.create-middle-media{
+    width: 100%;
+    /* max-height: 18rem; */
+    object-fit: contain;
+    border-radius: 1.2rem;
+    cursor: pointer;
+    /* aspect-ratio: 4/3; */
+}
+.media-container-options{
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+}
+.media-option-custom-icon{
+    width: 2.2rem;
+    height: 2.2rem;
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: center;
+    text-align: center;   
+    cursor: pointer;
+}
+.remove-picture-icon{
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+.remove-video-icon{
+    font-size: 1rem;
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+}
+
+
+@media screen and (min-width: 750px) {
+    .create-container-focus{    
+        /* left: 50%;
+        top: 0;
+        transform: translateX(-50%);         */
+        max-height: calc(100vh - 6.5rem);
+    }
+}

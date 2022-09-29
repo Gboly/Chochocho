@@ -1,0 +1,20 @@
+.rightbar-wrapper{
+    margin-bottom: 5rem;
+}
+.rightbar-search-container{
+    border: 1px solid #808080;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0.5rem;
+    margin: 0 1rem;
+}
+.rightbar-friends-wrapper{
+    margin: 1rem;
+}
+@media screen and (max-width: 1500px) {
+    .rightbar-container{
+        width: 25rem;
+    }
+}

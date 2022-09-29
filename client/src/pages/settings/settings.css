@@ -1,0 +1,139 @@
+.settings-container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex: 10.5;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    top: 3rem;
+    height: 100vh
+}
+.settings-wrapper{
+    width: 80%;
+    display: flex;
+    gap: 0.3rem;
+    margin-top: 1rem;
+    height: fit-content;
+    min-height: calc(100vh - 5rem);
+}
+.settings-container::-webkit-scrollbar{
+    width: 0.2rem;
+}
+.settings-container::-webkit-scrollbar-thumb{
+    background-color: rgba(195, 42, 163, 0.3)   
+}
+.settings-wrapper > aside{
+    padding: 1rem;
+    background-color: #fff;
+    width: 20rem;
+    min-width: 14rem;
+    height: calc(100vh - 6rem);
+    border-radius: 1rem 0 0 0;
+    position: sticky;
+    top: 1rem;
+    align-self: flex-start;
+}
+.responsive-settings-desc{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: none;
+    border-bottom: 1px solid rgba(121, 121, 121, 0.2);
+}
+.settings-wrapper > aside > div > div{
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    width: 100%;
+}
+.settings-wrapper > aside > div > div:hover{
+    opacity: 0.85;
+}
+.settings-wrapper > aside > div > div > i{
+    line-height: 0;
+    margin-right: 1rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+.settings-wrapper > aside > div > div > span{
+    font-size: 1rem;
+    /* font-weight: 400; */
+}
+.current-setting{
+    font-weight: 700 !important;
+}
+.current-setting-indicator{
+    line-height: 0;
+    font-size: 1.2rem !important;
+}
+.not-current-setting-indicator{
+    display: none;
+}
+.settings-wrapper > main {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 0 1rem 0 0;
+    padding: 1rem 1.5rem;
+    box-sizing: border-box;
+}
+.settings-header {
+    display: flex;
+    align-items: center;
+}
+.settings-header > h3{
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: gray;
+}
+.settings-header > i {
+    line-height: 0;
+    font-size: 1.2rem;
+    margin-right: 0.5rem ;
+    display: none;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 1380px) {
+    .settings-wrapper{
+        width: 91%;
+    }   
+}
+@media screen and (max-width: 960px) {
+    .settings-wrapper{
+        width: 98%;
+    }
+}
+@media screen and (max-width: 850px) {
+    .responsive-settings-outlet{
+        display: none;
+    }
+    .settings-wrapper > aside{
+        width: 100%;
+        border-radius: 1rem 1rem 0 0;
+        /* height: calc(100vh - 7rem); */
+    }
+    .settings-wrapper > main{
+        border-radius: 1rem;
+        /* height: fit-content; */
+    }
+    .not-current-setting-indicator{
+        display: block;
+    }
+    .settings-wrapper > aside > div > div > span{
+        font-size: 1.1rem;
+    }
+    .current-setting-indicator{
+        font-size: 1rem !important;
+    }
+    .current-setting{
+        font-weight: 500 !important;
+    }
+    .settings-header > i {
+        display: block;
+        margin-left: -0.3rem;
+    }
+}

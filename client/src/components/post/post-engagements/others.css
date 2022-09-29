@@ -1,0 +1,11 @@
+.post-bottom-right{
+    font-size: 0.8rem;    
+}
+.comments-count{
+    margin-right: 1rem;
+}
+.share-count:hover, .comments-count:hover{
+    text-decoration: underline;
+    text-decoration-color: #c32aa3;
+    font-size: 0.95rem;
+}

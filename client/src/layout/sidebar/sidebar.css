@@ -1,0 +1,50 @@
+.sidebar-container{
+    font-weight: 500;
+    width: 15rem;
+    max-width: 15rem;
+    background-color: #fff;
+    position: relative;
+    top: 3rem;
+    left: 0;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid rgba(0,0,0,0.1);
+}
+.sidebar-container::-webkit-scrollbar{
+    width: 0.2rem;
+}
+.sidebar-container::-webkit-scrollbar-thumb{
+    background-color: rgba(195, 42, 163, 0.3)
+}
+.sidebar-lg-wrapper{
+    margin: 0.5rem 1rem;
+}
+.sidebar-lg-bottom{
+    height: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    gap: 0.5rem;
+}
+.sidebar-top-container{
+    display: none;
+}
+@media screen and (max-width: 960px) {
+    .sidebar-container{
+        width: 14rem;
+        max-width: 14rem;
+    }
+}
+@media screen and (max-width: 750px) {
+    .sidebar-container{
+        /* display: none; */
+        position: absolute;
+        top: 0;
+        z-index: 999;
+    }
+    .sidebar-lg{
+        display: none;
+    }
+    .sidebar-top-container{
+        display: block;
+    }
+}

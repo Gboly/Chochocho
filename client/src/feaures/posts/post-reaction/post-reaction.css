@@ -1,0 +1,73 @@
+.post-interaction{
+    display: flex;
+    justify-content: space-between;    
+}
+.pi-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;    
+}
+.pi-icon{
+    margin-right: 0.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    display: flex;justify-content: center;align-items: center;
+    background-color: inherit;
+}
+.likePost:hover{
+    color: #c32aa3;
+    background-color: rgba(195, 42, 163, 0.1);
+    /* box-shadow: 0 0 5px rgba(195, 42, 163, 0.8); */
+}
+#liked{
+    color: #c32aa3;
+    animation: likePost 1.5s;
+}
+#comment:hover{
+    color: #2a55c3;
+    background-color: rgba(42, 85, 195, 0.1);
+}
+.share:hover{
+    color: #cc7722;
+    background-color: rgba(204, 119, 34, 0.2);
+}
+.reposts:hover{
+    color: #2ac34b;
+    background-color: rgba(42, 195, 75, 0.1);
+}
+.not-reposted:hover{
+    color: rgba(42,195, 75, 0.4);
+}
+.reposted{
+    color: #2ac34b;
+    animation: scaleIncrease 1.5s;
+}
+.disabled{
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+@keyframes likePost {
+    0%{
+        transform: scale(1.2) rotate(0deg);
+        border-top: 2px solid rgba(195, 42, 163, 0.6);
+        color: rgba(195, 42, 163, 0.1);
+    }
+    100%{
+        transform: scale(1) rotate(360deg);
+        border-top: initial;
+        color: rgba(195, 42, 163, 1);
+    }    
+}
+
+@keyframes scaleIncrease{
+    0%{
+        transform: scale(1.5);
+    }
+    100%{
+        transform: scale(1);
+    }
+}

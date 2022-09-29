@@ -1,0 +1,33 @@
+.notification-icons{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    line-height: 0;
+    font-size: 0.75rem;
+    text-align: center;
+    display: flex;align-items: center; justify-content: center;
+}
+.like{
+    color: #c32aa3;
+    background-image: linear-gradient(to bottom right, rgba(195, 42, 163, 0.3), rgba(195, 42, 163, 0.2));
+}
+.comment{
+    color: #2a55c3;
+    background-image: linear-gradient(to bottom right, rgba(42, 85, 195, 0.3), rgba(42, 85, 195, 0.2));
+}
+.repost{
+    color: #2ac34b;
+    background-image: linear-gradient(to bottom right, rgba(42, 195, 75, 0.3), rgba(42, 195, 75, 0.2));
+}
+.follow{
+    color: #c32aa3;
+    background-image: linear-gradient(to bottom right, rgba(195, 42, 163, 0.3), rgba(195, 42, 163, 0.2));
+}
+.mention{
+    color: #000;
+    background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.2));
+}
+.post{
+    color: #b7410e;
+    background-image: linear-gradient(to bottom right, rgba(183, 65, 14, 0.3), rgba(183, 65, 14, 0.2));
+}

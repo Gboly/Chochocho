@@ -1,0 +1,17 @@
+.main-container{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    width: 100vw;
+}
+.sidebar-container-flex{
+    flex: 1.5;
+}
+
+
+@media screen and (max-width: 750px) {
+    .main-container{
+        display: block;
+        width: 100vw;
+    }
+}

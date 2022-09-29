@@ -1,0 +1,72 @@
+.create-container{
+    background-color: #fff;
+    margin: 0.55rem 0;
+    border-bottom: 1px solid #f4f5f7;
+    border-top: 1px solid #f4f5f7;
+    border-radius: 0.8rem;   
+    /* margin-top: 0; */
+}
+.create-wrapper{
+    margin: 0.6rem 1rem;
+}
+.create-middle-text{
+    display: flex;
+    margin-bottom: 1rem;
+    position: relative;    
+}
+.create-avi{
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+    cursor: pointer;
+}
+.create-input{
+    box-sizing: border-box;
+    width: calc(100% - 3.2rem);
+    background-color:#f4f5f7;
+    border-radius: 0.5rem;
+    border: none;
+    height: 2.2rem;
+    padding: 0 1rem;
+    font-family: "roboto", sans-serif;
+    color: inherit;
+    font-weight: 450;
+}
+.create-input::placeholder{
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+.create-input:focus{
+    outline: none;
+}
+.create-bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;       
+}
+.create-bottom-left{
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 8;
+    justify-content: space-between;
+}
+.create-bottom-right{
+    flex: 4;
+    display: flex;
+    justify-content: flex-end;
+}
+.cbr-button{
+    padding: 0.5rem 0.75rem;
+    color: #fff;
+    background-color: #c32aa3;
+    border-radius: 0.35rem;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+.cbr-button:focus{
+    outline: none;
+}
