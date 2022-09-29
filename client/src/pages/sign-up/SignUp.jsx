@@ -60,11 +60,12 @@ export default function SignUp() {
     setSignUpDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const inputContent = signUpInputData.reduce((accum, current) => {
+  const inputContent = signUpInputData.reduce((accum, current, index) => {
     const { type, placeholder, name, icon } = current;
     type === "password"
       ? accum.push(
           <PasswordInput
+            key={index}
             {...{
               placeholder,
               name,
@@ -75,6 +76,7 @@ export default function SignUp() {
         )
       : accum.push(
           <CustomInput
+            key={index}
             {...{
               type,
               placeholder,
@@ -88,8 +90,8 @@ export default function SignUp() {
     return accum;
   }, []);
 
-  const oAuthButtons = oAuthData.map((item) => (
-    <button>
+  const oAuthButtons = oAuthData.map((item, index) => (
+    <button key={index}>
       <img src={item.src} alt="" />
       <span>Login with {item.type}</span>
     </button>

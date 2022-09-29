@@ -87,11 +87,12 @@ export default function SignIn() {
       : localStorage.removeItem("loginDetails");
   };
 
-  const inputContent = signUpInputData.reduce((accum, current) => {
+  const inputContent = signUpInputData.reduce((accum, current, index) => {
     const { type, placeholder, name, icon } = current;
     type === "password"
       ? accum.push(
           <PasswordInput
+            key={index}
             {...{
               placeholder,
               name,
@@ -102,6 +103,7 @@ export default function SignIn() {
         )
       : accum.push(
           <CustomInput
+            key={index}
             {...{
               type,
               placeholder,
@@ -115,8 +117,8 @@ export default function SignIn() {
     return accum;
   }, []);
 
-  const oAuthButtons = oAuthData.map((item) => (
-    <button>
+  const oAuthButtons = oAuthData.map((item, index) => (
+    <button key={index}>
       <img src={item.src} alt="" />
       <span>Login with {item.type}</span>
     </button>
