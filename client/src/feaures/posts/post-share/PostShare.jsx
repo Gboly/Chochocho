@@ -17,6 +17,7 @@ export default function PostShare({ postId }) {
     useState({ repost: false, bookmark: false });
 
   const handleCopy = () => {
+    // Change post link.
     const result = copyTextToClipboard(`${getCurrentUrl()}#${postId}`);
     result.then((data) =>
       data ? displayConfirmation("copy") : alert("failed to copy link to post.")
@@ -27,34 +28,17 @@ export default function PostShare({ postId }) {
     setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
   };
 
-  const handleClick = () => dispatch(closePostShare());
+  const handleClick = (e, action) => {
+    e && e.stopPropagation && e.stopPropagation();
+    action && action();
+  };
+
+  const close = () => dispatch(closePostShare());
 
   return (
     <div className="post-share-container">
       <div className="post-share-wrapper">
-        {/* <div
-          className={`post-share-item ${
-            isReposted ? "post-share-reposted" : "post-share-not-reposted"
-          }`}
-        >
-          <label htmlFor="repost">
-            <i className="psi-icon">
-              <AirlineStopsOutlinedIcon style={iconStyle} />
-            </i>
-            <span className="psi-desc">
-              {`Repost${isReposted ? "ed" : ""}`}
-            </span>
-          </label>
-          <input
-            type="checkbox"
-            name="repost"
-            id="repost"
-            checked={isReposted}
-            onChange={handleChange}
-            style={{ display: "none" }}
-          />
-        </div> */}
-        <div className="post-share-item">
+        <div className="post-share-item" onClick={handleClick}>
           <label htmlFor="bookmark">
             <i className="psi-icon">
               {isBookmarked ? (
@@ -76,7 +60,7 @@ export default function PostShare({ postId }) {
             style={{ display: "none" }}
           />
         </div>
-        <div className="post-share-item">
+        <div className="post-share-item" onClick={handleClick}>
           <i className="psi-icon">
             <LocalPostOfficeOutlinedIcon style={iconStyle} />
           </i>
@@ -84,10 +68,12 @@ export default function PostShare({ postId }) {
         </div>
         <div
           className="post-share-item"
-          onClick={() => {
-            handleCopy();
-            handleClick();
-          }}
+          onClick={(e) =>
+            handleClick(e, () => {
+              handleCopy();
+              close();
+            })
+          }
         >
           <i className="psi-icon">
             <LinkOutlinedIcon style={iconStyle} />

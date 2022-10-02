@@ -1,0 +1,7 @@
+.view-post-container .post-container:first-of-type{
+    border-radius: 0 0 1rem 1rem;
+    margin-bottom: 0.5rem;
+}
+.view-post-container .create-container{
+    margin-top: 0rem;
+}

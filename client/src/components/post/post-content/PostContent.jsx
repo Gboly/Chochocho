@@ -1,7 +1,6 @@
 import CustomVideo from "../../../feaures/custom-video/CustomVideo";
 import "./post-content.css";
-import avi1 from "../../../assets/avatar-square.png";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   openFullscreen,
   openAltMessage,
@@ -15,7 +14,10 @@ export default function PostContent({ content, mediaType, media, postId }) {
   return (
     <div className="post-center">
       <p className="post-text">{content}</p>
-      <div className="post-media-container">
+      <div
+        className="post-media-container"
+        onClick={(e) => e && e.stopPropagation && e.stopPropagation()}
+      >
         {mediaType.startsWith("video") && (
           <CustomVideo src={media} postId={postId} />
         )}

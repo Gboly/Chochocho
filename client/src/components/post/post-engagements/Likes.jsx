@@ -9,11 +9,13 @@ import { openEngagedUsersList } from "../../../app/actions/homeActions";
 import { engagedUsersListType, likeType } from "../../../util/types";
 
 export default function Likes({ likes }) {
-  const handleClick = () =>
+  const handleClick = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
     showPopupOnOpaqueOverlay(openEngagedUsersList, engagedUsersListType, {
       type: likeType,
       userIds: likes,
     });
+  };
 
   const content = likes.reduce((accum, current, index) => {
     if (index <= 2) {
@@ -32,7 +34,7 @@ export default function Likes({ likes }) {
       {likes.length > 3 && (
         <div
           className="home-user-avatar likes-indicator like-count-remainder"
-          onClick={handleClick}
+          onClick={(e) => handleClick(e)}
         >
           {/* Write a function to remove the plus sign when the value ceases to contain the circle */}
           +{truncateLikesEngagements(likes.length - 3)}

@@ -5,8 +5,16 @@ import CreatePostActive from "./create-post-active/CreatePostActive";
 import { useSelector } from "react-redux";
 import { getCreatePostState } from "./createPostSlice";
 
-export default function CreatePost() {
+export default function CreatePost({ placeholder }) {
   const active = useSelector(getCreatePostState);
 
-  return <>{active ? <CreatePostActive /> : <CreatePostIdle />}</>;
+  return (
+    <>
+      {active ? (
+        <CreatePostActive placeholder={placeholder} />
+      ) : (
+        <CreatePostIdle placeholder={placeholder} />
+      )}
+    </>
+  );
 }

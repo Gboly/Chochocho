@@ -39,3 +39,7 @@
 .post-hr{
     border-color: rgba(0,0,0,0.1);    
 }
+.full-date{
+    margin-top: 1rem;
+    width: 100%; 
+}

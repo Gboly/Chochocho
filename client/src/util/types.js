@@ -22,5 +22,11 @@ export const likeType = "liked";
 export const repostType = "reposted";
 export const followersType = "followers";
 export const followingType = "following";
-
+export const postType = "post";
+export const otherLikeType = "like";
+export const otherRepostType = "repost";
+export const othercommentType = "comment";
+export const homeCreatePostPlaceholder = "What's happening?";
+export const commentCreatePostPlaceholder = "Reply to this post";
+export const scrollCacheType = "scroll cache";
 //export const

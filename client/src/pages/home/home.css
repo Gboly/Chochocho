@@ -31,31 +31,17 @@
     display: none;
 }
 .rightbar-container{
-    background-color: #fff;   
-    /* position: fixed;
-    top: 3rem;
-    right: 0;
-    height: calc(100vh - 3rem); */
+    background-color: #fff;
    position: relative;
     top: 3rem;
     left: 0;
     height: 100vh;
     overflow-y: scroll;
     width: 35rem;
-    /* z-index: -1; */
     flex: 3.5;
 }
 
 
-
-/* @media screen and (max-width: 1500px) {
-    .home-main-wrapper, .home-posts-container-focus{
-        left: calc(50% - 5rem);
-    }
-    .home-createposts-container-focus{  
-        left: calc(50% + 15rem);
-    }
-} */
 @media screen and (max-width: 1310px) {
     .home-main-wrapper, .home-create-post-container, .home-create-post-container-active {
         width: 35rem 

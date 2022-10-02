@@ -1,25 +1,27 @@
 import "./post-reaction.css";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
-import IosShareOutlinedIcon from "@mui/icons-material/IosShareOutlined";
-import AirlineStopsOutlinedIcon from "@mui/icons-material/AirlineStopsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openPostShare } from "../../../app/actions/homeActions";
 import { iconStyle } from "../../../util/iconDescContent";
 import { useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShareFromSquare } from "@fortawesome/free-regular-svg-icons";
-import { faArrowUpFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { faShareNodes } from "@fortawesome/free-solid-svg-icons";
 import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as solidHeart } from "@fortawesome/free-regular-svg-icons";
-import { faHeart as regularHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
+import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
+import { selectPostById } from "../../../app/api-slices/postsApiSlice";
+import { selectPostTotalComments } from "../../comments/commentsApiSlice";
 
-export default function PostReaction({ postId, visibleFor }) {
+export default function PostReaction({ postId, visibleFor, comment }) {
   const dispatch = useDispatch();
+  const post = useSelector((state) => selectPostById(state, postId));
+  const likesTotal = (post?.likes || []).length;
+  const repostsTotal = (post?.reposts || []).length;
+  const commentsTotal = useSelector((state) =>
+    selectPostTotalComments(state, postId)
+  );
+
   const [{ like: isLiked, repost: isReposted }, setIsChecked] = useState({
     like: false,
     repost: false,
@@ -28,20 +30,32 @@ export default function PostReaction({ postId, visibleFor }) {
   const handleChange = (e) => {
     setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
   };
+  const handleClick = (e, action) => {
+    e && e.stopPropagation && e.stopPropagation();
+    // Not all clicks here have actual click actions. Just making sure to stopPropagation
+    action && action();
+  };
 
   return (
-    <div className="post-interaction">
-      <span className="pi-item">
-        <label htmlFor={`likePost${postId}`}>
-          {!isLiked ? (
-            <i className="pi-icon likePost" id="not-liked">
-              <FontAwesomeIcon icon={solidHeart} />
-            </i>
-          ) : (
-            <i className="pi-icon likePost" id="liked">
-              <FontAwesomeIcon icon={regularHeart} />
-            </i>
-          )}
+    <div className={`post-interaction ${comment ? "comment-interaction" : ""}`}>
+      <span className="pi-item" onClick={(e) => handleClick(e)}>
+        <label
+          className="pi-icon likePost"
+          id={!isLiked ? "not-liked" : "liked"}
+          htmlFor={`likePost${postId}`}
+        >
+          <div>
+            {!isLiked ? (
+              <i>
+                <FontAwesomeIcon icon={regularHeart} />
+              </i>
+            ) : (
+              <i className="like-animation">
+                <FontAwesomeIcon icon={solidHeart} />
+              </i>
+            )}
+            <span>{comment && likesTotal > 0 && likesTotal}</span>
+          </div>
         </label>
         <input
           onChange={handleChange}
@@ -52,21 +66,30 @@ export default function PostReaction({ postId, visibleFor }) {
           style={{ display: "none" }}
         />
       </span>
-      <span className="pi-item">
-        <i className="pi-icon" id="comment">
-          <FontAwesomeIcon icon={faCommentDots} />
-        </i>
+      <span className="pi-item" onClick={(e) => handleClick(e)}>
+        <label className="pi-icon" id="comment">
+          <div>
+            <i>
+              <FontAwesomeIcon icon={faCommentDots} />
+            </i>
+            <span>{comment && commentsTotal > 0 && commentsTotal}</span>
+          </div>
+        </label>
       </span>
 
-      <span className="pi-item">
-        <label htmlFor={`repost${postId}`}>
-          <i
-            className={`pi-icon reposts ${
-              isReposted ? "reposted" : "not-reposted"
-            } ${visibleFor === "Public" ? "" : "disabled"}`}
-          >
-            <FontAwesomeIcon icon={faShareFromSquare} />
-          </i>
+      <span className="pi-item" onClick={(e) => handleClick(e)}>
+        <label
+          className={`pi-icon reposts ${
+            isReposted ? "reposted" : "not-reposted"
+          } ${visibleFor === "Public" ? "" : "disabled"}`}
+          htmlFor={`repost${postId}`}
+        >
+          <div>
+            <i className={isReposted ? "repost-animation" : ""}>
+              <FontAwesomeIcon icon={faShareFromSquare} />
+            </i>
+            <span>{comment && repostsTotal > 0 && repostsTotal}</span>
+          </div>
         </label>
         <input
           onChange={handleChange}
@@ -79,7 +102,10 @@ export default function PostReaction({ postId, visibleFor }) {
         />
       </span>
 
-      <span className="pi-item" onClick={() => dispatch(openPostShare(postId))}>
+      <span
+        className="pi-item"
+        onClick={(e) => handleClick(e, () => dispatch(openPostShare(postId)))}
+      >
         <i className="pi-icon share">
           <ShareOutlinedIcon style={{ ...iconStyle, fontSize: "1.4rem" }} />
         </i>

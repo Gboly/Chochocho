@@ -9,7 +9,7 @@ import {
   closeOpaqueOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
-import { editProfileImageType } from "./types";
+import { editProfileImageType, scrollCacheType } from "./types";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -175,4 +175,34 @@ export const closeNestedPopupOnOpaqueOverlay = (
 ) => {
   store.dispatch(openOpaqueOverlay(parentType));
   store.dispatch(closeAction(parameter));
+};
+
+export const getSessionStorageItem = (key) => {
+  const stringifiedValue = sessionStorage.getItem(key) ?? `{}`;
+  const value = JSON.parse(stringifiedValue);
+  return value;
+};
+
+export const setIsReturnPage = (value) => {
+  const scrollCache = getSessionStorageItem(scrollCacheType);
+
+  sessionStorage.setItem(
+    scrollCacheType,
+    JSON.stringify({ ...scrollCache, isReturnPage: value })
+  );
+};
+
+export const updateScrollCache = (value) => {
+  const scrollCache = getSessionStorageItem(scrollCacheType);
+  const scrollTopStack = scrollCache?.scrollTopStack || [];
+
+  let newScrollTopStack;
+  value
+    ? (newScrollTopStack = [...scrollTopStack, value])
+    : (newScrollTopStack = scrollTopStack.slice(0, scrollTopStack.length - 1));
+
+  sessionStorage.setItem(
+    scrollCacheType,
+    JSON.stringify({ ...scrollCache, scrollTopStack: newScrollTopStack })
+  );
 };

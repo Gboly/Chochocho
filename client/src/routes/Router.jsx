@@ -17,7 +17,7 @@ import LayoutGen from "../layout-gen/LayoutGen";
 import SignUp from "../pages/sign-up/SignUp";
 import SignIn from "../pages/sign-in/SignIn";
 import ForgotPassword from "../pages/forgot-password/ForgotPassword";
-// import React from 'react'
+import ViewPost from "../pages/view post/ViewPost";
 
 export default function Router() {
   return (
@@ -31,6 +31,8 @@ export default function Router() {
       </Route>
       <Route path="/" element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path=":username/post/:postId" element={<ViewPost />} />
+        {/* #12 */}
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="notifications" element={<Notifications />} />
         <Route path="community" element={<Community />}>

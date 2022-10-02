@@ -25,26 +25,29 @@ export default function HomeUserAvatar({
     setSrc(user?.profileImage || "");
   }, [user]);
 
-  const hanldeClick = () => {
+  const handleClick = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
+    // some avatars shouldn't navigate to a new route. This would be passed as prop(noLink)
+    // So, only when noLink is not available should the following code run
     if (!noLink) {
+      // no need for routing when you're already on the route
       if (location.pathname !== `/profile/${userId}`) {
         navigate(`/profile/${userId}`);
       }
     }
-    action();
+    action && action();
   };
 
   return (
     <img
       src={src}
       onError={() => {
-        console.log("bad");
         src !== defaultProfileImage && setSrc(defaultProfileImage);
       }}
       alt="User avatar"
       className="home-user-avatar"
       style={{ width: dimension, height: dimension, ...style }}
-      onClick={hanldeClick}
+      onClick={(e) => handleClick(e)}
     />
   );
 }

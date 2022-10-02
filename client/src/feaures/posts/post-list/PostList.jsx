@@ -9,8 +9,9 @@ import {
   getRemovedPosts,
 } from "../post-excerpt/postExcerptSlice";
 import { useParams } from "react-router-dom";
+import { forwardRef } from "react";
 
-export default function PostList() {
+const List = (_, ref) => {
   const allPostIds = useSelector(selectPostsIds);
   const hiddenPosts = useSelector(getHiddenPosts);
   const removedPosts = useSelector(getRemovedPosts);
@@ -26,10 +27,15 @@ export default function PostList() {
     .reduce((accum, current) => {
       if (hiddenPosts.includes(current)) {
         accum.push(<PostHidden key={current} postId={current} />);
-      } else accum.push(<PostExcerpt key={current} postId={current} />);
+      } else
+        accum.push(<PostExcerpt key={current} ref={ref} postId={current} />);
 
       return accum;
     }, []);
 
   return <>{postList}</>;
-}
+};
+
+const PostList = forwardRef(List);
+
+export default PostList;

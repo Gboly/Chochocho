@@ -32,4 +32,16 @@ moving bottom and image has reached top border ||
 Search filter => Normally, i would use a reduce method here since i'm supposed to filter through the users to compare their username and displayname against the searchText and then render usercameo only when the condition is meant. The issue here now is that i cannot use useSelector to fetch the user details based on their userIds since it's not directly inside a Component. Therefore, i'm creating a kind of middle-man component that handles the situation.
 
 #11
-This was initially used for like and repost only which is why it is placed within the post excerpt. Now following and followers has been added to it, i"m leaving it here. 
+This was initially used for like and repost only which is why it is placed within the post excerpt. Now following and followers has been added to it, i"m leaving it here.
+
+#12
+Use usernames for routing instead of just the userIds
+
+#13
+Comments should have its own excerpt due to the fact that postIds are sent to postExcerpt and it generates details by selecting from the posts collection of the database. Since comments and actual post collections are different, there would be a mix up if this is passed.
+
+#14
+While mapping, remember to filter out removed posts and also take care of hidden post just like postList.jsx does it. Therefore, the reduce method is your goto.
+
+#15
+These postExcerpts are just standing in till i figure out linking commments and posts

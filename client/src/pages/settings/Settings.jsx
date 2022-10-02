@@ -77,7 +77,7 @@ export default function Settings() {
   );
 }
 
-export const SettingsHeader = ({ text, closePopup, overlay }) => {
+export const SettingsHeader = ({ text, closePopup, overlay, viewPost }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -90,7 +90,7 @@ export const SettingsHeader = ({ text, closePopup, overlay }) => {
   };
 
   return (
-    <header className="settings-header">
+    <header className={viewPost ? "view-post-header" : "settings-header"}>
       <i onClick={goBack}>
         <ArrowBackIosOutlinedIcon style={iconStyle} />
       </i>

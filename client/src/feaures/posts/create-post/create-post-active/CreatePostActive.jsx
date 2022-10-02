@@ -1,5 +1,4 @@
 import "./create-post-active.css";
-import avi2 from "../../../../assets/avatar-square.png";
 import CustomSelect from "../../../../components/custom-select/CustomSelect";
 import CustomTextArea from "../../../../components/custom-text-area/CustomTextArea";
 import IconDescription from "../../../../components/icon-description/IconDescription";
@@ -22,14 +21,13 @@ import {
   getUploadedMedia,
   getPostText,
 } from "../createPostSlice";
-import { selectUserById } from "../../../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import {
   closePopupOnOpaqueOverlay,
   showPopupOnOpaqueOverlay,
 } from "../../../../util/functions";
 
-export default function CreatePostActive() {
+export default function CreatePostActive({ placeholder }) {
   const dispatch = useDispatch();
   const { isOpen: visibilityOptionsIsOpen, valueId } = useSelector(
     getVisibilityOptionsState
@@ -120,7 +118,7 @@ export default function CreatePostActive() {
             />
             <CustomTextArea
               {...{
-                placeholder: "What's happening?",
+                placeholder: placeholder,
                 sxx: { ph: "create-custom-placeholder", ta: "create-textarea" },
                 handleInput: (textContent) => dispatch(writePost(textContent)),
                 text: postText,

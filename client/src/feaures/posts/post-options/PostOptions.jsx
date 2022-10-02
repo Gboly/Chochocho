@@ -19,7 +19,8 @@ export default function PostOptions({ postId }) {
   //#3
   const postOptions = userId === 1 ? userPostOptions : othersPostOptions;
 
-  const handleClick = (current) => {
+  const handleClick = (e, current) => {
+    e && e.stopPropagation && e.stopPropagation();
     const { desc, action } = current;
     current?.dispatch
       ? dispatch(action(postId))
@@ -40,7 +41,7 @@ export default function PostOptions({ postId }) {
           <div
             key={index}
             className="post-option"
-            onClick={() => handleClick(current)}
+            onClick={(e) => handleClick(e, current)}
           >
             <i className="post-option-icon">{icon}</i>
             <span className="post-option-desc">{capitalize(desc)}</span>

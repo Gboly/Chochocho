@@ -6,7 +6,7 @@ import { openCreatePost } from "../../../../app/actions/homeActions";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../../../util/functions";
 
-export default function CreatePostIdle() {
+export default function CreatePostIdle({ placeholder }) {
   return (
     <div className="create-container">
       <form className="create-wrapper">
@@ -20,7 +20,7 @@ export default function CreatePostIdle() {
 
           <input
             type="text"
-            placeholder="What's happening?"
+            placeholder={placeholder}
             className="create-input"
             onFocus={() =>
               showPopupOnOpaqueOverlay(openCreatePost, "create post")

@@ -2,6 +2,9 @@
     display: flex;
     justify-content: space-between;    
 }
+.comment-interaction{
+    margin-top: 1rem;
+}
 .pi-item{
     display: flex;
     align-items: center;
@@ -22,8 +25,21 @@
     background-color: rgba(195, 42, 163, 0.1);
     /* box-shadow: 0 0 5px rgba(195, 42, 163, 0.8); */
 }
+.pi-icon > div {
+    display: flex;
+    position: relative;
+}
+.pi-icon > div > span{
+    margin-left: 0.5rem;
+    position: absolute;
+    right: -1.5rem;
+    padding: 0.15rem 0;
+    font-size: 1rem;
+}
 #liked{
     color: #c32aa3;
+}
+.like-animation{
     animation: likePost 1.5s;
 }
 #comment:hover{
@@ -43,6 +59,8 @@
 }
 .reposted{
     color: #2ac34b;
+}
+.repost-animation{
     animation: scaleIncrease 1.5s;
 }
 .disabled{
@@ -53,12 +71,10 @@
 @keyframes likePost {
     0%{
         transform: scale(1.2) rotate(0deg);
-        border-top: 2px solid rgba(195, 42, 163, 0.6);
         color: rgba(195, 42, 163, 0.1);
     }
     100%{
         transform: scale(1) rotate(360deg);
-        border-top: initial;
         color: rgba(195, 42, 163, 1);
     }    
 }
