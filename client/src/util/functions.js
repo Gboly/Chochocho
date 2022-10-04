@@ -144,6 +144,7 @@ export const displayConfirmation = (type) => {
   setTimeout(() => store.dispatch(closeConfirmation()), 3000);
 };
 
+// Recursive function
 export const convertToCamelCasing = (value, n) => {
   const spaceIndex = value.indexOf(" ");
   if (spaceIndex === -1) {
@@ -183,6 +184,10 @@ export const getSessionStorageItem = (key) => {
   return value;
 };
 
+export const setSessionStorageItem = (key, value) => {
+  sessionStorage.setItem(key, JSON.stringify(value));
+};
+
 export const setIsReturnPage = (value) => {
   const scrollCache = getSessionStorageItem(scrollCacheType);
 
@@ -192,17 +197,7 @@ export const setIsReturnPage = (value) => {
   );
 };
 
-export const updateScrollCache = (value) => {
+export const updateScrollCache = (pathname, value) => {
   const scrollCache = getSessionStorageItem(scrollCacheType);
-  const scrollTopStack = scrollCache?.scrollTopStack || [];
-
-  let newScrollTopStack;
-  value
-    ? (newScrollTopStack = [...scrollTopStack, value])
-    : (newScrollTopStack = scrollTopStack.slice(0, scrollTopStack.length - 1));
-
-  sessionStorage.setItem(
-    scrollCacheType,
-    JSON.stringify({ ...scrollCache, scrollTopStack: newScrollTopStack })
-  );
+  setSessionStorageItem(scrollCacheType, { ...scrollCache, [pathname]: value });
 };

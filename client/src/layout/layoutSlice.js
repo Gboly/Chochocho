@@ -6,7 +6,6 @@ const initialState = {
   sidebarNav: false,
   confirmation: { isOpen: false, type: "" },
   pageHeight: "",
-  scrollCache: { isFreshPage: true, scrollTopStack: [] },
 };
 
 export const layoutSlice = createSlice({
@@ -49,16 +48,6 @@ export const layoutSlice = createSlice({
       state.pageHeight = action.payload;
       return state;
     },
-    setIsFreshPage: (state, action) => {
-      state.scrollCache.isFreshPage = action.payload;
-      return state;
-    },
-    updateScrollCache: (state, action) => {
-      action.payload
-        ? state.scrollCache.scrollTopStack.push(action.payload)
-        : state.scrollCache.scrollTopStack.pop();
-      return state;
-    },
   },
 });
 
@@ -70,4 +59,3 @@ export const getPageHeight = (state) => state.layout.pageHeight;
 export const getOpaqueOverlayState = (state) => state.layout.opaqueOverlay;
 export const getTransparentOverlayState = (state) =>
   state.layout.transparentOverlay;
-export const getScrollCacheState = (state) => state.layout.scrollCache;

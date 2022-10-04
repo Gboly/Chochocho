@@ -10,6 +10,4 @@ export const {
   closeOpaqueOverlay,
   openTransparentOverlay,
   closeTransparentOverlay,
-  setIsFreshPage,
-  updateScrollCache,
 } = layoutSlice.actions;

@@ -13,8 +13,11 @@ import { extendedUsersApiSlice } from "./app/api-slices/usersApiSlice";
 import { extendedCommentsApiSlice } from "./feaures/comments/commentsApiSlice";
 
 import Router from "./routes/Router";
+import { scrollCacheType } from "./util/types";
 
 // import App from "./App";
+
+window.onload = () => sessionStorage.removeItem(scrollCacheType);
 
 store.dispatch(extendedPostsApiSlice.endpoints.getPosts.initiate());
 store.dispatch(extendedUsersApiSlice.endpoints.getUsers.initiate());

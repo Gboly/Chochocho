@@ -13,15 +13,15 @@ import { openPostOption } from "../../../app/actions/homeActions";
 import { getPostOptionState, getPostShareState } from "./postExcerptSlice";
 import { closePostOption } from "../../../app/actions/homeActions";
 import { getEditPostState } from "../create-post/createPostSlice";
-import { forwardRef, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { iconStyle } from "../../../util/iconDescContent";
 import UserCameo from "../../../components/user-cameo/UserCameo";
 import { convertToUserFriendlyTime } from "../../../util/functions";
 import { useNavigate } from "react-router-dom";
 import { selectUserById } from "../../../app/api-slices/usersApiSlice";
-import { updateScrollCache } from "../../../util/functions";
+import NavigateWithScrollCache from "../../scroll-cache/NavigateWithScrollCache";
 
-const Excerpt = ({ postId, viewPost, comment }, ref) => {
+const PostExcerpt = ({ postId, viewPost, comment }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post = useSelector((state) => selectPostById(state, postId));
@@ -31,10 +31,11 @@ const Excerpt = ({ postId, viewPost, comment }, ref) => {
   const { isOpen: editPostIsOpen } = useSelector(getEditPostState);
 
   const [isPopUp, setIsPopUp] = useState(false);
+  const [route, setRoute] = useState(false);
 
   useEffect(() => {
     editPostIsOpen && dispatch(closePostOption());
-  }, [editPostIsOpen, dispatch, ref]);
+  }, [editPostIsOpen, dispatch]);
 
   useEffect(() => {
     optionsIsOpen || shareIsOpen ? setIsPopUp(true) : setIsPopUp(false);
@@ -65,73 +66,80 @@ const Excerpt = ({ postId, viewPost, comment }, ref) => {
     </i>
   );
 
-  let scrollTop;
   const handleClick = (e) => {
     e && e.stopPropagation && e.stopPropagation();
-    // This is basically caching the scrollTop before routing.
-    if (ref) {
-      scrollTop = ref.current.scrollTop;
-      updateScrollCache(scrollTop);
-    }
-    !viewPost && navigate(`/${user?.username}/post/${postId}`);
+    setRoute(true);
   };
 
-  return (
-    <main
-      className={`post-container ${
-        !isPopUp && !viewPost ? "post-container-Wpopup" : ""
-      }`}
-      id={postId}
-      onClick={(e) => handleClick(e)}
-    >
-      {optionsIsOpen && optionsId === postId && <PostOptions {...{ postId }} />}
-      {shareIsOpen && shareId === postId && <PostShare postId={shareId} />}
+  const handleRouting = () => navigate(`/${user?.username}/post/${postId}`);
+  const cleanUp = () => setRoute(false);
 
-      <div className="post-wrapper" onClick={(e) => handleClick(e)}>
-        <div className="post-top">
-          <UserCameo
-            {...{
-              userId,
-              icon: postOptionIcon,
-              avatarProp: { size: 3 },
-              aside: viewPost ? 0 : convertToUserFriendlyTime(date),
-              main: 0,
-              single: true,
-            }}
+  return (
+    <>
+      {/* When a truthy viewPost prop is passed then do not navigate. */}
+      {!viewPost && (
+        <NavigateWithScrollCache
+          clicked={route}
+          handleRouting={handleRouting}
+          cleanUp={cleanUp}
+        />
+      )}
+      <main
+        className={`post-container ${
+          !isPopUp && !viewPost ? "post-container-Wpopup" : ""
+        }`}
+        id={postId}
+        onClick={(e) => handleClick(e)}
+      >
+        {optionsIsOpen && optionsId === postId && (
+          <PostOptions {...{ postId }} />
+        )}
+        {shareIsOpen && shareId === postId && <PostShare postId={shareId} />}
+
+        <div className="post-wrapper" onClick={(e) => handleClick(e)}>
+          <div className="post-top">
+            <UserCameo
+              {...{
+                userId,
+                icon: postOptionIcon,
+                avatarProp: { size: 3 },
+                aside: viewPost ? 0 : convertToUserFriendlyTime(date),
+                main: 0,
+                single: true,
+              }}
+            />
+          </div>
+          <PostContent {...{ content, mediaType, media, postId }} />
+          {!comment ? (
+            viewPost ? (
+              <>
+                <FullDate {...{ date, visibleFor }} />
+                <hr className="post-hr" />
+                <Others {...{ postId, reposts, likes }} />
+                <hr className="post-hr" />
+              </>
+            ) : (
+              <>
+                <div className="post-engagements">
+                  <Likes {...{ likes, userId }} />
+                  <Others {...{ postId, reposts }} />
+                </div>
+                <hr className="post-hr" />
+              </>
+            )
+          ) : (
+            ""
+          )}
+          <PostReaction
+            postId={postId}
+            visibleFor={visibleFor}
+            comment={comment}
           />
         </div>
-        <PostContent {...{ content, mediaType, media, postId }} />
-        {!comment ? (
-          viewPost ? (
-            <>
-              <FullDate {...{ date, visibleFor }} />
-              <hr className="post-hr" />
-              <Others {...{ postId, reposts, likes }} />
-              <hr className="post-hr" />
-            </>
-          ) : (
-            <>
-              <div className="post-engagements">
-                <Likes {...{ likes, userId }} />
-                <Others {...{ postId, reposts }} />
-              </div>
-              <hr className="post-hr" />
-            </>
-          )
-        ) : (
-          ""
-        )}
-        <PostReaction
-          postId={postId}
-          visibleFor={visibleFor}
-          comment={comment}
-        />
-      </div>
-    </main>
+      </main>
+    </>
   );
 };
-
-const PostExcerpt = forwardRef(Excerpt);
 
 export default PostExcerpt;
 

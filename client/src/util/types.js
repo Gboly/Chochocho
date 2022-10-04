@@ -29,4 +29,12 @@ export const othercommentType = "comment";
 export const homeCreatePostPlaceholder = "What's happening?";
 export const commentCreatePostPlaceholder = "Reply to this post";
 export const scrollCacheType = "scroll cache";
+export const viewPostPageType = "view-post-page";
+export const profilePageType = "profile-page";
+export const homePageType = "home-page";
+export const notificationPageType = "notification-page";
+export const settingsPageType = "settings-page";
+export const communityPageType = "community-page";
+export const chatsPageType = "chats-page";
+
 //export const
