@@ -16,7 +16,8 @@ import { showPopupOnOpaqueOverlay } from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
 import { useRef } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
-import { createContext } from "react";
+import { createContext, useContext, useImperativeHandle } from "react";
+import { LayoutContext } from "../../layout/Layout";
 
 export const ProfileContext = createContext();
 
@@ -24,6 +25,16 @@ export default function Profile() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileNode = useRef();
+  const { pageNodes } = useContext(LayoutContext);
+
+  // #16, #17
+  useImperativeHandle(
+    pageNodes,
+    () => ({
+      profileNode: profileNode.current,
+    }),
+    [profileNode]
+  );
 
   const { userId: id } = useParams();
   const userId = Number(id);
@@ -34,103 +45,93 @@ export default function Profile() {
 
   return (
     <>
-      <ProfileContext.Provider value={profileNode}>
-        <ScrollCache ref={profileNode}>
-          <div
-            className="profile-container"
-            ref={profileNode}
-            id={profilePageType}
-          >
-            <div className="profile-wrapper">
-              <div className="profile-top">
-                <button
-                  className="profile-back-button"
-                  onClick={() => navigate(-1)}
-                >
-                  <i>
-                    <ArrowBackOutlinedIcon style={iconStyle} />
-                  </i>
-                </button>
-                <img
-                  src={coverPhoto}
-                  alt="profile cover"
-                  className="profile-coverphoto"
-                  onClick={() => dispatch(openFullscreen(coverPhoto))}
+      <ScrollCache ref={profileNode}>
+        <div
+          className="profile-container"
+          ref={profileNode}
+          id={profilePageType}
+        >
+          <div className="profile-wrapper">
+            <div className="profile-top">
+              <button
+                className="profile-back-button"
+                onClick={() => navigate(-1)}
+              >
+                <i>
+                  <ArrowBackOutlinedIcon style={iconStyle} />
+                </i>
+              </button>
+              <img
+                src={coverPhoto}
+                alt="profile cover"
+                className="profile-coverphoto"
+                onClick={() => dispatch(openFullscreen(coverPhoto))}
+              />
+              <div className="profile-top-absolute">
+                <HomeUserAvatar
+                  {...{
+                    size: 7,
+                    style: { border: "3px solid #fff", marginTop: "-4rem" },
+                    userId,
+                    noLink: true,
+                    action: () =>
+                      dispatch(openFullscreen(user?.profileImage || "")),
+                    // #8
+                  }}
                 />
-                <div className="profile-top-absolute">
-                  <HomeUserAvatar
-                    {...{
-                      size: 7,
-                      style: { border: "3px solid #fff", marginTop: "-4rem" },
-                      userId,
-                      noLink: true,
-                      action: () =>
-                        dispatch(openFullscreen(user?.profileImage || "")),
-                      // #8
-                    }}
-                  />
-                  {/* #3 */}
-                  {userId === 1 && (
-                    <button
-                      className="edit-profile"
-                      onClick={() =>
-                        showPopupOnOpaqueOverlay(
-                          openEditProfile,
-                          editProfileType
-                        )
-                      }
-                    >
-                      Edit profile
+                {/* #3 */}
+                {userId === 1 && (
+                  <button
+                    className="edit-profile"
+                    onClick={() =>
+                      showPopupOnOpaqueOverlay(openEditProfile, editProfileType)
+                    }
+                  >
+                    Edit profile
+                  </button>
+                )}
+                {/* #3 */}
+                {userId !== 1 && (
+                  <div>
+                    <button>
+                      <i>
+                        <LocalPostOfficeOutlinedIcon />
+                      </i>
                     </button>
-                  )}
-                  {/* #3 */}
-                  {userId !== 1 && (
-                    <div>
-                      <button>
-                        <i>
-                          <LocalPostOfficeOutlinedIcon />
-                        </i>
-                      </button>
-                      <button
-                        className={`square-button ${
-                          following ? "followed" : ""
-                        }`}
-                      >
-                        {following ? "Following" : "Follow"}
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <p className="profile-username">{user?.displayName || ""}</p>
-                <p>@{user?.username || ""}</p>
-                <p className="profile-bio">{user?.bio || ""}</p>
+                    <button
+                      className={`square-button ${following ? "followed" : ""}`}
+                    >
+                      {following ? "Following" : "Follow"}
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className="profile-bottom">
-                <div>
-                  <ProfileDetails />
-                  <FollowDetails />
-                  {/* #3 */}
-                  {userId === 1 && (
-                    <button
-                      onClick={() =>
-                        showPopupOnOpaqueOverlay(
-                          openEditProfile,
-                          editProfileType
-                        )
-                      }
-                    >
-                      Edit details
-                    </button>
-                  )}
-                </div>
-                <div>
-                  <PostListLoader />
-                </div>
+              <p className="profile-username">{user?.displayName || ""}</p>
+              <p>@{user?.username || ""}</p>
+              <p className="profile-bio">{user?.bio || ""}</p>
+            </div>
+            <div className="profile-bottom">
+              <div>
+                <ProfileDetails />
+                <FollowDetails />
+                {/* #3 */}
+                {userId === 1 && (
+                  <button
+                    onClick={() =>
+                      showPopupOnOpaqueOverlay(openEditProfile, editProfileType)
+                    }
+                  >
+                    Edit details
+                  </button>
+                )}
+              </div>
+              <div>
+                <PostListLoader />
               </div>
             </div>
           </div>
-        </ScrollCache>
-      </ProfileContext.Provider>
+        </div>
+      </ScrollCache>
     </>
   );
 }

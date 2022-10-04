@@ -6,32 +6,40 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import OtherHousesOutlinedIcon from "@mui/icons-material/OtherHousesOutlined";
+import {
+  chatsBasePathType,
+  communityBasePathType,
+  homeBasePathType,
+  notificationsBasePathType,
+  profileBasePathType,
+  settingsBasePathType,
+} from "./types";
 
 export const sidebarContent = [
   {
     name: "Home",
     icon: <OtherHousesOutlinedIcon />,
-    id: "",
+    id: homeBasePathType,
   },
   {
     name: "Profile",
     icon: <PermIdentityOutlinedIcon />,
-    id: "profile",
+    id: profileBasePathType,
   },
   {
     name: "Community",
     icon: <PeopleAltOutlinedIcon />,
-    id: "community",
+    id: communityBasePathType,
   },
   {
     name: "Chats",
     icon: <LocalPostOfficeOutlinedIcon />,
-    id: "chats",
+    id: chatsBasePathType,
   },
   {
     name: "Notification",
     icon: <NotificationsOutlinedIcon />,
-    id: "notifications",
+    id: notificationsBasePathType,
   },
   // {
   //   name: "Explore",
@@ -41,7 +49,7 @@ export const sidebarContent = [
   {
     name: "Settings",
     icon: <SettingsOutlinedIcon />,
-    id: "settings",
+    id: settingsBasePathType,
   },
   {
     name: "Logout",

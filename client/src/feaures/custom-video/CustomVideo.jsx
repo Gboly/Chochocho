@@ -1,23 +1,17 @@
 import "./custom-video.css";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useState, useRef } from "react";
-import { useEffect, useCallback } from "react";
-// import PlayBackSpeed from "../playback-speed/PlayBackSpeed";
+import { useEffect } from "react";
 import { iconStyle } from "../../util/iconDescContent";
 import video from "../../assets/video.mp4";
 import { timing } from "../../util/functions";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { getPlaybackRateState } from "../posts/post-excerpt/postExcerptSlice";
 
 import Controls from "./controls/Controls";
 
 export default function CustomVideo({ src, postId }) {
-  // const dispatch = useDispatch();
-  // const {isOpen: initialPlay, id: initialPlayId} = useSelector(getInitialPlayState);
-  // const playing = useSelector(getPlayState);
-  // const controls = useSelector(getControlsState);
-
   const [initialPlay, setInitialPlay] = useState(false);
   const [controls, setControls] = useState(false);
   const [playing, setPlaying] = useState(false);

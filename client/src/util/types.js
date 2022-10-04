@@ -36,5 +36,10 @@ export const notificationPageType = "notification-page";
 export const settingsPageType = "settings-page";
 export const communityPageType = "community-page";
 export const chatsPageType = "chats-page";
-
+export const profileBasePathType = "profile";
+export const homeBasePathType = "";
+export const communityBasePathType = "community";
+export const chatsBasePathType = "chats";
+export const notificationsBasePathType = "notifications";
+export const settingsBasePathType = "settings";
 //export const

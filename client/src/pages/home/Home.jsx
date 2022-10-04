@@ -11,8 +11,9 @@ import { getPostOptionState } from "../../feaures/posts/post-excerpt/postExcerpt
 
 import { useOutletContext } from "react-router-dom";
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
-import { createContext, useRef } from "react";
+import { createContext, useRef, useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
+import { LayoutContext } from "../../layout/Layout";
 
 export const HomeContext = createContext();
 
@@ -22,45 +23,51 @@ export default function Home() {
 
   const opaqueLayer = useOutletContext();
   const homeNode = useRef();
+  const { pageNodes } = useContext(LayoutContext);
+
+  // #16, #17
+  useImperativeHandle(
+    pageNodes,
+    () => ({
+      homeNode: homeNode.current,
+    }),
+    [homeNode]
+  );
 
   return (
     <>
-      <HomeContext.Provider value={homeNode}>
-        <ScrollCache ref={homeNode}>
-          <div
-            ref={homeNode}
-            className={`home-wrapper ${opaqueLayer ? "outlet-no-scroll" : ""}`}
-            id={homePageType}
-          >
-            <div className="home-main-wrapper">
-              <div
-                className={`home-story ${
-                  createPostIsActive || postOptionsIsOpen
-                    ? "story-container"
-                    : ""
-                }`}
-              >
-                <Story />
-              </div>
-
-              <section
-                className={`home-create-post-container ${
-                  createPostIsActive ? "home-create-post-container-active" : ""
-                }`}
-              >
-                <CreatePost placeholder={homeCreatePostPlaceholder} />
-              </section>
-
-              <section>
-                <PostListLoader {...{ createPostIsActive }} />
-              </section>
+      <ScrollCache ref={homeNode}>
+        <div
+          ref={homeNode}
+          className={`home-wrapper ${opaqueLayer ? "outlet-no-scroll" : ""}`}
+          id={homePageType}
+        >
+          <div className="home-main-wrapper">
+            <div
+              className={`home-story ${
+                createPostIsActive || postOptionsIsOpen ? "story-container" : ""
+              }`}
+            >
+              <Story />
             </div>
+
+            <section
+              className={`home-create-post-container ${
+                createPostIsActive ? "home-create-post-container-active" : ""
+              }`}
+            >
+              <CreatePost placeholder={homeCreatePostPlaceholder} />
+            </section>
+
+            <section>
+              <PostListLoader {...{ createPostIsActive }} />
+            </section>
           </div>
-          <div className="rightbar-container">
-            <RightBar />
-          </div>
-        </ScrollCache>
-      </HomeContext.Provider>
+        </div>
+        <div className="rightbar-container">
+          <RightBar />
+        </div>
+      </ScrollCache>
     </>
   );
 }

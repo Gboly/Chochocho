@@ -188,16 +188,11 @@ export const setSessionStorageItem = (key, value) => {
   sessionStorage.setItem(key, JSON.stringify(value));
 };
 
-export const setIsReturnPage = (value) => {
+export const updateScrollCache = (key, value) => {
   const scrollCache = getSessionStorageItem(scrollCacheType);
-
-  sessionStorage.setItem(
-    scrollCacheType,
-    JSON.stringify({ ...scrollCache, isReturnPage: value })
-  );
+  setSessionStorageItem(scrollCacheType, { ...scrollCache, [key]: value });
 };
 
-export const updateScrollCache = (pathname, value) => {
-  const scrollCache = getSessionStorageItem(scrollCacheType);
-  setSessionStorageItem(scrollCacheType, { ...scrollCache, [pathname]: value });
+export const getBasePath = (pathName) => {
+  return pathName.split("/")[1] || "";
 };

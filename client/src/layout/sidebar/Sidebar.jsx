@@ -24,7 +24,7 @@ const spreadInOutVariant = {
 
 export default function Sidebar({ size }) {
   // #3
-  sidebarContent[1].id = "profile/1";
+  //sidebarContent[1].id = "profile/1";
 
   const sidebarItems = sidebarContent.map((content, index) => (
     <SidebarItem key={index} {...{ ...content }} />

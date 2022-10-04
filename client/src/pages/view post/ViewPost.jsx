@@ -16,8 +16,9 @@ import {
 import Spinner from "../../components/Spinner/Spinner";
 import { useSelector } from "react-redux";
 import { createContext, useRef } from "react";
-import { forwardRef } from "react";
+import { useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
+import { LayoutContext } from "../../layout/Layout";
 
 export const ViewPostContext = createContext();
 
@@ -31,6 +32,16 @@ export default function ViewPost() {
     useGetCommentsQuery();
 
   const viewPostNode = useRef();
+  const { pageNodes } = useContext(LayoutContext);
+
+  // #16, #17
+  useImperativeHandle(
+    pageNodes,
+    () => ({
+      viewPostNode: viewPostNode.current,
+    }),
+    [viewPostNode]
+  );
 
   const goBack = () => {
     navigate(-1);
@@ -38,38 +49,36 @@ export default function ViewPost() {
 
   return (
     <>
-      <ViewPostContext.Provider value={viewPostNode}>
-        <ScrollCache ref={viewPostNode}>
-          <div
-            ref={viewPostNode}
-            className={`home-wrapper view-post-container ${
-              opaqueLayer ? "outlet-no-scroll" : ""
-            }`}
-            id={viewPostPageType}
-          >
-            <div className="home-main-wrapper">
-              <SettingsHeader
-                text={capitalize(postType)}
-                viewPost={true}
-                closePopup={goBack}
-                overlay={true}
-              />
-              {postIsLoading && <Spinner />}
-              {postLoadIsSuccessful && (
-                <>
-                  <PostExcerpt postId={postId} viewPost={true} />
-                  <CreatePost placeholder={commentCreatePostPlaceholder} />
-                </>
-              )}
-              {commentIsLoading && <Spinner />}
-              {commentLoadIsSuccessful && <CommentsList postId={postId} />}
-            </div>
+      <ScrollCache ref={viewPostNode}>
+        <div
+          ref={viewPostNode}
+          className={`home-wrapper view-post-container ${
+            opaqueLayer ? "outlet-no-scroll" : ""
+          }`}
+          id={viewPostPageType}
+        >
+          <div className="home-main-wrapper">
+            <SettingsHeader
+              text={capitalize(postType)}
+              viewPost={true}
+              closePopup={goBack}
+              overlay={true}
+            />
+            {postIsLoading && <Spinner />}
+            {postLoadIsSuccessful && (
+              <>
+                <PostExcerpt postId={postId} viewPost={true} />
+                <CreatePost placeholder={commentCreatePostPlaceholder} />
+              </>
+            )}
+            {commentIsLoading && <Spinner />}
+            {commentLoadIsSuccessful && <CommentsList postId={postId} />}
           </div>
-          <div className="rightbar-container">
-            <RightBar />
-          </div>
-        </ScrollCache>
-      </ViewPostContext.Provider>
+        </div>
+        <div className="rightbar-container">
+          <RightBar />
+        </div>
+      </ScrollCache>
     </>
   );
 }

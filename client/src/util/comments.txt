@@ -45,3 +45,9 @@ While mapping, remember to filter out removed posts and also take care of hidden
 
 #15
 These postExcerpts are just standing in till i figure out linking commments and posts
+
+#16
+I intend to expose this homeNode to the layout component because it needs to be used inside sidebar. Sidebar is not a child component of home, so, this does the work.
+
+#17
+All these ref distribution s due to my page structure. The body is fixed and its the actual page component that has the scroll ability. Therefore i just cant use document.body.scrollTop to handle all of it. I intend to correct this at a later time.

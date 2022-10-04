@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useContext, useLayoutEffect } from "react";
 import { forwardRef } from "react";
 import { getSessionStorageItem } from "../../util/functions";
 import {
@@ -7,20 +7,27 @@ import {
   viewPostPageType,
 } from "../../util/types";
 import { useLocation, useParams } from "react-router-dom";
+import { LayoutContext } from "../../layout/Layout";
 
 export const ScrollCache = forwardRef(({ children }, ref) => {
   const location = useLocation();
   const { userId } = useParams();
+  const { pageRefresh, setPageRefresh } = useContext(LayoutContext);
+
   useLayoutEffect(() => {
     const scrollCache = getSessionStorageItem(scrollCacheType);
     const key =
       ref.current.id === viewPostPageType ||
-      (userId !== 1 && ref.current.id === profilePageType)
+      // #3
+      (userId !== "1" && ref.current.id === profilePageType)
         ? location.key
         : location.pathname;
 
     ref.current.scrollTop = scrollCache[key] || 0;
-  }, [location, ref, userId]);
+
+    // cleanup function.
+    return () => setPageRefresh(false);
+  }, [location, ref, userId, pageRefresh, setPageRefresh]);
 
   return <>{children}</>;
 });

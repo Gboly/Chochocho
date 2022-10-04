@@ -26,21 +26,24 @@ import { closeOutletOptions } from "../app/actions/communityActions";
 
 import "./layout.css";
 
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import Confirmation from "../components/confirmation/Confirmation";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { getOpaqueOverlayState } from "./layoutSlice";
 
+export const LayoutContext = createContext();
+
 export default function Layout() {
   const dispatch = useDispatch();
+  const pageNodes = useRef();
+  const [pageRefresh, setPageRefresh] = useState(false);
 
   const { isOpen: opaqueOverlayIsOpen } = useSelector(getOpaqueOverlayState);
 
   const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
   const { isOpen: postShareIsOpen } = useSelector(getPostShareState);
-
   const { isOpen: playbackSpeedIsOpen } = useSelector(getPlaybackRateState);
   const { isOpen: notificationOptionsIsOpen } = useSelector(
     getNotificationOptionsState
@@ -77,27 +80,31 @@ export default function Layout() {
 
   return (
     <>
-      <Header />
-      <div className="main-container">
-        <div className="sidebar-container-flex">
-          {/* #1  */}
-          <Sidebar size="lg" />
-          {/* <AnimatePresence>
+      <LayoutContext.Provider
+        value={{ pageNodes, pageRefresh, setPageRefresh }}
+      >
+        <Header />
+        <div className="main-container">
+          <div className="sidebar-container-flex">
+            {/* #1  */}
+            <Sidebar size="lg" />
+            {/* <AnimatePresence>
             {sidebarIsOpen && <Sidebar key={sidebarIsOpen} size="sm" />}
           </AnimatePresence> */}
+          </div>
+          <Outlet context={opaqueOverlayIsOpen} />
         </div>
-        <Outlet context={opaqueOverlayIsOpen} />
-      </div>
-      {/* #2 */}
-      {fullscreenIsOpen && <PostImageFullscreen />}
-      {confirmationIsOpen && <Confirmation type={confirmationType} />}
+        {/* #2 */}
+        {fullscreenIsOpen && <PostImageFullscreen />}
+        {confirmationIsOpen && <Confirmation type={confirmationType} />}
 
-      {opaqueOverlayIsOpen && <OpaqueOverlay />}
-      {transparentLayer && (
-        <div onClick={removeTransparentOverlay}>
-          <TransparentOverlay />
-        </div>
-      )}
+        {opaqueOverlayIsOpen && <OpaqueOverlay />}
+        {transparentLayer && (
+          <div onClick={removeTransparentOverlay}>
+            <TransparentOverlay />
+          </div>
+        )}
+      </LayoutContext.Provider>
     </>
   );
 }

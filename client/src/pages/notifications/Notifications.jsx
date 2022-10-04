@@ -9,6 +9,10 @@ import NotificationOptions from "../../feaures/notification-block/NotificationOp
 import { useSelector, useDispatch } from "react-redux";
 import { getNotificationOptionsState } from "./notificationSlice";
 import { openNotificationOptions } from "../../app/actions/notificationActions";
+import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
+import { useRef, useContext, useImperativeHandle } from "react";
+import { notificationsBasePathType } from "../../util/types";
+import { LayoutContext } from "../../layout/Layout";
 
 const notifications = [
   {
@@ -132,6 +136,17 @@ export default function Notifications() {
   const { isOpen: notificationOptionsIsOpen } = useSelector(
     getNotificationOptionsState
   );
+  const notificationsNode = useRef();
+  const { pageNodes } = useContext(LayoutContext);
+
+  // #16, #17
+  useImperativeHandle(
+    pageNodes,
+    () => ({
+      notificationsNode: notificationsNode.current,
+    }),
+    [notificationsNode]
+  );
 
   const content = notifications.map((item, index) => {
     return (
@@ -151,26 +166,32 @@ export default function Notifications() {
   });
   return (
     <>
-      <div className="notification-wrapper">
-        <div>
-          <header>
-            <span>Notification</span>
-            <i onClick={() => dispatch(openNotificationOptions())}>
-              <SettingsOutlinedIcon style={iconStyle} />
-            </i>
-            <div className="post-options-container notification-options-conatiner">
-              {notificationOptionsIsOpen && (
-                <NotificationOptions options={notificationOptions} />
-              )}
-            </div>
-          </header>
-          {content}
-          <div className="nots-void"></div>
+      <ScrollCache ref={notificationsNode}>
+        <div
+          ref={notificationsNode}
+          className="notification-wrapper"
+          id={notificationsBasePathType}
+        >
+          <div>
+            <header>
+              <span>Notification</span>
+              <i onClick={() => dispatch(openNotificationOptions())}>
+                <SettingsOutlinedIcon style={iconStyle} />
+              </i>
+              <div className="post-options-container notification-options-conatiner">
+                {notificationOptionsIsOpen && (
+                  <NotificationOptions options={notificationOptions} />
+                )}
+              </div>
+            </header>
+            {content}
+            <div className="nots-void"></div>
+          </div>
         </div>
-      </div>
-      <div className="rightbar-container">
-        <RightBar />
-      </div>
+        <div className="rightbar-container">
+          <RightBar />
+        </div>
+      </ScrollCache>
     </>
   );
 }
