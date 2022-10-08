@@ -2,20 +2,23 @@ import "./view-post.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import RightBar from "../../feaures/right-bar/RightBar";
 import { SettingsHeader } from "../settings/Settings";
-import { capitalize, setIsReturnPage } from "../../util/functions";
+import { capitalize } from "../../util/functions";
 import { postType, viewPostPageType } from "../../util/types";
 import PostExcerpt from "../../feaures/posts/post-excerpt/PostExcerpt";
 import CreatePost from "../../feaures/posts/create-post/CreatePost";
 import { commentCreatePostPlaceholder } from "../../util/types";
 import { useParams } from "react-router-dom";
-import { useGetPostsQuery } from "../../app/api-slices/postsApiSlice";
 import {
-  selectCommentByPostId,
-  useGetCommentsQuery,
-} from "../../feaures/comments/commentsApiSlice";
+  selectPostById,
+  selectPostsAndPostCommentsResult,
+  selectPostsIds,
+  useGetPostCommentsQuery,
+  useGetPostsQuery,
+} from "../../app/api-slices/postsApiSlice";
+import { selectCommentByPostId } from "../../feaures/comments/commentsApiSlice";
 import Spinner from "../../components/Spinner/Spinner";
 import { useSelector } from "react-redux";
-import { createContext, useRef } from "react";
+import { createContext, useEffect, useRef, useState } from "react";
 import { useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { LayoutContext } from "../../layout/Layout";
@@ -28,8 +31,23 @@ export default function ViewPost() {
   const { postId } = useParams();
   const { isLoading: postIsLoading, isSuccess: postLoadIsSuccessful } =
     useGetPostsQuery();
-  const { isLoading: commentIsLoading, isSuccess: commentLoadIsSuccessful } =
-    useGetCommentsQuery();
+
+  const [comments, setComments] = useState([]);
+  const [commentsSearchQuery, setCommentsSearchQuery] = useState("");
+
+  const [parents, setParents] = useState([]);
+
+  const post = useSelector((state) => selectPostById(state, postId));
+
+  const { isLoading: commentIsLoading } =
+    useGetPostCommentsQuery(commentsSearchQuery);
+
+  useEffect(() => {
+    setComments(post?.comments || []);
+    setCommentsSearchQuery((post?.comments || []).join("&id=") || "");
+
+    setParents(post?.parents || []);
+  }, [post]);
 
   const viewPostNode = useRef();
   const { pageNodes } = useContext(LayoutContext);
@@ -67,12 +85,20 @@ export default function ViewPost() {
             {postIsLoading && <Spinner />}
             {postLoadIsSuccessful && (
               <>
+                <ParentsList parents={parents} />
                 <PostExcerpt postId={postId} viewPost={true} />
                 <CreatePost placeholder={commentCreatePostPlaceholder} />
+                {commentIsLoading ? (
+                  <Spinner />
+                ) : (
+                  <CommentsList comments={comments} />
+                )}
+                {/* {commentIsLoading && <Spinner />}
+                {commentLoadIsSuccessful && (
+                  <CommentsList postId={postId} comments={comments} />
+                )} */}
               </>
             )}
-            {commentIsLoading && <Spinner />}
-            {commentLoadIsSuccessful && <CommentsList postId={postId} />}
           </div>
         </div>
         <div className="rightbar-container">
@@ -83,19 +109,30 @@ export default function ViewPost() {
   );
 }
 
-export const CommentsList = ({ postId }) => {
-  const comments = useSelector((state) => selectCommentByPostId(state, postId));
+export const CommentsList = ({ comments }) => {
+  const postsIds = useSelector(selectPostsIds);
 
   // #13, #14
-  // const commentList = comments.reduce((commentId) => {
-
-  // })
-
-  return (
-    <>
-      <PostExcerpt postId={1} comment={true} />
-      <PostExcerpt postId={6} comment={true} />
-      <PostExcerpt postId={5} comment={true} />
-    </>
+  const commentList = comments.map(
+    (commentId) =>
+      postsIds.includes(commentId) && (
+        <PostExcerpt key={commentId} postId={commentId} comment={true} />
+      )
   );
+
+  return <>{commentList}</>;
+};
+
+export const ParentsList = ({ parents }) => {
+  const postsIds = useSelector(selectPostsIds);
+
+  // #13, #14
+  const commentList = parents.map(
+    (parentId) =>
+      postsIds.includes(parentId) && (
+        <PostExcerpt key={parentId} postId={parentId} comment={true} />
+      )
+  );
+
+  return <>{commentList}</>;
 };

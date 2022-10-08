@@ -1,8 +1,5 @@
 import "./sidebar.css";
 import { sidebarContent } from "../../util/sidebarContent";
-import { useSelector } from "react-redux";
-import { getSidebarState } from "../layoutSlice";
-
 import SidebarTop from "../../components/sidebar/sidebar-top/SidebarTop";
 import SidebarItem from "../../components/sidebar/sidebar-item/SidebarItem";
 import { motion } from "framer-motion";
@@ -24,7 +21,6 @@ const spreadInOutVariant = {
 
 export default function Sidebar({ size }) {
   // #3
-  //sidebarContent[1].id = "profile/1";
 
   const sidebarItems = sidebarContent.map((content, index) => (
     <SidebarItem key={index} {...{ ...content }} />

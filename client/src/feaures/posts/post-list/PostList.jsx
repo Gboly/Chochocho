@@ -2,7 +2,7 @@ import "./post-list.css";
 import PostExcerpt from "../post-excerpt/PostExcerpt";
 import PostHidden from "../post-hidden/PostHidden";
 import { useSelector } from "react-redux";
-import { selectPostsIds } from "../../../app/api-slices/postsApiSlice";
+import { selectRegularPostIds } from "../../../app/api-slices/postsApiSlice";
 import { selectPostIdsByUserId } from "../../../app/api-slices/postsApiSlice";
 import {
   getHiddenPosts,
@@ -11,7 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 
 const PostList = () => {
-  const allPostIds = useSelector(selectPostsIds);
+  const allPostIds = useSelector(selectRegularPostIds);
   const hiddenPosts = useSelector(getHiddenPosts);
   const removedPosts = useSelector(getRemovedPosts);
 

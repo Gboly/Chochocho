@@ -39,6 +39,15 @@ export default function SidebarItem({ name, icon, id }) {
   };
   const cleanUp = () => setRoute(false);
 
+  const currentPage = () => {
+    const match =
+      id === profileBasePathType ? location.pathname === link : pathName === id;
+    if (!match) {
+      return "";
+    }
+    return "current-page";
+  };
+
   return (
     <>
       <NavigateWithScrollCache
@@ -48,7 +57,7 @@ export default function SidebarItem({ name, icon, id }) {
       />
       <div
         id={id}
-        className={`sidebar-item ${pathName === id ? "current-page" : ""}`}
+        className={`sidebar-item ${currentPage()}`}
         onClick={handleClick}
       >
         <i>{icon}</i>

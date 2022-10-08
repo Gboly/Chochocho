@@ -68,7 +68,8 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
 
   const handleClick = (e) => {
     e && e.stopPropagation && e.stopPropagation();
-    setRoute(true);
+    // When a truthy viewPost prop is passed then do not navigate.
+    !viewPost && setRoute(true);
   };
 
   const handleRouting = () => navigate(`/${user?.username}/post/${postId}`);
@@ -76,14 +77,11 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
 
   return (
     <>
-      {/* When a truthy viewPost prop is passed then do not navigate. */}
-      {!viewPost && (
-        <NavigateWithScrollCache
-          clicked={route}
-          handleRouting={handleRouting}
-          cleanUp={cleanUp}
-        />
-      )}
+      <NavigateWithScrollCache
+        clicked={route}
+        handleRouting={handleRouting}
+        cleanUp={cleanUp}
+      />
       <main
         className={`post-container ${
           !isPopUp && !viewPost ? "post-container-Wpopup" : ""

@@ -19,9 +19,10 @@ import { scrollCacheType } from "./util/types";
 
 window.onload = () => sessionStorage.removeItem(scrollCacheType);
 
-store.dispatch(extendedPostsApiSlice.endpoints.getPosts.initiate());
+//store.dispatch(extendedPostsApiSlice.endpoints.getPosts.initiate());
+//store.dispatch(extendedPostsApiSlice.endpoints.getPostComments.initiate());
 store.dispatch(extendedUsersApiSlice.endpoints.getUsers.initiate());
-store.dispatch(extendedCommentsApiSlice.endpoints.getComments.initiate());
+//store.dispatch(extendedCommentsApiSlice.endpoints.getComments.initiate());
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

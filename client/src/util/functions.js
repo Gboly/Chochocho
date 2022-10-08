@@ -196,3 +196,9 @@ export const updateScrollCache = (key, value) => {
 export const getBasePath = (pathName) => {
   return pathName.split("/")[1] || "";
 };
+
+export const unNormalize = (entities) =>
+  Object.entries(entities).reduce((accum, [key, value]) => {
+    accum = [...accum, value];
+    return accum;
+  }, []);

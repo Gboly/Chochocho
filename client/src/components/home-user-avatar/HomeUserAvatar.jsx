@@ -31,7 +31,7 @@ const HomeUserAvatar = ({ userId, size, style, noLink, action }) => {
 
     //   }
     // }
-    setRoute(true);
+    !noLink && location.pathname !== `/profile/${userId}` && setRoute(true);
     action && action();
   };
 
@@ -40,13 +40,11 @@ const HomeUserAvatar = ({ userId, size, style, noLink, action }) => {
 
   return (
     <>
-      {!noLink && location.pathname !== `/profile/${userId}` && (
-        <NavigateWithScrollCache
-          clicked={route}
-          handleRouting={handleRouting}
-          cleanUp={cleanUp}
-        />
-      )}
+      <NavigateWithScrollCache
+        clicked={route}
+        handleRouting={handleRouting}
+        cleanUp={cleanUp}
+      />
       <img
         src={src}
         onError={() => {
