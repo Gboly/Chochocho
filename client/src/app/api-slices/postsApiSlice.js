@@ -1,7 +1,4 @@
-import { createEntityAdapter, createSelector, current } from "@reduxjs/toolkit";
-import { unNormalize } from "../../util/functions";
-import { store } from "../store";
-
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "../api";
 
 const postsAdapter = createEntityAdapter({
@@ -50,13 +47,6 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
 export const { useGetPostsQuery, useGetPostCommentsQuery } =
   extendedPostsApiSlice;
 
-const selectPostResult = extendedPostsApiSlice.endpoints.getPosts.select();
-
-export const selectPostData = createSelector(selectPostResult, (postResult) => {
-  const data = postResult.data;
-  return data;
-});
-
 const selectedEndPoints = ["getPosts", "getPostComments"];
 
 const selectQueriesData = (queries) =>
@@ -70,7 +60,7 @@ const selectQueriesData = (queries) =>
 const mergeSelectedQueriesData = (selectedQueriesData) =>
   selectedQueriesData.reduce((accum, current) => {
     accum = {
-      // Removing duplicates from ids
+      // Removing duplicates from ids(if any)
       ids: [...new Set([...accum.ids, ...current.ids])],
       entities: { ...accum.entities, ...current.entities },
     };

@@ -9,7 +9,7 @@ import {
 import { useLocation, useParams } from "react-router-dom";
 import { LayoutContext } from "../../layout/Layout";
 
-export const ScrollCache = forwardRef(({ children }, ref) => {
+export const ScrollCache = forwardRef(({ children, defaultScrollTop }, ref) => {
   const location = useLocation();
   const { userId } = useParams();
   const { pageRefresh, setPageRefresh } = useContext(LayoutContext);
@@ -23,11 +23,11 @@ export const ScrollCache = forwardRef(({ children }, ref) => {
         ? location.key
         : location.pathname;
 
-    ref.current.scrollTop = scrollCache[key] || 0;
+    ref.current.scrollTop = scrollCache[key] || defaultScrollTop || 0;
 
     // cleanup function.
     return () => setPageRefresh(false);
-  }, [location, ref, userId, pageRefresh, setPageRefresh]);
+  }, [location, ref, userId, pageRefresh, setPageRefresh, defaultScrollTop]);
 
   return <>{children}</>;
 });
