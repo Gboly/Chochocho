@@ -48,6 +48,7 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
     media,
     likes,
     reposts,
+    comments,
     visibleFor,
     date,
   } = post;
@@ -120,7 +121,7 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
               <>
                 <div className="post-engagements">
                   <Likes {...{ likes, userId }} />
-                  <Others {...{ postId, reposts }} />
+                  <Others {...{ postId, reposts, comments }} />
                 </div>
                 <hr className="post-hr" />
               </>

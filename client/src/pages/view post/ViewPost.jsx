@@ -29,6 +29,9 @@ export default function ViewPost() {
   const navigate = useNavigate();
   const opaqueLayer = useOutletContext();
   const { postId } = useParams();
+  const postsIds = useSelector(selectPostsIds);
+  const post = useSelector((state) => selectPostById(state, postId));
+
   const { isLoading: postIsLoading, isSuccess: postLoadIsSuccessful } =
     useGetPostsQuery();
 
@@ -37,9 +40,6 @@ export default function ViewPost() {
 
   const [parents, setParents] = useState([]);
   const [parentsSearchQuery, setParentsSearchQuery] = useState("");
-
-  const postsIds = useSelector(selectPostsIds);
-  const post = useSelector((state) => selectPostById(state, postId));
 
   const { isLoading: commentIsLoading } =
     useGetPostCommentsQuery(commentsSearchQuery);
@@ -84,7 +84,7 @@ export default function ViewPost() {
     navigate(-1);
   };
 
-  // This custom hook handles this process. The parameter postId would serve as dependency to retrieve ref detail
+  // This custom hook handles this process. The parameter postId would serve as dependency to retrieve ref details
   const [defaultScrollTop, handleRef] = useOffsetTop(postId);
 
   return (

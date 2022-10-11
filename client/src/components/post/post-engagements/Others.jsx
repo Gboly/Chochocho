@@ -3,9 +3,6 @@ import {
   showPopupOnOpaqueOverlay,
   truncateEngagements,
 } from "../../../util/functions";
-import { useSelector } from "react-redux";
-import { selectPostTotalComments } from "../../../feaures/comments/commentsApiSlice";
-import { useDispatch } from "react-redux";
 import { openEngagedUsersList } from "../../../app/actions/homeActions";
 import {
   engagedUsersListType,
@@ -16,19 +13,15 @@ import {
   likeType,
 } from "../../../util/types";
 
-export default function Others({ postId, reposts, likes }) {
+export default function Others({ postId, reposts, likes, comments }) {
   const repostTotal = reposts.length;
 
-  const commentsTotal = useSelector((state) =>
-    selectPostTotalComments(state, postId)
-  );
-
-  const commentsOrLikesTotal = likes ? likes.length : commentsTotal;
+  const commentsOrLikesTotal = likes ? likes.length : comments.length;
   const commentsOrLikesType = likes ? otherLikeType : othercommentType;
 
   const types = {
-    [repostType]: { type: repostType, userIds: reposts },
-    [likeType]: { type: likeType, userIds: likes },
+    [otherRepostType]: { type: repostType, userIds: reposts },
+    [otherLikeType]: { type: likeType, userIds: likes },
   };
 
   const handleClick = (e, type) => {
@@ -55,7 +48,7 @@ export default function Others({ postId, reposts, likes }) {
       {repostTotal > 0 && (
         <span
           className="share-count"
-          onClick={(e) => handleClick(e, repostType)}
+          onClick={(e) => handleClick(e, otherRepostType)}
         >
           {truncateEngagements(repostTotal)}{" "}
           {`${otherRepostType}${repostTotal === 1 ? "" : "s"}`}

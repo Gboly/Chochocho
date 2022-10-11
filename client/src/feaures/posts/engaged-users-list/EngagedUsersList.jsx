@@ -22,7 +22,6 @@ export default function EngagedUsersList() {
     size: "3",
     action: handleClose,
   };
-
   const header = `${capitalize(type)} ${
     !followTypes.includes(type) ? "by" : ""
   }`;
@@ -31,6 +30,7 @@ export default function EngagedUsersList() {
 
   const EngagedUser = ({ userId }) => {
     const user = useSelector((state) => selectUserById(state, userId));
+    // #3
     const authUserId = 1;
     const displayName = user?.displayName || "";
     const username = user?.username || "";
