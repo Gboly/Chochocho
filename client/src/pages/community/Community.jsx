@@ -9,18 +9,23 @@ import {
   setOutletOption,
 } from "../../app/actions/communityActions";
 import { Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCommunityOutletIndexFromLocation } from "../../util/functions";
-import { selectUserById } from "../../app/api-slices/usersApiSlice";
+import {
+  selectUserById,
+  useGetUserByIdQuery,
+} from "../../app/api-slices/usersApiSlice";
+import { LayoutContext } from "../../layout/Layout";
 
 export default function Community() {
   const dispatch = useDispatch();
   const { isOpen: outletOptionIsOpen, valueId: value } =
     useSelector(getOutletOptionState);
-  const user = useSelector((state) => selectUserById(state, 1));
-  const followers = user?.followers || [];
-  const following = user?.following || [];
+
+  const { authUser } = useContext(LayoutContext);
+  const followers = authUser?.followers || [];
+  const followings = authUser?.following || [];
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -33,7 +38,7 @@ export default function Community() {
 
   const outlets = [
     `${followers.length} Followers`,
-    `${following.length} Following`,
+    `${followings.length} Following`,
     "People you might like",
   ];
 
@@ -72,7 +77,7 @@ export default function Community() {
               <CustomSelect {...CustomSelectProps} />
             </div>
           </header>
-          <Outlet />
+          {authUser && <Outlet context={{ followers, followings, authUser }} />}
         </div>
       </div>
       <div className="rightbar-container">

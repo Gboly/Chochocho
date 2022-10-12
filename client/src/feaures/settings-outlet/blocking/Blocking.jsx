@@ -4,19 +4,38 @@ import { BlockedUser } from "./BlockedUser";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector } from "react-redux";
-import { selectUserById } from "../../../app/api-slices/usersApiSlice";
-import { useState, useEffect } from "react";
+import {
+  selectUserById,
+  useGetUsersByIdQuery,
+} from "../../../app/api-slices/usersApiSlice";
+import { useState, useEffect, useContext } from "react";
 import Searchbar from "../../../components/searchbar/Searchbar";
+import { LayoutContext } from "../../../layout/Layout";
+import { prepareUserIdsForQuery } from "../../../util/functions";
+import Spinner from "../../../components/Spinner/Spinner";
 
 export default function Blocking() {
-  const authUser = useSelector((state) => selectUserById(state, 1));
+  const {
+    authUser: { blocked },
+  } = useContext(LayoutContext);
+
+  const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
+
+  const blockedIds = blocked.map((user) => user.userId);
+
+  const {
+    isLoading: blockedUsersFetchIsLoading,
+    data: blockedUsersFetchResult,
+  } = useGetUsersByIdQuery({
+    userIds: prepareUserIdsForQuery(blockedIds),
+    start: skip,
+    end: limit,
+  });
+
+  const isFetched = (userId) =>
+    (blockedUsersFetchResult || []).ids?.includes(userId) || false;
 
   const [searchText, setSearchText] = useState("");
-  const [blockedList, setBlockedList] = useState([]);
-
-  useEffect(() => {
-    authUser && setBlockedList(authUser?.blocked);
-  }, [authUser]);
 
   const handleChange = (e) => setSearchText(e.target.value);
 
@@ -34,13 +53,16 @@ export default function Blocking() {
         />
         <p>Blocked users list</p>
         <ul className="no-bullet">
-          {blockedList.map((user, index) => {
+          {(blocked || []).map((user, index) => {
             const { userId, date } = user;
             return (
-              <BlockedUser key={index} {...{ userId, date, searchText }} />
+              isFetched(userId) && (
+                <BlockedUser key={index} {...{ userId, date, searchText }} />
+              )
             );
           })}
         </ul>
+        {blockedUsersFetchIsLoading && <Spinner />}
       </section>
     </main>
   );

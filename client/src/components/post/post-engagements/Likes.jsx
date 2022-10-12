@@ -2,12 +2,19 @@ import "./likes.css";
 import {
   showPopupOnOpaqueOverlay,
   truncateLikesEngagements,
+  prepareUserIdsForQuery,
 } from "../../../util/functions";
 import HomeUserAvatar from "../../home-user-avatar/HomeUserAvatar";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openEngagedUsersList } from "../../../app/actions/homeActions";
 import { engagedUsersListType, likeType } from "../../../util/types";
+import {
+  selectFetchedUsersById,
+  useGetUsersByIdQuery,
+} from "../../../app/api-slices/usersApiSlice";
 
+const start = 0;
+const end = 3;
 export default function Likes({ likes }) {
   const handleClick = (e) => {
     e && e.stopPropagation && e.stopPropagation();
@@ -17,16 +24,20 @@ export default function Likes({ likes }) {
     });
   };
 
-  const content = likes.reduce((accum, current, index) => {
-    if (index <= 2) {
-      accum.push(
-        <div key={index} className="likes-indicator">
-          <HomeUserAvatar userId={current} size="2.2" />
-        </div>
-      );
-    }
-    return accum;
-  }, []);
+  const {
+    isLoading: UsersThatLikedFetchIsLoading,
+    data: usersThatLikedResult,
+  } = useGetUsersByIdQuery({
+    userIds: prepareUserIdsForQuery(likes),
+    start,
+    end,
+  });
+
+  const isFetched = (userId) =>
+    (usersThatLikedResult || []).ids?.includes(userId) || false;
+  const content = (usersThatLikedResult?.ids || []).map((userId) => {
+    return isFetched(userId) && <Liked key={userId} userId={userId} />;
+  });
 
   return (
     <div className="post-bottom-left">
@@ -43,3 +54,15 @@ export default function Likes({ likes }) {
     </div>
   );
 }
+
+const Liked = ({ userId }) => {
+  const { profileImage } = useSelector((state) =>
+    selectFetchedUsersById(state, userId)
+  );
+
+  return (
+    <div className="likes-indicator">
+      <HomeUserAvatar userId={userId} size="2.2" src={profileImage} />
+    </div>
+  );
+};

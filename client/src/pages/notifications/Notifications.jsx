@@ -131,6 +131,7 @@ const notifications = [
   },
 ];
 
+// Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
 export default function Notifications() {
   const dispatch = useDispatch();
   const { isOpen: notificationOptionsIsOpen } = useSelector(

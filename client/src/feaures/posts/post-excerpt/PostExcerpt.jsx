@@ -6,7 +6,6 @@ import Others from "../../../components/post/post-engagements/Others";
 import PostReaction from "../post-reaction/PostReaction";
 import PostOptions from "../post-options/PostOptions";
 import PostShare from "../post-share/PostShare";
-
 import { useSelector, useDispatch } from "react-redux";
 import { selectPostById } from "../../../app/api-slices/postsApiSlice";
 import { openPostOption } from "../../../app/actions/homeActions";
@@ -18,10 +17,40 @@ import { iconStyle } from "../../../util/iconDescContent";
 import UserCameo from "../../../components/user-cameo/UserCameo";
 import { convertToUserFriendlyTime } from "../../../util/functions";
 import { useNavigate } from "react-router-dom";
-import { selectUserById } from "../../../app/api-slices/usersApiSlice";
+import { useGetUserByIdQuery } from "../../../app/api-slices/usersApiSlice";
 import NavigateWithScrollCache from "../../scroll-cache/NavigateWithScrollCache";
+import Spinner from "../../../components/Spinner/Spinner";
 
-const PostExcerpt = ({ postId, viewPost, comment }) => {
+export default function PostExcerpt({ postId, viewPost, comment }) {
+  const { userId } = useSelector((state) => selectPostById(state, postId));
+
+  const {
+    data: user,
+    isLoading: userFetchIsLoading,
+    isSuccess: userFetchIsSuccesfull,
+  } = useGetUserByIdQuery(userId);
+
+  return (
+    <>
+      {userFetchIsLoading && (
+        // This should be skeleton
+        <Spinner />
+      )}
+      {userFetchIsSuccesfull && user && (
+        <Excerpt
+          {...{
+            postId,
+            viewPost,
+            comment,
+            user,
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+const Excerpt = ({ postId, viewPost, comment, user }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post = useSelector((state) => selectPostById(state, postId));
@@ -53,7 +82,7 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
     date,
   } = post;
 
-  const user = useSelector((state) => selectUserById(state, userId));
+  const { username, displayName, profileImage: src } = user;
 
   const postOptionIcon = (
     <i
@@ -73,7 +102,7 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
     !viewPost && setRoute(true);
   };
 
-  const handleRouting = () => navigate(`/${user?.username}/post/${postId}`);
+  const handleRouting = () => navigate(`/${username}/post/${postId}`);
   const cleanUp = () => setRoute(false);
 
   return (
@@ -101,9 +130,10 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
               {...{
                 userId,
                 icon: postOptionIcon,
-                avatarProp: { size: 3 },
-                aside: viewPost ? 0 : convertToUserFriendlyTime(date),
-                main: 0,
+                avatarProp: { size: 3, src },
+                aside: !viewPost && convertToUserFriendlyTime(date),
+                header: displayName,
+                sub: username,
                 single: true,
               }}
             />
@@ -139,8 +169,6 @@ const PostExcerpt = ({ postId, viewPost, comment }) => {
     </>
   );
 };
-
-export default PostExcerpt;
 
 export const FullDate = ({ date, visibleFor }) => {
   const fullDate = new Date(date).toLocaleString("en-US", {

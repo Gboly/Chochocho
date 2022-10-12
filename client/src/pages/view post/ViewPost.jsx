@@ -135,6 +135,7 @@ export default function ViewPost() {
   );
 }
 
+// Skeletons should be used to indicate loading instead of spinners
 export const CommentsList = ({ comments, isFetched }) => {
   // #13, #14
   const commentList = comments.map(

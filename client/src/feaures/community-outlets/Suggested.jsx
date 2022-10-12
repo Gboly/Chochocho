@@ -1,35 +1,35 @@
 import "./community-outlet.css";
-
 import CommunityBlock from "./CommunityBlock";
-import { useSelector } from "react-redux";
-import {
-  selectUserById,
-  selectUsersIds,
-} from "../../app/api-slices/usersApiSlice";
+import { useOutletContext } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useGetUsersByIdExceptionsQuery } from "../../app/api-slices/usersApiSlice";
+import Spinner from "../../components/Spinner/Spinner";
+import { prepareUserIdsForQuery } from "../../util/functions";
+import { exemptionType } from "../../util/types";
 
 export default function Suggested() {
-  const authUser = useSelector((state) => selectUserById(state, 1));
-  //Filtering the authUser from userIds should be done in the backend
-  const userIds = useSelector(selectUsersIds);
+  const { followings, followers, authUser } = useOutletContext();
+  const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 
-  const following = authUser?.following;
-  const followers = authUser?.followers;
+  const friends = [authUser?.id, ...followings, ...followers];
 
-  const associatedUsers =
-    following && followers ? followers.concat(following) : [];
+  const { isLoading: suggestedFetchIsLoading, data: suggestedResult } =
+    useGetUsersByIdExceptionsQuery({
+      userIds: prepareUserIdsForQuery(friends, exemptionType),
+      start: skip,
+      end: limit,
+    });
 
-  const uniqueAssociatedUsers = [...new Set(associatedUsers)];
-
-  const suggestedUsers = userIds.filter(
-    (id) => id !== 1 && !uniqueAssociatedUsers.includes(id)
-  );
+  const isFetched = (userId) =>
+    (suggestedResult || []).ids?.includes(userId) || false;
 
   return (
     <>
-      {suggestedUsers &&
-        suggestedUsers.map((userId, index) => (
-          <CommunityBlock key={index} {...{ userId }} />
-        ))}
+      {(suggestedResult?.ids || []).map(
+        (userId, index) =>
+          isFetched(userId) && <CommunityBlock key={index} {...{ userId }} />
+      )}
+      {suggestedFetchIsLoading && <Spinner />}
       <div
         className="nots-void"
         style={{ height: "1rem", padding: "7rem" }}

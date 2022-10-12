@@ -5,8 +5,13 @@ import { useDispatch } from "react-redux";
 import { openCreatePost } from "../../../../app/actions/homeActions";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../../../util/functions";
+import { useContext } from "react";
+import { LayoutContext } from "../../../../layout/Layout";
 
 export default function CreatePostIdle({ placeholder }) {
+  const {
+    authUser: { profileImage },
+  } = useContext(LayoutContext);
   return (
     <div className="create-container">
       <form className="create-wrapper">
@@ -14,6 +19,7 @@ export default function CreatePostIdle({ placeholder }) {
           <HomeUserAvatar
             //#3
             userId={1}
+            src={profileImage}
             size="2.2"
             style={{ marginRight: "1rem" }}
           />

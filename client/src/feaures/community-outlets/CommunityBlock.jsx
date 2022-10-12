@@ -8,33 +8,33 @@ import {
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { useSelector } from "react-redux";
-import { selectUserById } from "../../app/api-slices/usersApiSlice";
+import {
+  selectFetchedUsersById,
+  selectUserById,
+} from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
+import { useOutletContext } from "react-router-dom";
 
 const iconLink = [faGlobe, faFacebook, faTwitter, faInstagram];
 
 export default function CommunityBlock({ userId }) {
-  const authUser = useSelector((state) => selectUserById(state, 1));
-  const user = useSelector((state) => selectUserById(state, userId));
+  const { followers, followings } = useOutletContext();
 
-  const followings = authUser?.following;
-  const followers = authUser?.followers;
+  const {
+    bio,
+    displayName,
+    username,
+    website,
+    profileImage,
+    facebook,
+    twitter,
+    instagram,
+  } = useSelector((state) => selectFetchedUsersById(state, userId));
 
-  const bio = user?.bio;
-  const displayName = user?.displayName;
-  const username = user?.username;
-  const profileImage = user?.profileImage;
+  const userLinks = [website, facebook, twitter, instagram];
 
-  const userLinks = [
-    user?.website,
-    user?.facebook,
-    user?.twitter,
-    user?.instagram,
-  ];
-
-  const following = followings ? followings.includes(userId) : false;
-  const followed = followers ? followers.includes(userId) : false;
-
+  const following = followings.includes(userId);
+  const followed = followers.includes(userId);
   const followStatus = following ? "unfollow" : "follow";
 
   const iconContent = userLinks.reduce((accum, current, index) => {
@@ -57,7 +57,7 @@ export default function CommunityBlock({ userId }) {
   return (
     <section>
       <div>
-        <HomeUserAvatar userId={userId} size="4.5" />
+        <HomeUserAvatar userId={userId} size="4.5" src={profileImage} />
         <article>
           <div>
             <p>{displayName}</p>

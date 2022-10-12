@@ -42,4 +42,5 @@ export const communityBasePathType = "community";
 export const chatsBasePathType = "chats";
 export const notificationsBasePathType = "notifications";
 export const settingsBasePathType = "settings";
+export const exemptionType = "exemption";
 //export const

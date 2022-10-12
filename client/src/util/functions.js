@@ -9,7 +9,7 @@ import {
   closeOpaqueOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
-import { editProfileImageType, scrollCacheType } from "./types";
+import { editProfileImageType, scrollCacheType, exemptionType } from "./types";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -202,3 +202,41 @@ export const unNormalize = (entities) =>
     accum = [...accum, value];
     return accum;
   }, []);
+
+const selectQueriesData = (queries, selectedEndPoints) =>
+  Object.values(queries).reduce((accum, query) => {
+    selectedEndPoints.includes(query.endpointName) &&
+      query.status === "fulfilled" &&
+      accum.push(query.data);
+    return accum;
+  }, []);
+
+const mergeSelectedQueriesData = (selectedQueriesData, initialState) =>
+  selectedQueriesData.reduce((accum, current) => {
+    accum = {
+      // Removing duplicates from ids(if any)
+      ids: [...new Set([...accum.ids, ...current.ids])],
+      entities: { ...accum.entities, ...current.entities },
+    };
+    return accum;
+  }, initialState);
+
+export const selectTotalFetchedResult = (
+  state,
+  selectedEndPoints,
+  initialState
+) => {
+  const selectedQueriesData = selectQueriesData(
+    state.api.queries,
+    selectedEndPoints
+  );
+  const mergedSelectedQueriesData = mergeSelectedQueriesData(
+    selectedQueriesData,
+    initialState
+  );
+  return mergedSelectedQueriesData;
+};
+
+export const prepareUserIdsForQuery = (userIds, type) => {
+  return userIds.join(`&id${type === exemptionType ? "_ne" : ""}=`) || "";
+};

@@ -7,6 +7,7 @@ import { visibilityOptions } from "../../../../util/formRadioOptions";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { iconStyle } from "../../../../util/iconDescContent";
 import { useDispatch, useSelector } from "react-redux";
+import { useContext } from "react";
 import {
   closeCreatePost,
   hideVisibiltyOptions,
@@ -26,8 +27,12 @@ import {
   closePopupOnOpaqueOverlay,
   showPopupOnOpaqueOverlay,
 } from "../../../../util/functions";
+import { LayoutContext } from "../../../../layout/Layout";
 
 export default function CreatePostActive({ placeholder }) {
+  const {
+    authUser: { profileImage },
+  } = useContext(LayoutContext);
   const dispatch = useDispatch();
   const { isOpen: visibilityOptionsIsOpen, valueId } = useSelector(
     getVisibilityOptionsState
@@ -112,6 +117,7 @@ export default function CreatePostActive({ placeholder }) {
             <HomeUserAvatar
               // #3
               userId={1}
+              src={profileImage}
               size="2.2"
               style={{ marginRight: "1rem" }}
               noLink={true}

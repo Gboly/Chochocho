@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "../api";
+import { selectTotalFetchedResult } from "../../util/functions";
 
 const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
@@ -49,38 +50,13 @@ export const { useGetPostsQuery, useGetPostCommentsQuery } =
 
 const selectedEndPoints = ["getPosts", "getPostComments"];
 
-const selectQueriesData = (queries) =>
-  Object.values(queries).reduce((accum, query) => {
-    selectedEndPoints.includes(query.endpointName) &&
-      query.status === "fulfilled" &&
-      accum.push(query.data);
-    return accum;
-  }, []);
-
-const mergeSelectedQueriesData = (selectedQueriesData) =>
-  selectedQueriesData.reduce((accum, current) => {
-    accum = {
-      // Removing duplicates from ids(if any)
-      ids: [...new Set([...accum.ids, ...current.ids])],
-      entities: { ...accum.entities, ...current.entities },
-    };
-    return accum;
-  }, initialState);
-
-export const selectPostsAndPostCommentsResult = (state) => {
-  const selectedQueriesData = selectQueriesData(state.api.queries);
-  const mergedSelectedQueriesData =
-    mergeSelectedQueriesData(selectedQueriesData);
-  return mergedSelectedQueriesData;
-};
-
 // This provides both regular posts and comments
 export const {
   selectAll: selectAllPosts,
   selectIds: selectPostsIds,
   selectById: selectPostById,
 } = postsAdapter.getSelectors((state) =>
-  selectPostsAndPostCommentsResult(state)
+  selectTotalFetchedResult(state, selectedEndPoints, initialState)
 );
 
 // This provides all regular postIds (no comments)
