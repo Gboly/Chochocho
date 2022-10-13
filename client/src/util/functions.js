@@ -126,7 +126,8 @@ export const getCommunityOutletIndexFromLocation = (locationPath) => {
   return communityRoutes.indexOf(currentPath);
 };
 
-export const capitalize = (word) => `${word[0].toUpperCase()}${word.slice(1)}`;
+export const capitalize = (word) =>
+  word ? `${word[0].toUpperCase()}${word.slice(1)}` : "";
 
 export const copyTextToClipboard = async (text) => {
   try {
@@ -197,11 +198,7 @@ export const getBasePath = (pathName) => {
   return pathName.split("/")[1] || "";
 };
 
-export const unNormalize = (entities) =>
-  Object.entries(entities).reduce((accum, [key, value]) => {
-    accum = [...accum, value];
-    return accum;
-  }, []);
+export const unNormalize = (data) => Object.values(data.entities);
 
 const selectQueriesData = (queries, selectedEndPoints) =>
   Object.values(queries).reduce((accum, query) => {
@@ -239,4 +236,9 @@ export const selectTotalFetchedResult = (
 
 export const prepareUserIdsForQuery = (userIds, type) => {
   return userIds.join(`&id${type === exemptionType ? "_ne" : ""}=`) || "";
+};
+
+export const prepareIdsForQuery = (documentField, idKey) => {
+  const ids = documentField.map((item) => item[idKey]);
+  return prepareUserIdsForQuery(ids);
 };

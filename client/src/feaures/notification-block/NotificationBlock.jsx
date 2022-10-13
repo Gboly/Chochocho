@@ -1,72 +1,100 @@
 import IconGradient from "../../components/icon-gradient/IconGradient";
 import "./notification-block.css";
-import avi2 from "../../assets/avatar-square.png";
 import CircleIcon from "@mui/icons-material/Circle";
 import { iconStyle } from "../../util/iconDescContent";
 import { description } from "../../util/notificationTypes";
 
 import { useSelector } from "react-redux";
-import { selectUserById } from "../../app/api-slices/usersApiSlice";
-import { selectPostById } from "../../app/api-slices/postsApiSlice";
+import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
+import {
+  commentType,
+  followType,
+  mentionType,
+  otherLikeType,
+  otherRepostType,
+  photoType,
+  postType,
+  videoType,
+} from "../../util/types";
+import { selectNotificationById } from "../../app/api-slices/notificationsApiSlice";
+import { useContext } from "react";
+import { LayoutContext } from "../../layout/Layout";
+import { convertToUserFriendlyTime, capitalize } from "../../util/functions";
+import { useNavigate } from "react-router-dom";
 
-export default function NotificationBlock({ type, userId, viewed, postId }) {
-  const user = useSelector((state) => selectUserById(state, userId));
-  const authUser = useSelector((state) => selectUserById(state, 1));
+const mediaSnippet = [photoType, videoType];
+const snippetExcluded = [mentionType, followType];
+const profileRouteTypes = [followType];
+const viewPostRouteTypes = [
+  otherLikeType,
+  otherRepostType,
+  commentType,
+  mentionType,
+  postType,
+];
+export default function NotificationBlock({ notificationId, viewed }) {
+  const navigate = useNavigate();
 
-  const followed = authUser?.following.includes(userId);
+  const { isFollowing } = useContext(LayoutContext);
+  const { postId, userId, date, type, snippet } = useSelector((state) =>
+    selectNotificationById(state, notificationId)
+  );
 
-  const post = useSelector((state) => selectPostById(state, postId));
-  const postContent = post?.content;
-  const mediaType = post?.mediaType;
-  const snippet = postContent ? postContent.slice(0, 11) : "";
+  const { data: user } = useGetUserByIdQuery(userId);
 
-  const content = description.reduce((accum, current, index) => {
-    if (type === current.type) {
-      accum.push(
-        <p key={index}>
-          {user?.displayName} {current.text}{" "}
-          {type !== "mention" && type !== "follow"
-            ? snippet
-              ? `post ${"  "} "${snippet}..."`
-              : mediaType === "image"
-              ? "photo"
-              : "video"
-            : ""}
-        </p>
-      );
-    }
+  const { text } = description.find((item) => item.type === type);
 
-    return accum;
-  }, []);
+  const handleClick = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
+    navigate(
+      profileRouteTypes.includes(type)
+        ? `/profile/${userId}`
+        : viewPostRouteTypes.includes(type)
+        ? `/${user?.username}/post/${postId}`
+        : "/"
+    );
+  };
 
   return (
-    <div className="notification-block-container">
-      <div>
-        <IconGradient type={type} />
-        <HomeUserAvatar
-          userId={userId}
-          size={2.5}
-          style={{ marginRight: "0.6rem", marginLeft: "1rem" }}
-        />
-        <div className={viewed ? "viewed-notification" : ""}>
-          {content}
-          <span>2 mins ago</span>
+    <>
+      {user && (
+        <div className="notification-block-container" onClick={handleClick}>
+          <div>
+            <IconGradient type={type} />
+            <HomeUserAvatar
+              userId={userId}
+              src={user.profileImage}
+              size={2.5}
+              style={{ marginRight: "0.6rem", marginLeft: "1rem" }}
+            />
+            <div className={viewed ? "viewed-notification" : ""}>
+              <p>
+                {`${user.displayName} ${text} ${
+                  mediaSnippet.includes(snippet) ||
+                  snippetExcluded.includes(type)
+                    ? `${capitalize(snippet)}`
+                    : `Post "${snippet}..."`
+                }`}
+              </p>
+              <span>{convertToUserFriendlyTime(date)}</span>
+            </div>
+          </div>
+          {type === followType ? (
+            isFollowing(userId) ? (
+              <button id="following">Following</button>
+            ) : (
+              <button>Follow Back</button>
+            )
+          ) : !viewed ? (
+            <i>
+              <CircleIcon style={iconStyle} />
+            </i>
+          ) : (
+            ""
+          )}
         </div>
-      </div>
-      {type === "follow" ? (
-        followed ? (
-          <button id="following">Following</button>
-        ) : (
-          <button>Follow Back</button>
-        )
-      ) : !viewed ? (
-        <i>
-          <CircleIcon style={iconStyle} />
-        </i>
-      ) : (
-        ""
       )}
-    </div>
+    </>
   );
 }

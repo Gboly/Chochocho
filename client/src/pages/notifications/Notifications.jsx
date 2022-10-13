@@ -5,131 +5,22 @@ import { iconStyle } from "../../util/iconDescContent";
 import NotificationBlock from "../../feaures/notification-block/NotificationBlock";
 import { notificationOptions } from "../../util/iconDescContent";
 import NotificationOptions from "../../feaures/notification-block/NotificationOptions";
-
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getNotificationOptionsState } from "./notificationSlice";
 import { openNotificationOptions } from "../../app/actions/notificationActions";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { useRef, useContext, useImperativeHandle } from "react";
-import { notificationsBasePathType } from "../../util/types";
+import {
+  notificationIdType,
+  notificationsBasePathType,
+} from "../../util/types";
 import { LayoutContext } from "../../layout/Layout";
-
-const notifications = [
-  {
-    userId: 4,
-    type: "like",
-    postId: 3,
-    viewed: false,
-    snippet: "",
-    mediaType: "video",
-  },
-  {
-    userId: 2,
-    type: "repost",
-    postId: 3,
-    viewed: true,
-    snippet: "Life is good",
-    mediaType: "video",
-  },
-  {
-    userId: 5,
-    type: "follow",
-    viewed: true,
-    followed: true,
-  },
-  {
-    userId: 2,
-    type: "mention",
-    postId: 4,
-    viewed: false,
-  },
-  {
-    userId: 3,
-    type: "comment",
-    postId: 1,
-    viewed: false,
-    snippet: "",
-    mediaType: "image",
-  },
-  {
-    userId: 4,
-    type: "post",
-    postId: 6,
-    viewed: false,
-    snippet: "Good old Bil",
-    mediaType: "image",
-  },
-  {
-    userId: 5,
-    type: "like",
-    postId: 1,
-    viewed: false,
-    snippet: "",
-    mediaType: "video",
-  },
-  {
-    userId: 2,
-    type: "follow",
-    viewed: false,
-    followed: true,
-  },
-  {
-    userId: 3,
-    type: "follow",
-    viewed: false,
-    followed: true,
-  },
-  {
-    userId: 2,
-    type: "mention",
-    postId: 2,
-    viewed: false,
-  },
-  {
-    userId: 3,
-    type: "comment",
-    postId: 3,
-    viewed: true,
-    snippet: "",
-    mediaType: "image",
-  },
-  {
-    userId: 2,
-    type: "mention",
-    postId: 3,
-    viewed: false,
-  },
-  {
-    userId: 4,
-    type: "follow",
-    viewed: true,
-    followed: true,
-  },
-  {
-    userId: 2,
-    type: "post",
-    postId: 5,
-    viewed: true,
-    snippet: "Good old Bil",
-    mediaType: "image",
-  },
-  {
-    userId: 3,
-    type: "like",
-    postId: 5,
-    viewed: false,
-    snippet: "",
-    mediaType: "video",
-  },
-  {
-    userId: 5,
-    type: "post",
-    postId: 4,
-    viewed: true,
-    snippet: "Good old Bil",
-    mediaType: "image",
-  },
-];
+import { useGetNotificationsQuery } from "../../app/api-slices/notificationsApiSlice";
+import { initialState } from "../../app/api-slices/notificationsApiSlice";
+import { useEffect } from "react";
+import { prepareIdsForQuery } from "../../util/functions";
+import Spinner from "../../components/Spinner/Spinner";
 
 // Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
 export default function Notifications() {
@@ -138,7 +29,10 @@ export default function Notifications() {
     getNotificationOptionsState
   );
   const notificationsNode = useRef();
-  const { pageNodes } = useContext(LayoutContext);
+  const {
+    pageNodes,
+    authUser: { notifications },
+  } = useContext(LayoutContext);
 
   // #16, #17
   useImperativeHandle(
@@ -149,20 +43,27 @@ export default function Notifications() {
     [notificationsNode]
   );
 
-  const content = notifications.map((item, index) => {
+  const [fetchQuery, setFetchQuery] = useState({
+    queryState: initialState,
+    searchQuery: prepareIdsForQuery(notifications, notificationIdType),
+    start: 0,
+    end: 10,
+  });
+  const { isLoading: notificationsIsLoading, data: notificationsData } =
+    useGetNotificationsQuery(fetchQuery);
+
+  const isFetched = (notificationId) =>
+    (notificationsData?.ids || []).includes(notificationId);
+
+  const content = notifications.map(({ notificationId, viewed }) => {
     return (
-      <NotificationBlock
-        key={index}
-        {...{
-          userId: item?.userId,
-          type: item?.type,
-          postId: item?.postId,
-          viewed: item?.viewed,
-          snippet: item?.snippet,
-          mediaType: item?.mediaType,
-          followed: item?.followed,
-        }}
-      />
+      isFetched(notificationId) && (
+        <NotificationBlock
+          key={notificationId}
+          notificationId={notificationId}
+          viewed={viewed}
+        />
+      )
     );
   });
   return (
@@ -186,6 +87,7 @@ export default function Notifications() {
               </div>
             </header>
             {content}
+            {notificationsIsLoading && <Spinner />}
             <div className="nots-void"></div>
           </div>
         </div>
