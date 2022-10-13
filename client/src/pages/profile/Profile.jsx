@@ -25,29 +25,24 @@ import Spinner from "../../components/Spinner/Spinner";
 export const ProfileContext = createContext();
 
 export const Profile = () => {
-  const {
-    authUser: { id: authUserId },
-  } = useContext(LayoutContext);
   const { userId: id } = useParams();
   const userId = Number(id);
   //const user = useSelector((state) => selectUserById(state, userId));
   const { isLoading: userIsLoading, data: user } = useGetUserByIdQuery(userId);
 
-  const authenticated = userId === authUserId;
-
   return (
     <>
-      {user && <ProfileComponent {...{ authenticated, user, userId }} />}
+      {user && <ProfileComponent {...{ user, userId }} />}
       {userIsLoading && <Spinner />}
     </>
   );
 };
 
-function ProfileComponent({ authenticated, user, userId }) {
+function ProfileComponent({ user, userId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileNode = useRef();
-  const { pageNodes, isFollowing } = useContext(LayoutContext);
+  const { pageNodes, isFollowing, isAuth } = useContext(LayoutContext);
 
   // #16, #17
   useImperativeHandle(
@@ -105,7 +100,7 @@ function ProfileComponent({ authenticated, user, userId }) {
                   }}
                 />
                 {/* #3 */}
-                {authenticated ? (
+                {isAuth(userId) ? (
                   <button
                     className="edit-profile"
                     onClick={() =>
@@ -140,7 +135,7 @@ function ProfileComponent({ authenticated, user, userId }) {
                 <ProfileDetails user={user} />
                 <FollowDetails {...{ following, followers }} />
                 {/* #3 */}
-                {authenticated && (
+                {isAuth(userId) && (
                   <button
                     onClick={() =>
                       showPopupOnOpaqueOverlay(openEditProfile, editProfileType)

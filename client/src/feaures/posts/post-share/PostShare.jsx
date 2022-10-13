@@ -1,24 +1,27 @@
 import "./post-share.css";
-import AirlineStopsOutlinedIcon from "@mui/icons-material/AirlineStopsOutlined";
 import BookmarkRemoveOutlinedIcon from "@mui/icons-material/BookmarkRemoveOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import { iconStyle } from "../../../util/iconDescContent";
 import { useState } from "react";
-import { getCurrentUrl, copyTextToClipboard } from "../../../util/functions";
+import { copyTextToClipboard } from "../../../util/functions";
 import { displayConfirmation } from "../../../util/functions";
 import { useDispatch } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
+import {} from "../../../app/api-slices/usersApiSlice";
 
-export default function PostShare({ postId }) {
+export default function PostShare({ postId, userId, username }) {
   const dispatch = useDispatch();
-  const [{ repost: isReposted, bookmark: isBookmarked }, setIsChecked] =
-    useState({ repost: false, bookmark: false });
+  const [{ bookmark: isBookmarked }, setIsChecked] = useState({
+    bookmark: false,
+  });
 
   const handleCopy = () => {
     // Change post link.
-    const result = copyTextToClipboard(`${getCurrentUrl()}#${postId}`);
+    const result = copyTextToClipboard(
+      `${window.location.origin}/${username}/post/${postId}`
+    );
     result.then((data) =>
       data ? displayConfirmation("copy") : alert("failed to copy link to post.")
     );

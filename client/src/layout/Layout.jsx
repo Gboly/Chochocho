@@ -48,6 +48,7 @@ export default function Layout() {
   const { data: authUser } = useGetUserByIdQuery(authUserId);
   const isFollowing = (userId) => (authUser?.following || []).includes(userId);
   const isFollower = (userId) => (authUser?.followers || []).includes(userId);
+  const isAuth = (userId) => authUser?.id === userId;
 
   const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
@@ -97,6 +98,7 @@ export default function Layout() {
             authUser,
             isFollowing,
             isFollower,
+            isAuth,
           }}
         >
           <Header />

@@ -1,8 +1,5 @@
 import "./post-options.css";
-
-import { useDispatch, useSelector } from "react-redux";
-import { selectPostById } from "../../../app/api-slices/postsApiSlice";
-
+import { useDispatch } from "react-redux";
 import {
   othersPostOptions,
   userPostOptions,
@@ -10,21 +7,22 @@ import {
 import { showPopupOnOpaqueOverlay } from "../../../util/functions";
 import { capitalize } from "../../../util/functions";
 import { postNotifcationType } from "../../../util/types";
+import { useContext } from "react";
+import { LayoutContext } from "../../../layout/Layout";
 
-export default function PostOptions({ postId }) {
+export default function PostOptions({ postId, userId }) {
   const dispatch = useDispatch();
-  const post = useSelector((state) => selectPostById(state, postId));
-  const userId = post?.userId;
+  const { isAuth } = useContext(LayoutContext);
+  const postOptions = isAuth(userId) ? userPostOptions : othersPostOptions;
 
-  //#3
-  const postOptions = userId === 1 ? userPostOptions : othersPostOptions;
-
-  const handleClick = (e, current) => {
+  const handleClick = (e, option) => {
     e && e.stopPropagation && e.stopPropagation();
-    const { desc, action } = current;
-    current?.dispatch
-      ? dispatch(action(postId))
-      : showPopupOnOpaqueOverlay(action, desc, postId);
+    const { desc, action } = option;
+    if (action) {
+      option?.dispatch
+        ? dispatch(action(postId))
+        : showPopupOnOpaqueOverlay(action, desc, postId);
+    }
   };
 
   const content = postOptions.reduce((accum, current, index) => {
@@ -32,7 +30,11 @@ export default function PostOptions({ postId }) {
     desc === postNotifcationType
       ? accum.push(
           // #4
-          <div key={index} className="post-option">
+          <div
+            key={index}
+            className="post-option"
+            onClick={(e) => handleClick(e, current)}
+          >
             <i className="post-option-icon">{icon}</i>
             <span className="post-option-desc">{capitalize(desc)}</span>
           </div>

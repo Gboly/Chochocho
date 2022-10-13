@@ -120,9 +120,11 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
         onClick={(e) => handleClick(e)}
       >
         {optionsIsOpen && optionsId === postId && (
-          <PostOptions {...{ postId }} />
+          <PostOptions {...{ postId, userId }} />
         )}
-        {shareIsOpen && shareId === postId && <PostShare postId={shareId} />}
+        {shareIsOpen && shareId === postId && (
+          <PostShare postId={shareId} userId={userId} username={username} />
+        )}
 
         <div className="post-wrapper" onClick={(e) => handleClick(e)}>
           <div className="post-top">
