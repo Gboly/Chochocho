@@ -18,8 +18,9 @@
     font-weight: 500;
 }
 .follow-detail-item{
-    border: none;
-    outline: none;
+    /* border: none;
+    outline: none; */
+    cursor: pointer;
 }
 .count{
     margin-right: 0.5rem;   

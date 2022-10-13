@@ -9,6 +9,7 @@ const NavigateWithScrollCache = ({
   clicked,
   handleRouting,
   cleanUp,
+  action,
 }) => {
   const location = useLocation();
   const { userId } = useParams();
@@ -20,7 +21,7 @@ const NavigateWithScrollCache = ({
       notificationsNode: "",
     });
 
-  const { pageNodes } = useContext(LayoutContext);
+  const { pageNodes, isAuth } = useContext(LayoutContext);
 
   useEffect(() => {
     setNodes({
@@ -45,13 +46,23 @@ const NavigateWithScrollCache = ({
       //#3
       const key =
         // #3
-        viewPostNode || (userId !== "1" && profileNode)
+        viewPostNode || (!isAuth(Number(userId)) && profileNode)
           ? location.key
           : location.pathname;
       updateScrollCache(key, scrollTop);
     }
     handleRouting();
-  }, [ref, location, userId, handleRouting, profileNode, viewPostNode]);
+    action && action();
+  }, [
+    ref,
+    location,
+    userId,
+    handleRouting,
+    profileNode,
+    viewPostNode,
+    isAuth,
+    action,
+  ]);
 
   useEffect(() => {
     clicked && handleClick();

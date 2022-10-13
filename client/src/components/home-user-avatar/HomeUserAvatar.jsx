@@ -9,6 +9,7 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
   const location = useLocation();
   const [route, setRoute] = useState(false);
 
+  const userProfileRoute = `/profile/${userId}`;
   const dimension = `${size ?? 1}rem`;
 
   const [fetchedSrc, setSrc] = useState(src);
@@ -23,11 +24,12 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
     // some avatars shouldn't navigate to a new route. This would be passed as prop(noLink)
     // So, only when noLink is not available should the following code run
     // Also, no need for routing when you're already on the route
-    !noLink && location.pathname !== `/profile/${userId}` && setRoute(true);
-    action && action();
+    !noLink && location.pathname !== userProfileRoute
+      ? setRoute(true)
+      : action && action();
   };
 
-  const handleRouting = () => navigate(`/profile/${userId}`);
+  const handleRouting = () => navigate(userProfileRoute);
   const cleanUp = () => setRoute(false);
 
   return (
@@ -36,6 +38,7 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
         clicked={route}
         handleRouting={handleRouting}
         cleanUp={cleanUp}
+        action={action}
       />
       <img
         src={fetchedSrc || ""}

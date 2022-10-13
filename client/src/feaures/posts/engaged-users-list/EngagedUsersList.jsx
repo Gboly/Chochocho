@@ -2,7 +2,7 @@ import Searchbar from "../../../components/searchbar/Searchbar";
 import SimpleHeader from "../../../components/simple-header/SimpleHeader";
 import { SettingsHeader } from "../../../pages/settings/Settings";
 import "./engaged-users-list.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   capitalize,
   closePopupOnOpaqueOverlay,
@@ -18,6 +18,7 @@ import { useSelector } from "react-redux";
 import { getEngagedUsersListState } from "../post-excerpt/postExcerptSlice";
 import { followersType, followingType } from "../../../util/types";
 import Spinner from "../../../components/Spinner/Spinner";
+import { LayoutContext } from "../../../layout/Layout";
 
 const followTypes = [followingType, followersType];
 const header = (type) =>
@@ -41,15 +42,14 @@ export default function EngagedUsersList() {
 
   const handleClose = () => closePopupOnOpaqueOverlay(closeEngagedUsersList);
 
-  // *********************************************
+  // ********************************************* #10
 
   const EngagedUser = ({ userId }) => {
     const { displayName, username, profileImage, bio } = useSelector((state) =>
       selectFetchedUsersById(state, userId)
     );
 
-    // #3
-    const authUserId = 1;
+    const { isAuth } = useContext(LayoutContext);
 
     // Better search algorithm needs to be implemented
     if (
@@ -62,7 +62,7 @@ export default function EngagedUsersList() {
       <UserCameo
         {...{
           userId,
-          buttonType: userId === authUserId ? "" : "follow",
+          buttonType: isAuth(userId) ? "" : "follow",
           avatarProp: {
             size: "3",
             action: handleClose,
@@ -78,7 +78,6 @@ export default function EngagedUsersList() {
 
   // **********************************************
 
-  // #10
   const usersList = userIds.map(
     (userId, index) =>
       isFetched(userId) && <EngagedUser key={index} userId={userId} />
