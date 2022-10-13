@@ -42,6 +42,20 @@ import {
   pinPostType,
 } from "./types";
 
+import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobe } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFacebook,
+  faTwitter,
+  faInstagram,
+  faLinkedinIn,
+} from "@fortawesome/free-brands-svg-icons";
+import { faCakeCandles } from "@fortawesome/free-solid-svg-icons";
+
 export const iconStyle = {
   fontSize: "inherit",
   color: "inherit",
@@ -208,5 +222,55 @@ export const settingsContent = [
     desc: "Viewing & sharing",
     icon: <VisibilityOffOutlinedIcon style={iconStyle} />,
     pathName: "viewing",
+  },
+];
+
+const profileDetailStyle = { ...iconStyle };
+profileDetailStyle.fontSize = "1.3rem";
+export const profileDetails = [
+  {
+    type: "DOB",
+    icon: <CakeOutlinedIcon style={profileDetailStyle} />,
+    desc: "Born",
+  },
+  {
+    type: "joinedDate",
+    icon: <CalendarMonthOutlinedIcon style={profileDetailStyle} />,
+    desc: "Joined",
+  },
+  {
+    type: "location",
+    icon: <LocationOnOutlinedIcon style={profileDetailStyle} />,
+    desc: "",
+  },
+  {
+    type: "email",
+    icon: <AlternateEmailOutlinedIcon style={profileDetailStyle} />,
+    desc: "",
+  },
+  {
+    type: "facebook",
+    icon: <FontAwesomeIcon icon={faFacebook} />,
+    desc: "",
+  },
+  {
+    type: "twitter",
+    icon: <FontAwesomeIcon icon={faTwitter} />,
+    desc: "",
+  },
+  {
+    type: "instagram",
+    icon: <FontAwesomeIcon icon={faInstagram} />,
+    desc: "",
+  },
+  {
+    type: "linkedIn",
+    icon: <FontAwesomeIcon icon={faLinkedinIn} />,
+    desc: "",
+  },
+  {
+    type: "website",
+    icon: <FontAwesomeIcon icon={faGlobe} />,
+    desc: "",
   },
 ];

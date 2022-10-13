@@ -242,3 +242,9 @@ export const prepareIdsForQuery = (documentField, idKey) => {
   const ids = documentField.map((item) => item[idKey]);
   return prepareUserIdsForQuery(ids);
 };
+
+export const getUsernameFromLink = (link) => {
+  const linkArray = link.split("/");
+  const username = linkArray[linkArray.length - 1];
+  return username ? username : linkArray[linkArray.length - 2];
+};

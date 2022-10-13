@@ -13,6 +13,11 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
 
   const [fetchedSrc, setSrc] = useState(src);
 
+  // Thought this shouldn't be neccessary until i realized that previous src where cached and on routing to a new page(profile), it retains the former image instead of updating it.
+  useEffect(() => {
+    setSrc(src);
+  }, [src]);
+
   const handleClick = (e) => {
     e && e.stopPropagation && e.stopPropagation();
     // some avatars shouldn't navigate to a new route. This would be passed as prop(noLink)
