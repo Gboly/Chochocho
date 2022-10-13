@@ -33,15 +33,23 @@ const viewPostRouteTypes = [
   mentionType,
   postType,
 ];
-export default function NotificationBlock({ notificationId, viewed }) {
+export default function NotificationBlock({ notificationId }) {
   const navigate = useNavigate();
 
-  const { isFollowing } = useContext(LayoutContext);
+  const {
+    isFollowing,
+    authUser: { notifications },
+  } = useContext(LayoutContext);
+
   const { postId, userId, date, type, snippet } = useSelector((state) =>
     selectNotificationById(state, notificationId)
   );
 
   const { data: user } = useGetUserByIdQuery(userId);
+
+  const { viewed } = notifications.find(
+    (notification) => notification.notificationId === notificationId
+  );
 
   const { text } = description.find((item) => item.type === type);
 

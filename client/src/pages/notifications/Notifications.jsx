@@ -16,7 +16,10 @@ import {
   notificationsBasePathType,
 } from "../../util/types";
 import { LayoutContext } from "../../layout/Layout";
-import { useGetNotificationsQuery } from "../../app/api-slices/notificationsApiSlice";
+import {
+  selectNotificationsIds,
+  useGetNotificationsQuery,
+} from "../../app/api-slices/notificationsApiSlice";
 import { initialState } from "../../app/api-slices/notificationsApiSlice";
 import { useEffect } from "react";
 import { prepareIdsForQuery } from "../../util/functions";
@@ -49,23 +52,17 @@ export default function Notifications() {
     start: 0,
     end: 10,
   });
-  const { isLoading: notificationsIsLoading, data: notificationsData } =
+
+  const { isLoading: notificationsIsLoading } =
     useGetNotificationsQuery(fetchQuery);
 
-  const isFetched = (notificationId) =>
-    (notificationsData?.ids || []).includes(notificationId);
+  const notificationIds = useSelector(selectNotificationsIds);
 
-  const content = notifications.map(({ notificationId, viewed }) => {
-    return (
-      isFetched(notificationId) && (
-        <NotificationBlock
-          key={notificationId}
-          notificationId={notificationId}
-          viewed={viewed}
-        />
-      )
-    );
-  });
+  const content = notificationIds.map((notificationId) => (
+    <NotificationBlock key={notificationId} notificationId={notificationId} />
+  ));
+  console.log(notificationIds);
+
   return (
     <>
       <ScrollCache ref={notificationsNode}>
