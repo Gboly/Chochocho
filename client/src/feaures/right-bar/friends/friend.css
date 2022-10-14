@@ -37,6 +37,9 @@
 .rfli-online-status{
     font-size: 0.65rem;
 }
+.rfli-online-status > i{
+    color: #9cff2e;
+}
 .friends-option-container{
     padding: 1rem;
     top: 0 !important;

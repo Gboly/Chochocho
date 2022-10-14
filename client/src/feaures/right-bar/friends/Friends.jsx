@@ -22,7 +22,10 @@ import { openFriendsOptions } from "../../../app/actions/rightbarActions";
 
 export default function Friends() {
   const {
-    authUser: { following },
+    authUser: {
+      following,
+      settings: { activeStatus },
+    },
   } = useContext(LayoutContext);
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
@@ -42,8 +45,9 @@ export default function Friends() {
   // For online users. The lastSeen represents the time the user came online
   // For offline users. It represents the time the user went away.
   const followingBasedOnLastSeen = getUsersBasedOnLastSeen(unNormalizedResult);
+
   const friendsList = followingBasedOnLastSeen.map((user, i) => (
-    <Friend key={user.id} user={user} />
+    <Friend key={user.id} user={user} activeStatus={activeStatus} />
   ));
 
   const dispatch = useDispatch();
@@ -66,8 +70,15 @@ export default function Friends() {
   );
 }
 
-const Friend = ({ user }) => {
-  const { id, username, profileImage, status, lastSeen } = user;
+const Friend = ({ user, activeStatus: authUserActiveStatus }) => {
+  const {
+    id,
+    displayName,
+    profileImage,
+    online,
+    lastSeen,
+    settings: { activeStatus: userActiveStatus },
+  } = user;
 
   return (
     <div className="rfl-item">
@@ -78,15 +89,19 @@ const Friend = ({ user }) => {
           userId={id}
           style={{ marginRight: "1rem" }}
         />
-        <span className="rfli-name">{username}</span>
+        <span className="rfli-name">{displayName}</span>
       </div>
-      <div className="rfli-online-status">
-        {status === onlineType ? (
-          <FiberManualRecordSharpIcon style={iconStyle} />
-        ) : (
-          convertToUserFriendlyTime(lastSeen)
-        )}
-      </div>
+      {authUserActiveStatus && userActiveStatus && (
+        <div className="rfli-online-status">
+          {online ? (
+            <i>
+              <FiberManualRecordSharpIcon style={iconStyle} />
+            </i>
+          ) : (
+            convertToUserFriendlyTime(lastSeen)
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -52,4 +52,6 @@ export const photoType = "photo";
 export const videoType = "video";
 export const onlineType = "online";
 export const offlineType = "offline";
+export const messageSoundType = "messageSound";
+export const activeStatusType = "activeStatus";
 //export const

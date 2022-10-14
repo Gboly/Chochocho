@@ -265,20 +265,24 @@ const usersLastSeenToISO = (usersList) =>
     return user;
   });
 
-// To be updated with sort
-// const getSortedOnlineUsers = (usersList) =>
-//   usersList.filter((user) => user.status === onlineType);
-
 const getSortedUsers = (usersList) =>
   usersList.sort((a, b) => b.lastSeen.localeCompare(a.lastSeen));
 
-const getUsersBasedOnStatus = (users, statusType) =>
-  users.filter((user) => user.status === statusType);
+const getUsersBasedOnStatus = (users, online) =>
+  users.filter(
+    (user) =>
+      (online ? user.online : !user.online) && user.settings.activeStatus
+  );
+
+const getUsersWithoutActiveStatus = (usersList) =>
+  usersList.filter((user) => !user.settings.activeStatus);
 
 export const getUsersBasedOnLastSeen = (usersList) => {
   const updatedUsersList = usersLastSeenToISO(usersList);
   const sortedUsers = getSortedUsers(updatedUsersList);
-  const online = getUsersBasedOnStatus(sortedUsers, onlineType);
-  const offline = getUsersBasedOnStatus(sortedUsers, offlineType);
-  return [...online, ...offline];
+  const online = getUsersBasedOnStatus(sortedUsers, true);
+  const offline = getUsersBasedOnStatus(sortedUsers, false);
+  const offActiveStatus = getUsersWithoutActiveStatus(sortedUsers);
+  // The idea is to ensure that those online are top, followed by those offline and then we can have those who have their active status turned off
+  return [...online, ...offline, ...offActiveStatus];
 };

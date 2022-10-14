@@ -2,29 +2,35 @@ import CoPresentIcon from "@mui/icons-material/CoPresent";
 import VolumeMuteIcon from "@mui/icons-material/VolumeMute";
 import { iconStyle } from "../../../util/iconDescContent";
 import CustomSwitch from "../../../components/custom-switch/CustomSwitch";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { activeStatusType, messageSoundType } from "../../../util/types";
+import { LayoutContext } from "../../../layout/Layout";
 
 const optionsContent = [
   {
     id: 1,
-    type: "messageSound",
+    type: messageSoundType,
     icon: <VolumeMuteIcon style={iconStyle} />,
     desc: "Message sound",
   },
   {
     id: 2,
-    type: "activeStatus",
+    type: activeStatusType,
     icon: <CoPresentIcon style={iconStyle} />,
     desc: "Active status",
   },
 ];
 
-const initialState = optionsContent.reduce((accum, current) => {
-  accum = { ...accum, [current.type]: false };
-  return accum;
-}, {});
-
 const FriendsOption = () => {
+  const {
+    authUser: { settings },
+  } = useContext(LayoutContext);
+
+  const initialState = optionsContent.reduce((accum, { type }) => {
+    accum = { ...accum, [type]: settings[type] };
+    return accum;
+  }, {});
+
   const [isChecked, setIsChecked] = useState(initialState);
 
   const handleChange = (e) => {
