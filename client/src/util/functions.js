@@ -9,7 +9,13 @@ import {
   closeOpaqueOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
-import { editProfileImageType, scrollCacheType, exemptionType } from "./types";
+import {
+  editProfileImageType,
+  scrollCacheType,
+  exemptionType,
+  onlineType,
+  offlineType,
+} from "./types";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -198,7 +204,11 @@ export const getBasePath = (pathName) => {
   return pathName.split("/")[1] || "";
 };
 
-export const unNormalize = (data) => Object.values(data.entities);
+export const unNormalize = (data) => {
+  const values = Object.values(data.entities);
+  // Object.defineProperties related methods is usually read-only. This line creates a deep clone to ensure it is read&write again
+  return JSON.parse(JSON.stringify(values));
+};
 
 const selectQueriesData = (queries, selectedEndPoints) =>
   Object.values(queries).reduce((accum, query) => {
@@ -247,4 +257,28 @@ export const getUsernameFromLink = (link) => {
   const linkArray = link.split("/");
   const username = linkArray[linkArray.length - 1];
   return username ? username : linkArray[linkArray.length - 2];
+};
+
+const usersLastSeenToISO = (usersList) =>
+  usersList.map((user) => {
+    user.lastSeen = new Date(user.lastSeen).toISOString();
+    return user;
+  });
+
+// To be updated with sort
+// const getSortedOnlineUsers = (usersList) =>
+//   usersList.filter((user) => user.status === onlineType);
+
+const getSortedUsers = (usersList) =>
+  usersList.sort((a, b) => b.lastSeen.localeCompare(a.lastSeen));
+
+const getUsersBasedOnStatus = (users, statusType) =>
+  users.filter((user) => user.status === statusType);
+
+export const getUsersBasedOnLastSeen = (usersList) => {
+  const updatedUsersList = usersLastSeenToISO(usersList);
+  const sortedUsers = getSortedUsers(updatedUsersList);
+  const online = getUsersBasedOnStatus(sortedUsers, onlineType);
+  const offline = getUsersBasedOnStatus(sortedUsers, offlineType);
+  return [...online, ...offline];
 };

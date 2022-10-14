@@ -1,4 +1,4 @@
-import Friend from "./friend/Friend";
+import Friends from "./friends/Friends";
 import "./right-bar.css";
 import SearchBar from "./search-bar/SearchBar";
 import Story from "./story/Story";
@@ -14,7 +14,7 @@ export default function RightBar() {
           <Story />
         </div>
         <div className="rightbar-friends-wrapper">
-          <Friend />
+          <Friends />
         </div>
       </div>
     </>

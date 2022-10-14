@@ -278,7 +278,7 @@
             "instagram": "https://www.instagram.com/classicgee/",
             "website": "https://github.com/Gboly/Chochocho",
             "followers": [3, 9, 4, 8, 7],
-            "following": [3, 4, 6],
+            "following": [3, 4, 6, 9, 10],
             "blocked": [{"userId": 2, "date": "04/11/2020"},{"userId": 3, "date": "01/12/2020"},{"userId": 4, "date": "01/12/2020"},{"userId": 5, "date": "28/05/2021"},{"userId": 6, "date": "15/06/2021"},{"userId": 7, "date": "02/12/2021"},{"userId": 9, "date": "04/07/2022"},{"userId": 10, "date": "04/07/2022"}],
             "notifications": [{"notificationId": 1, "viewed": true},{"notificationId": 2, "viewed": false},{"notificationId": 3, "viewed": false},{"notificationId": 5, "viewed": false},{"notificationId": 6, "viewed": false},{"notificationId": 7, "viewed": true},{"notificationId": 8, "viewed": false},{"notificationId": 9, "viewed": true}],
             "DOB": "Apr 19, 1997",
@@ -286,7 +286,9 @@
 		    "Location": "Zielona Góra",
 		    "email": "consequat@aol.ca",
 		    "linkedIn": "consequat@aol.ca",
-		    "url": "http://pinterest.com"
+		    "url": "http://pinterest.com",
+            "status": "online",
+            "lastSeen": "Oct 14, 2022, 4:47 PM"
         },
         {
             "id": 2,
@@ -308,7 +310,9 @@
 		    "Location": "North-Eastern Islands",
 		    "email": "dui.fusce@yahoo.edu",
 		    "linkedIn": "dui.fusce@yahoo.edu",
-		    "url": "http://wikipedia.org"
+		    "url": "http://wikipedia.org",
+            "status": "offline",
+            "lastSeen": "Oct 13, 2022, 6:52 PM"
         },
         {
             "id": 3,
@@ -330,7 +334,9 @@
 		    "Location": "Stamford",
 		    "email": "duis@google.ca",
 		    "linkedIn": "duis@google.ca",
-		    "url": "https://zoom.us"
+		    "url": "https://zoom.us",
+            "status": "online",
+            "lastSeen": "Oct 14, 2022, 4:00 PM"
         },
         {
             "id": 4,
@@ -352,7 +358,9 @@
             "Location": "Lansing",
             "email": "proin.velit@google.edu",
             "linkedIn": "proin.velit@google.edu",
-            "url": "https://google.com"
+            "url": "https://google.com",
+            "status": "offline",
+            "lastSeen": "Oct 14, 2022, 1:38 PM"
         },
         {
             "id": 5,
@@ -374,7 +382,9 @@
 		    "Location": "Gillette",
 		    "email": "mi@hotmail.net",
 		    "linkedIn": "",
-		    "url": "https://zoom.us"
+		    "url": "https://zoom.us",
+            "status": "offline",
+            "lastSeen": "Oct 13, 2022, 4:28 AM"
         },
         {
             "id": 6,
@@ -396,7 +406,9 @@
 		    "Location": "Tuy Hòa",
 		    "email": "sed.pharetra@hotmail.edu",
 		    "linkedIn": "sed.pharetra@hotmail.edu",
-		    "url": "https://facebook.com"
+		    "url": "https://facebook.com",
+            "status": "offline",
+            "lastSeen": "Oct 14, 2022, 5:23 AM"
         },
         {
             "id": 7,
@@ -418,7 +430,9 @@
 		    "Location": "Orkanger",
 		    "email": "nonummy@outlook.couk",
 		    "linkedIn": "",
-		    "url": "http://zoom.us"
+		    "url": "http://zoom.us",
+            "status": "online",
+            "lastSeen": "Oct 14, 2022, 4:00 PM"
         },
         {
             "id": 8,
@@ -440,7 +454,9 @@
 		    "Location": "Sefro",
 		    "email": "leo.vivamus@icloud.net",
 		    "linkedIn": "leo.vivamus@icloud.net",
-		    "url": "https://google.com"
+		    "url": "https://google.com",
+            "status": "offline",
+            "lastSeen": "Oct 13, 2022, 9:48 PM"
         },
         {
             "id": 9,
@@ -462,7 +478,9 @@
 		    "Location": "Asan",
 		    "email": "lorem@google.net",
 		    "linkedIn": "lorem@google.net",
-		    "url": "https://guardian.co.uk"
+		    "url": "https://guardian.co.uk",
+            "status": "online",
+            "lastSeen": "Oct 14, 2022, 3:08 PM"
         },
         {
             "id": 10,
@@ -484,7 +502,9 @@
 		    "Location": "Cork",
 		    "email": "faucibus.leo@aol.net",
 		    "linkedIn": "faucibus.leo@aol.net",
-		    "url": "https://yahoo.com"
+		    "url": "https://yahoo.com",
+            "status": "offline",
+            "lastSeen": "Oct 14, 2022, 3:15 PM"
         }
     ],
     "comments":[

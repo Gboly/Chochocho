@@ -33,6 +33,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { getOpaqueOverlayState } from "./layoutSlice";
 import { useGetUserByIdQuery } from "../app/api-slices/usersApiSlice";
 import Spinner from "../components/Spinner/Spinner";
+import { getFriendsOptionsState } from "../feaures/right-bar/righbarSlice";
+import { closeFriendsOptions } from "../app/actions/rightbarActions";
 
 export const LayoutContext = createContext();
 
@@ -58,6 +60,7 @@ export default function Layout() {
     getNotificationOptionsState
   );
   const { isOpen: outletOptionIsOpen } = useSelector(getOutletOptionState);
+  const { isOpen: friendsOptionsIsOpen } = useSelector(getFriendsOptionsState);
   const { isOpen: confirmationIsOpen, type: confirmationType } =
     useSelector(getConfirmationState);
 
@@ -68,7 +71,8 @@ export default function Layout() {
     postShareIsOpen ||
     playbackSpeedIsOpen ||
     notificationOptionsIsOpen ||
-    outletOptionIsOpen
+    outletOptionIsOpen ||
+    friendsOptionsIsOpen
       ? setTransparentLayer(true)
       : setTransparentLayer(false);
   }, [
@@ -77,6 +81,7 @@ export default function Layout() {
     playbackSpeedIsOpen,
     postShareIsOpen,
     postOptionsIsOpen,
+    friendsOptionsIsOpen,
   ]);
 
   const removeTransparentOverlay = () => {
@@ -85,6 +90,7 @@ export default function Layout() {
     playbackSpeedIsOpen && dispatch(closePlaybackSpeed());
     notificationOptionsIsOpen && dispatch(closeNotificationOptions());
     outletOptionIsOpen && dispatch(closeOutletOptions());
+    friendsOptionsIsOpen && dispatch(closeFriendsOptions());
   };
 
   return (

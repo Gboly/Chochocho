@@ -6,6 +6,7 @@ import { postExcerptReducer } from "../feaures/posts/post-excerpt/postExcerptSli
 import { profileReducer } from "../pages/profile/profileSlice";
 import { notificationReducer } from "../pages/notifications/notificationSlice";
 import { communityReducer } from "../pages/community/communitySlice";
+import { rightbarReducer } from "../feaures/right-bar/righbarSlice";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     profile: profileReducer,
     notification: notificationReducer,
     community: communityReducer,
+    rightbar: rightbarReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

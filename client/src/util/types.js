@@ -50,4 +50,6 @@ export const notificationIdType = "notificationId";
 export const userIdType = "userId";
 export const photoType = "photo";
 export const videoType = "video";
+export const onlineType = "online";
+export const offlineType = "offline";
 //export const
