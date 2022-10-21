@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 import { getEngagedUsersListState } from "../post-excerpt/postExcerptSlice";
 import { followersType, followingType } from "../../../util/types";
 import Spinner from "../../../components/Spinner/Spinner";
-import { LayoutContext } from "../../../layout/Layout";
+import { GeneralContext } from "../../../routes/Router";
 
 const followTypes = [followingType, followersType];
 const header = (type) =>
@@ -49,7 +49,7 @@ export default function EngagedUsersList() {
       selectFetchedUsersById(state, userId)
     );
 
-    const { isAuth } = useContext(LayoutContext);
+    const { isAuth } = useContext(GeneralContext);
 
     // Better search algorithm needs to be implemented
     if (

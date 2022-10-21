@@ -13,7 +13,7 @@ import { useOutletContext } from "react-router-dom";
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
 import { createContext, useRef, useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
-import { LayoutContext } from "../../layout/Layout";
+import { GeneralContext } from "../../routes/Router";
 
 export const HomeContext = createContext();
 
@@ -23,7 +23,7 @@ export default function Home() {
 
   const opaqueLayer = useOutletContext();
   const homeNode = useRef();
-  const { pageNodes } = useContext(LayoutContext);
+  const { pageNodes } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(
@@ -45,7 +45,9 @@ export default function Home() {
           <div className="home-main-wrapper">
             <div
               className={`home-story ${
-                createPostIsActive || postOptionsIsOpen ? "story-container" : ""
+                createPostIsActive || postOptionsIsOpen
+                  ? "home-story-container"
+                  : ""
               }`}
             >
               <Story />

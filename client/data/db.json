@@ -265,6 +265,78 @@
             "snippet": "Duis eget n"
         }
     ],
+    "stories": [
+            {
+                "id": 1,
+                "userId": 2,
+                "mediaType": "video",
+                "media": "",
+                "createdAt": "2022-10-17 03:29:55"
+            },
+            {
+                "id": 2,
+                "userId": 4,
+                "mediaType": "image",
+                "media": "https://t4.ftcdn.net/jpg/05/11/26/55/360_F_511265561_FuYUWo6s2RJvhQuj2gMJYbAZe6FiJKtu.jpg",
+                "createdAt": "2022-10-16 13:15:07"
+            },
+            {
+                "id": 3,
+                "userId": 10,
+                "mediaType": "image",
+                "media": "https://i.pinimg.com/originals/9e/b6/87/9eb6874f1430cb6735bb356a8c92ea38.jpg",
+                "createdAt": "2022-10-17 05:29:09"
+            },
+            {
+                "id": 4,
+                "userId": 9,
+                "mediaType": "video",
+                "media": "",
+                "createdAt": "2022-10-17 08:14:13"
+            },
+            {
+                "id": 5,
+                "userId": 6,
+                "mediaType": "image",
+                "media": "",
+                "createdAt": "2022-10-17 12:52:39"
+            },
+            {
+                "id": 6,
+                "userId": 3,
+                "mediaType": "image",
+                "media": "https://carsguide-res.cloudinary.com/image/upload/f_auto%2Cfl_lossy%2Cq_auto%2Ct_default/v1/editorial/listicle/hero_image/2021-BMW-M4-coupe-yellow-1001x565-1.jpg",
+                "createdAt": "2022-10-16 18:34:02"
+            },
+            {
+                "id": 7,
+                "userId": 3,
+                "mediaType": "video",
+                "media": "",
+                "createdAt": "2022-10-17 06:31:18"
+            },
+            {
+                "id": 8,
+                "userId": 6,
+                "mediaType": "image",
+                "media": "https://i.ytimg.com/vi/R_mwYj49myc/maxresdefault.jpg",
+                "createdAt": "2022-10-17 03:00:44"
+            },
+            {
+                "id": 9,
+                "userId": 3,
+                "mediaType": "image",
+                "media": "https://static01.nyt.com/images/2021/04/30/multimedia/30xp-meme/29xp-meme-mediumSquareAt3X-v5.jpg",
+                "createdAt": "2022-10-17 07:02:14"
+            },
+            {
+                "id": 10,
+                "userId": 3,
+                "mediaType": "image",
+                "media": "https://cdn.vox-cdn.com/thumbor/-5QeCxdkh-7dEypKEonW8KEIvX0=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/13207789/hey.jpg",
+                "createdAt": "2022-10-17 02:08:52"
+            }
+    ],
     "users": [
         {
             "id": 1,
@@ -289,7 +361,10 @@
 		    "url": "http://pinterest.com",
             "online": true,
             "lastSeen": "Oct 14, 2022, 4:47 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [],
+            "otherStories": [{"storyId": 10, "viewed": false}, {"storyId": 8, "viewed": false}, {"storyId": 9, "viewed": false}, {"storyId": 4, "viewed": false}, {"storyId": 6, "viewed": false}, {"storyId": 7, "viewed": false}, {"storyId": 3, "viewed": false}, {"storyId": 5, "viewed": false}, {"storyId": 2, "viewed": false}],
+            "otherStoryAuthors": [{"userId": 3, "viewed": false}, {"userId": 6, "viewed": true}, {"userId": 10, "viewed": false}, {"userId": 9, "viewed": false}]
         },
         {
             "id": 2,
@@ -314,7 +389,10 @@
 		    "url": "http://wikipedia.org",
             "online": false,
             "lastSeen": "Oct 13, 2022, 6:52 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [{"storyId": 1}],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 3,
@@ -339,7 +417,10 @@
 		    "url": "https://zoom.us",
             "online": true,
             "lastSeen": "Oct 14, 2022, 4:00 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [{"storyId": 6}, {"storyId": 7},  {"storyId": 9}, {"storyId": 10} ],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 4,
@@ -364,7 +445,10 @@
             "url": "https://google.com",
             "online": false,
             "lastSeen": "Oct 14, 2022, 1:38 PM",
-            "settings": {"activeStatus": false, "messageSound": true}
+            "settings": {"activeStatus": false, "messageSound": true},
+            "myStory": [{"storyId": 2}],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 5,
@@ -389,7 +473,10 @@
 		    "url": "https://zoom.us",
             "online": false,
             "lastSeen": "Oct 13, 2022, 4:28 AM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 6,
@@ -414,7 +501,10 @@
 		    "url": "https://facebook.com",
             "online": false,
             "lastSeen": "Oct 14, 2022, 5:23 AM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [ {"storyId": 5},  {"storyId": 8}],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 7,
@@ -439,7 +529,10 @@
 		    "url": "http://zoom.us",
             "online": true,
             "lastSeen": "Oct 14, 2022, 4:00 PM",
-            "settings": {"activeStatus": false, "messageSound": true}
+            "settings": {"activeStatus": false, "messageSound": true},
+            "myStory": [],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 8,
@@ -464,7 +557,10 @@
 		    "url": "https://google.com",
             "online": false,
             "lastSeen": "Oct 13, 2022, 9:48 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 9,
@@ -489,7 +585,10 @@
 		    "url": "https://guardian.co.uk",
             "online": true,
             "lastSeen": "Oct 14, 2022, 3:08 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [ {"storyId": 4}],
+            "otherStories": [],
+            "otherStoryAuthors": []
         },
         {
             "id": 10,
@@ -514,7 +613,10 @@
 		    "url": "https://yahoo.com",
             "online": false,
             "lastSeen": "Oct 14, 2022, 3:15 PM",
-            "settings": {"activeStatus": true, "messageSound": true}
+            "settings": {"activeStatus": true, "messageSound": true},
+            "myStory": [ {"storyId": 3}],
+            "otherStories": [],
+            "otherStoryAuthors": []
         }
     ],
     "comments":[

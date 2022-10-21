@@ -3,15 +3,12 @@ import ProfileDetails from "../../feaures/users/profile-details/ProfileDetails";
 import FollowDetails from "../../feaures/users/follow-details/FollowDetails";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import { iconStyle } from "../../util/iconDescContent";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { openFullscreen } from "../../app/actions/homeActions";
 import { openEditProfile } from "../../app/actions/profileActions";
 import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  selectUserById,
-  useGetUserByIdQuery,
-} from "../../app/api-slices/usersApiSlice";
+import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
 import PostListLoader from "../../feaures/posts/post-list/postListLoader";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../util/functions";
@@ -19,8 +16,8 @@ import { editProfileType, profilePageType } from "../../util/types";
 import { useRef } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { createContext, useContext, useImperativeHandle } from "react";
-import { LayoutContext } from "../../layout/Layout";
 import Spinner from "../../components/Spinner/Spinner";
+import { GeneralContext } from "../../routes/Router";
 
 export const ProfileContext = createContext();
 
@@ -42,7 +39,7 @@ function ProfileComponent({ user, userId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileNode = useRef();
-  const { pageNodes, isFollowing, isAuth } = useContext(LayoutContext);
+  const { pageNodes, isFollowing, isAuth } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(

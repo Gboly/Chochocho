@@ -51,3 +51,7 @@ I intend to expose this homeNode to the layout component because it needs to be 
 
 #17
 All these ref distribution s due to my page structure. The body is fixed and its the actual page component that has the scroll ability. Therefore i just cant use document.body.scrollTop to handle all of it. I intend to correct this at a later time.
+
+#18
+I realized that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
+There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext. The context should be made in the router component

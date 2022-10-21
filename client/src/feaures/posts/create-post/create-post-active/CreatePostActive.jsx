@@ -27,12 +27,12 @@ import {
   closePopupOnOpaqueOverlay,
   showPopupOnOpaqueOverlay,
 } from "../../../../util/functions";
-import { LayoutContext } from "../../../../layout/Layout";
+import { GeneralContext } from "../../../../routes/Router";
 
 export default function CreatePostActive({ placeholder }) {
   const {
     authUser: { profileImage },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const { isOpen: visibilityOptionsIsOpen, valueId } = useSelector(
     getVisibilityOptionsState

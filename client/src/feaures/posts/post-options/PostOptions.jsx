@@ -8,11 +8,11 @@ import { showPopupOnOpaqueOverlay } from "../../../util/functions";
 import { capitalize } from "../../../util/functions";
 import { postNotifcationType } from "../../../util/types";
 import { useContext } from "react";
-import { LayoutContext } from "../../../layout/Layout";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function PostOptions({ postId, userId }) {
   const dispatch = useDispatch();
-  const { isAuth } = useContext(LayoutContext);
+  const { isAuth } = useContext(GeneralContext);
   const postOptions = isAuth(userId) ? userPostOptions : othersPostOptions;
 
   const handleClick = (e, option) => {

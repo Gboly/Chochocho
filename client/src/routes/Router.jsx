@@ -18,38 +18,70 @@ import SignUp from "../pages/sign-up/SignUp";
 import SignIn from "../pages/sign-in/SignIn";
 import ForgotPassword from "../pages/forgot-password/ForgotPassword";
 import ViewPost from "../pages/view post/ViewPost";
+import Story from "../pages/story/Story";
+import { useGetUserByIdQuery } from "../app/api-slices/usersApiSlice";
+import { createContext, useRef, useState } from "react";
 
+export const GeneralContext = createContext();
 export default function Router() {
+  // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
+  // There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext.
+  // #3
+  const authUserId = 1;
+  const { data: authUser } = useGetUserByIdQuery(authUserId);
+  const isFollowing = (userId) => (authUser?.following || []).includes(userId);
+  const isFollower = (userId) => (authUser?.followers || []).includes(userId);
+  const isAuth = (userId) => authUser?.id === userId;
+
+  const pageNodes = useRef();
+  const [pageRefresh, setPageRefresh] = useState(false);
+
   return (
-    <Routes>
-      <Route path="/auth" element={<LayoutGen />}>
-        <Route index element={<SignUp />} />
-        <Route path="sign-up" element={<SignUp />} />
-        <Route path="sign-in" element={<SignIn />} />
-        <Route path="reset-password" element={<ForgotPassword />} />
-        <Route path="settings/reset-password" element={<ForgotPassword />} />
-      </Route>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path=":username/post/:postId" element={<ViewPost />} />
-        {/* #12 */}
-        <Route path="profile/:userId" element={<Profile />} />
-        <Route path="notifications" element={<Notifications />} />
-        <Route path="community" element={<Community />}>
-          <Route index element={<Followers />} />
-          <Route path="followers" element={<Followers />} />
-          <Route path="following" element={<Following />} />
-          <Route path="suggested" element={<Suggested />} />
+    <GeneralContext.Provider
+      value={{
+        authUser,
+        isFollowing,
+        isFollower,
+        isAuth,
+        pageNodes,
+        pageRefresh,
+        setPageRefresh,
+      }}
+    >
+      <Routes>
+        <Route path="/auth" element={<LayoutGen />}>
+          <Route index element={<SignUp />} />
+          <Route path="sign-up" element={<SignUp />} />
+          <Route path="sign-in" element={<SignIn />} />
+          <Route path="reset-password" element={<ForgotPassword />} />
+          <Route path="settings/reset-password" element={<ForgotPassword />} />
         </Route>
-        <Route path="settings" element={<Settings />}>
-          <Route index element={<EditProfile />} />
-          <Route path="profile" element={<EditProfile />} />
-          <Route path="notification" element={<Notification />} />
-          <Route path="blocking" element={<Blocking />} />
-          <Route path="security" element={<Security />} />
-          <Route path="viewing" element={<Viewing />} />
+        <Route path="/" element={<Layout authUser={authUser} />}>
+          <Route index element={<Home />} />
+          <Route path=":username/post/:postId" element={<ViewPost />} />
+          {/* #12 */}
+          <Route path="profile/:userId" element={<Profile />} />
+          <Route path="notifications" element={<Notifications />} />
+          <Route path="community" element={<Community />}>
+            <Route index element={<Followers />} />
+            <Route path="followers" element={<Followers />} />
+            <Route path="following" element={<Following />} />
+            <Route path="suggested" element={<Suggested />} />
+          </Route>
+          <Route path="settings" element={<Settings />}>
+            <Route index element={<EditProfile />} />
+            <Route path="profile" element={<EditProfile />} />
+            <Route path="notification" element={<Notification />} />
+            <Route path="blocking" element={<Blocking />} />
+            <Route path="security" element={<Security />} />
+            <Route path="viewing" element={<Viewing />} />
+          </Route>
         </Route>
-      </Route>
-    </Routes>
+        <Route
+          path="/:username/story/:storyId"
+          element={<Story authUser={authUser} />}
+        />
+      </Routes>
+    </GeneralContext.Provider>
   );
 }

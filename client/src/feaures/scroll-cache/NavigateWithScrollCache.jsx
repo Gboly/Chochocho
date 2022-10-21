@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { LayoutContext } from "../../layout/Layout";
+import { GeneralContext } from "../../routes/Router";
 import { updateScrollCache } from "../../util/functions";
 
 const NavigateWithScrollCache = ({
@@ -21,7 +21,7 @@ const NavigateWithScrollCache = ({
       notificationsNode: "",
     });
 
-  const { pageNodes, isAuth } = useContext(LayoutContext);
+  const { pageNodes, isAuth } = useContext(GeneralContext);
 
   useEffect(() => {
     setNodes({

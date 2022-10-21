@@ -2,7 +2,7 @@ import HomeUserAvatar from "../home-user-avatar/HomeUserAvatar";
 import "./user-cameo.css";
 import { capitalize } from "../../util/functions";
 import { useContext } from "react";
-import { LayoutContext } from "../../layout/Layout";
+import { GeneralContext } from "../../routes/Router";
 
 export default function UserCameo({
   userId,
@@ -15,13 +15,17 @@ export default function UserCameo({
   main,
   aside,
   single,
+  alignItems,
 }) {
-  const { isFollowing } = useContext(LayoutContext);
+  const { isFollowing } = useContext(GeneralContext);
 
   return (
     <article
       className="user-cameo-container"
-      style={{ marginBottom: single ? "" : "1.2rem" }}
+      style={{
+        marginBottom: single ? "" : "1.2rem",
+        alignItems: alignItems ? "center" : "",
+      }}
     >
       <section>
         <HomeUserAvatar {...{ ...avatarProp, userId }} />

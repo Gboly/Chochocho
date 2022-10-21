@@ -36,21 +36,10 @@ import Spinner from "../components/Spinner/Spinner";
 import { getFriendsOptionsState } from "../feaures/right-bar/righbarSlice";
 import { closeFriendsOptions } from "../app/actions/rightbarActions";
 
-export const LayoutContext = createContext();
-
-export default function Layout() {
+export default function Layout({ authUser }) {
   const dispatch = useDispatch();
-  const pageNodes = useRef();
-  const [pageRefresh, setPageRefresh] = useState(false);
 
   const { isOpen: opaqueOverlayIsOpen } = useSelector(getOpaqueOverlayState);
-
-  // #3
-  const authUserId = 1;
-  const { data: authUser } = useGetUserByIdQuery(authUserId);
-  const isFollowing = (userId) => (authUser?.following || []).includes(userId);
-  const isFollower = (userId) => (authUser?.followers || []).includes(userId);
-  const isAuth = (userId) => authUser?.id === userId;
 
   const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
@@ -96,17 +85,8 @@ export default function Layout() {
   return (
     <>
       {authUser ? (
-        <LayoutContext.Provider
-          value={{
-            pageNodes,
-            pageRefresh,
-            setPageRefresh,
-            authUser,
-            isFollowing,
-            isFollower,
-            isAuth,
-          }}
-        >
+        // #18
+        <>
           <Header />
           <div className="main-container">
             <div className="sidebar-container-flex">
@@ -128,7 +108,7 @@ export default function Layout() {
               <TransparentOverlay />
             </div>
           )}
-        </LayoutContext.Provider>
+        </>
       ) : (
         // This should be replaced with a loading animation screen(twitter-like)
         <Spinner />

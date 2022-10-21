@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { iconStyle } from "../../../util/iconDescContent";
 import { closePopupOnOpaqueOverlay } from "../../../util/functions";
 import { useContext } from "react";
-import { LayoutContext } from "../../../layout/Layout";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function SidebarTop() {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export default function SidebarTop() {
   //Make sure to generate authUser properly after building backend
   const {
     authUser: { id, displayName, profileImage },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   const handleRouting = () => {
     navigate(`/profile/${id}`);

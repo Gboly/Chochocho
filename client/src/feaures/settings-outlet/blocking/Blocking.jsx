@@ -10,14 +10,14 @@ import {
 } from "../../../app/api-slices/usersApiSlice";
 import { useState, useEffect, useContext } from "react";
 import Searchbar from "../../../components/searchbar/Searchbar";
-import { LayoutContext } from "../../../layout/Layout";
 import { prepareUserIdsForQuery } from "../../../util/functions";
 import Spinner from "../../../components/Spinner/Spinner";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function Blocking() {
   const {
     authUser: { blocked },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 

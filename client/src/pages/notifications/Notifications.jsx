@@ -15,15 +15,14 @@ import {
   notificationIdType,
   notificationsBasePathType,
 } from "../../util/types";
-import { LayoutContext } from "../../layout/Layout";
 import {
   selectNotificationsIds,
   useGetNotificationsQuery,
 } from "../../app/api-slices/notificationsApiSlice";
 import { initialState } from "../../app/api-slices/notificationsApiSlice";
-import { useEffect } from "react";
 import { prepareIdsForQuery } from "../../util/functions";
 import Spinner from "../../components/Spinner/Spinner";
+import { GeneralContext } from "../../routes/Router";
 
 // Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
 export default function Notifications() {
@@ -35,7 +34,7 @@ export default function Notifications() {
   const {
     pageNodes,
     authUser: { notifications },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(
@@ -61,7 +60,6 @@ export default function Notifications() {
   const content = notificationIds.map((notificationId) => (
     <NotificationBlock key={notificationId} notificationId={notificationId} />
   ));
-  console.log(notificationIds);
 
   return (
     <>

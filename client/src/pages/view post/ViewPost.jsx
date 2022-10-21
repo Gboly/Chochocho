@@ -19,9 +19,9 @@ import { useSelector } from "react-redux";
 import { createContext, useEffect, useRef, useState } from "react";
 import { useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
-import { LayoutContext } from "../../layout/Layout";
 import useOffsetTop from "../../util/useCallbackRef";
 import { useCallback } from "react";
+import { GeneralContext } from "../../routes/Router";
 
 export const ViewPostContext = createContext();
 
@@ -69,7 +69,7 @@ export default function ViewPost() {
   );
 
   const viewPostNode = useRef();
-  const { pageNodes } = useContext(LayoutContext);
+  const { pageNodes } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(

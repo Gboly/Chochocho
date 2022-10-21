@@ -1,33 +1,99 @@
 import "./story.css";
+import AddIcon from "@mui/icons-material/Add";
+import { iconStyle } from "../../../util/iconDescContent";
+import { useContext, useMemo } from "react";
+import {
+  selectFetchedUsersById,
+  useGetUsersByIdQuery,
+} from "../../../app/api-slices/usersApiSlice";
+import { prepareIdsForQuery, sortStoryAuthors } from "../../../util/functions";
+import { imageType, userIdType, videoType } from "../../../util/types";
+import { useSelector } from "react-redux";
+import { useGetStoryByIdQuery } from "../../../app/api-slices/storiesApiSlice";
+import video from "../../../assets/video.mp4";
+import { GeneralContext } from "../../../routes/Router";
 
-import DisplayImage from "../../../components/display-image/DisplayImage";
+const Story = () => {
+  const {
+    authUser: { otherStoryAuthors },
+  } = useContext(GeneralContext);
 
-export default function Story() {
-  const storyList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((_, i) => (
-    <div key={i} className="story-item">
-      <div className="story-img-container">
-        <img
-          src="https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bG92ZSUyMGZsb3dlcnN8ZW58MHx8MHx8&w=1000&q=80"
-          alt="story"
-          className="story-img"
-        />
-      </div>
-      <span className="story-username">Henderson</span>
-    </div>
-  ));
+  const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
+    useGetUsersByIdQuery({
+      userIds: prepareIdsForQuery(otherStoryAuthors, userIdType),
+    });
+
+  const isFetched = (id) => {
+    return (storyAuthors?.ids || []).includes(id);
+  };
+
+  // The otherStoryAuthors needs to be sorted on the backend endpoint that deals with updating otherStoryAuthors viewed property.
+  // This particular user with the viewed needs to be sliced out of its current position and then placed at the end of the array.
+
+  // For now, i'll be using a client side sorting with sortStoryAuthors
+  const sortedAuthorsBasedonViewedStatus = sortStoryAuthors(otherStoryAuthors);
 
   return (
-    <div className="story">
-      <div className="story-wrapper">
-        <div className="story-item">
-          <div className="story-img-container">
-            <DisplayImage />
-            <i className="add-story-icon">+</i>
-          </div>
-          <span className="story-username">Gbolahan</span>
-        </div>
-        {storyList}
-      </div>
+    <div className="story-container">
+      <CreateStory />
+      {sortedAuthorsBasedonViewedStatus.map(
+        ({ userId, viewed }) =>
+          isFetched(userId) && (
+            <UserStory key={userId} userId={userId} viewed={viewed} />
+          )
+      )}
+      {/* skeleton whenever isLoading */}
     </div>
   );
-}
+};
+
+export const CreateStory = () => {
+  return (
+    <div className="rightbar-story-item">
+      <section className="rightbar-create-story">
+        <i>
+          <AddIcon style={iconStyle} />
+        </i>
+      </section>
+      <div>Create a story</div>
+    </div>
+  );
+};
+export const UserStory = ({ userId, viewed }) => {
+  const { username, myStory } = useSelector((state) =>
+    selectFetchedUsersById(state, userId)
+  );
+
+  const posterStoryId = useMemo(() => {
+    return myStory[myStory.length - 1].storyId;
+  }, [myStory]);
+
+  const { data: story, isLoading: storyIsLoading } =
+    useGetStoryByIdQuery(posterStoryId);
+
+  return (
+    <>
+      {story && (
+        <div className="rightbar-story-item">
+          {story.mediaType === videoType ? (
+            <video
+              src={video}
+              alt="last story post vid"
+              className={`${viewed ? "viewed" : ""}`}
+            />
+          ) : (
+            <img
+              src={story.media}
+              alt="last story post"
+              className={`${viewed ? "viewed" : ""}`}
+            />
+          )}
+          <div>{username}</div>
+        </div>
+      )}
+      {/* skeleton whenever isLoading */}
+    </>
+  );
+};
+
+export default Story;

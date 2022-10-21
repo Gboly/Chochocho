@@ -4,7 +4,7 @@ import { iconStyle } from "../../../util/iconDescContent";
 import CustomSwitch from "../../../components/custom-switch/CustomSwitch";
 import { useContext, useState } from "react";
 import { activeStatusType, messageSoundType } from "../../../util/types";
-import { LayoutContext } from "../../../layout/Layout";
+import { GeneralContext } from "../../../routes/Router";
 
 const optionsContent = [
   {
@@ -24,7 +24,7 @@ const optionsContent = [
 const FriendsOption = () => {
   const {
     authUser: { settings },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   const initialState = optionsContent.reduce((accum, { type }) => {
     accum = { ...accum, [type]: settings[type] };

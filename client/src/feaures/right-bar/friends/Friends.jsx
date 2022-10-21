@@ -3,7 +3,6 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import FiberManualRecordSharpIcon from "@mui/icons-material/FiberManualRecordSharp";
 import { iconStyle } from "../../../util/iconDescContent";
 import { useContext } from "react";
-import { LayoutContext } from "../../../layout/Layout";
 import HomeUserAvatar from "../../../components/home-user-avatar/HomeUserAvatar";
 import { useState } from "react";
 import { useGetUsersByIdQuery } from "../../../app/api-slices/usersApiSlice";
@@ -14,11 +13,11 @@ import {
   getUsersBasedOnLastSeen,
 } from "../../../util/functions";
 import Spinner from "../../../components/Spinner/Spinner";
-import { onlineType } from "../../../util/types";
 import { useDispatch, useSelector } from "react-redux";
 import { getFriendsOptionsState } from "../righbarSlice";
 import FriendsOption from "./FriendsOption";
 import { openFriendsOptions } from "../../../app/actions/rightbarActions";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function Friends() {
   const {
@@ -26,7 +25,7 @@ export default function Friends() {
       following,
       settings: { activeStatus },
     },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 

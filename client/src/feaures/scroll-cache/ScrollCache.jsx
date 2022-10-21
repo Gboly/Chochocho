@@ -7,12 +7,12 @@ import {
   viewPostPageType,
 } from "../../util/types";
 import { useLocation, useParams } from "react-router-dom";
-import { LayoutContext } from "../../layout/Layout";
+import { GeneralContext } from "../../routes/Router";
 
 export const ScrollCache = forwardRef(({ children, defaultScrollTop }, ref) => {
   const location = useLocation();
   const { userId } = useParams();
-  const { pageRefresh, setPageRefresh } = useContext(LayoutContext);
+  const { pageRefresh, setPageRefresh } = useContext(GeneralContext);
 
   useLayoutEffect(() => {
     const scrollCache = getSessionStorageItem(scrollCacheType);

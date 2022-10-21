@@ -13,6 +13,18 @@
 .rightbar-friends-wrapper{
     margin: 1rem;
 }
+.rightbar-container{
+    background-color: #fff;
+   position: relative;
+    top: 3rem;
+    left: 0;
+    height: 100vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 35rem;
+    max-width: 30rem;
+    flex: 3.5;
+}
 @media screen and (max-width: 1500px) {
     .rightbar-container{
         width: 25rem;

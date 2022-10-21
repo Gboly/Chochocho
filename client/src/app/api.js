@@ -3,6 +3,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000" }),
-  tagTypes: ["Posts", "Users", "Comments", "Notifications"],
+  tagTypes: ["Posts", "Users", "Comments", "Notifications", "Stories"],
   endpoints: (builder) => ({}),
 });

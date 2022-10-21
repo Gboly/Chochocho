@@ -248,9 +248,9 @@ export const prepareUserIdsForQuery = (userIds, type) => {
   return userIds.join(`&id${type === exemptionType ? "_ne" : ""}=`) || "";
 };
 
-export const prepareIdsForQuery = (documentField, idKey) => {
+export const prepareIdsForQuery = (documentField, idKey, type) => {
   const ids = documentField.map((item) => item[idKey]);
-  return prepareUserIdsForQuery(ids);
+  return prepareUserIdsForQuery(ids, type);
 };
 
 export const getUsernameFromLink = (link) => {
@@ -285,4 +285,10 @@ export const getUsersBasedOnLastSeen = (usersList) => {
   const offActiveStatus = getUsersWithoutActiveStatus(sortedUsers);
   // The idea is to ensure that those online are top, followed by those offline and then we can have those who have their active status turned off
   return [...online, ...offline, ...offActiveStatus];
+};
+
+export const sortStoryAuthors = (userList) => {
+  const viewed = userList.filter(({ userId, viewed }) => viewed);
+  const active = userList.filter(({ userId, viewed }) => !viewed);
+  return [...active, ...viewed];
 };

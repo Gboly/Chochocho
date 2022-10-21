@@ -6,12 +6,12 @@ import { openCreatePost } from "../../../../app/actions/homeActions";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../../../util/functions";
 import { useContext } from "react";
-import { LayoutContext } from "../../../../layout/Layout";
+import { GeneralContext } from "../../../../routes/Router";
 
 export default function CreatePostIdle({ placeholder }) {
   const {
     authUser: { profileImage },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
   return (
     <div className="create-container">
       <form className="create-wrapper">

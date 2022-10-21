@@ -12,18 +12,14 @@ import { Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCommunityOutletIndexFromLocation } from "../../util/functions";
-import {
-  selectUserById,
-  useGetUserByIdQuery,
-} from "../../app/api-slices/usersApiSlice";
-import { LayoutContext } from "../../layout/Layout";
+import { GeneralContext } from "../../routes/Router";
 
 export default function Community() {
   const dispatch = useDispatch();
   const { isOpen: outletOptionIsOpen, valueId: value } =
     useSelector(getOutletOptionState);
 
-  const { authUser } = useContext(LayoutContext);
+  const { authUser } = useContext(GeneralContext);
   const followers = authUser?.followers || [];
   const followings = authUser?.following || [];
 

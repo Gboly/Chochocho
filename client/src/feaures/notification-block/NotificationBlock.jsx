@@ -19,9 +19,9 @@ import {
 } from "../../util/types";
 import { selectNotificationById } from "../../app/api-slices/notificationsApiSlice";
 import { useContext } from "react";
-import { LayoutContext } from "../../layout/Layout";
 import { convertToUserFriendlyTime, capitalize } from "../../util/functions";
 import { useNavigate } from "react-router-dom";
+import { GeneralContext } from "../../routes/Router";
 
 const mediaSnippet = [photoType, videoType];
 const snippetExcluded = [mentionType, followType];
@@ -39,7 +39,7 @@ export default function NotificationBlock({ notificationId }) {
   const {
     isFollowing,
     authUser: { notifications },
-  } = useContext(LayoutContext);
+  } = useContext(GeneralContext);
 
   const { postId, userId, date, type, snippet } = useSelector((state) =>
     selectNotificationById(state, notificationId)

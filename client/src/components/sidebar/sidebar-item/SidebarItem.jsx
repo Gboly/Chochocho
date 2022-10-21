@@ -6,7 +6,7 @@ import { closeSidebarNav } from "../../../app/actions/layoutActions";
 import { profileBasePathType } from "../../../util/types";
 import { getBasePath, updateScrollCache } from "../../../util/functions";
 import NavigateWithScrollCache from "../../../feaures/scroll-cache/NavigateWithScrollCache";
-import { LayoutContext } from "../../../layout/Layout";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function SidebarItem({ name, icon, id }) {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export default function SidebarItem({ name, icon, id }) {
   const [pathName, setPathName] = useState("");
   const [route, setRoute] = useState(false);
 
-  const { setPageRefresh } = useContext(LayoutContext);
+  const { setPageRefresh } = useContext(GeneralContext);
 
   useEffect(() => {
     setPathName(getBasePath(location.pathname));
