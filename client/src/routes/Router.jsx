@@ -23,6 +23,7 @@ import StoryLayout from "../pages/story/StoryLayout";
 import { useGetUserByIdQuery } from "../app/api-slices/usersApiSlice";
 import { createContext, useMemo, useRef, useState } from "react";
 import { sortByViewedStatus } from "../util/functions";
+import StoryIndexOutlet from "../pages/story/StoryIndexOutlet";
 
 export const GeneralContext = createContext();
 export default function Router() {
@@ -84,7 +85,7 @@ export default function Router() {
           </Route>
         </Route>
         <Route path="/story" element={<StoryLayout authUser={authUser} />}>
-          <Route />
+          <Route index element={<StoryIndexOutlet />} />
           <Route
             path=":username/:storyId"
             element={<Story authUser={authUser} />}

@@ -1,12 +1,6 @@
 import "./story.css";
 import Spinner from "../../components/Spinner/Spinner";
-import {
-  useState,
-  useMemo,
-  useEffect,
-  useCallback,
-  createContext,
-} from "react";
+import { useState, useMemo, useCallback, createContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
@@ -16,6 +10,7 @@ import { getStoryUserDetails } from "../../util/functions";
 import PrevSlide from "./prevSlide";
 import NextSlide from "./nextSlide";
 import StoryHeader from "./StoryHeader";
+import { isEqual } from "lodash";
 
 export const StoryContext = createContext();
 const Story = ({ authUser }) => {
@@ -55,7 +50,12 @@ const Story = ({ authUser }) => {
           : transitionType === "next"
           ? nextParams
           : { username, storyId };
-      navigate(`/story/${newUsername}/${newStoryId}`);
+
+      // When making a transition on the last story, navigate to the default story route.
+      // The nextParams remains the currentParam whenever it gets to the last story
+      transitionType === "next" && isEqual(nextParams, { username, storyId })
+        ? navigate("/story")
+        : navigate(`/story/${newUsername}/${newStoryId}`);
     },
     [nextParams, navigate, prevParams, username, storyId]
   );

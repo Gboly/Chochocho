@@ -95,6 +95,26 @@
     opacity: 0.8;
 }
 
+/* index outlet */
+.story-outlet-index{
+    width: 100%;
+    background-color: #f4f5f7;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.story-outlet-index > img{
+    width: 10rem;
+    border-radius: 50%;
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.15);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.story-outlet-index > p {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
 /* main */
 .story-page-main{
     width: calc(100% - 24rem);
