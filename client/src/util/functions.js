@@ -292,3 +292,32 @@ export const sortStoryAuthors = (userList) => {
   const active = userList.filter(({ userId, viewed }) => !viewed);
   return [...active, ...viewed];
 };
+
+export const getStoryUserDetails = (allStoryAuthors, userId) => {
+  const viewedAuthors = allStoryAuthors.filter((author) => author.viewed);
+  const activeAuthors = allStoryAuthors.filter((author) => !author.viewed);
+  const isAViewedAuthor = viewedAuthors.some(
+    (viewedAuthor) => viewedAuthor.userId === userId
+  );
+  const isAnActiveAuthor = activeAuthors.some(
+    (activeAuthor) => activeAuthor.userId === userId
+  );
+  const viewedAuthorIndex = viewedAuthors.findIndex(
+    (viewedauthor) => viewedauthor.userId === userId
+  );
+  const activeAuthorIndex = activeAuthors.findIndex(
+    (activeAuthor) => activeAuthor.userId === userId
+  );
+  const userIndex = isAnActiveAuthor
+    ? activeAuthorIndex
+    : isAViewedAuthor
+    ? viewedAuthorIndex
+    : -1;
+  const users = isAnActiveAuthor
+    ? activeAuthors
+    : isAViewedAuthor
+    ? viewedAuthors
+    : [];
+
+  return { userIndex, users };
+};

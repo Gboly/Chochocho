@@ -1,106 +1,114 @@
 import "./story.css";
-import Header from "../../layout/header/Header";
-import { StorySidebar } from "./StorySidebar";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { iconStyle } from "../../util/iconDescContent";
 import Spinner from "../../components/Spinner/Spinner";
-import UserCameo from "../../components/user-cameo/UserCameo";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
-import { faVolumeOff } from "@fortawesome/free-solid-svg-icons";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { faPause } from "@fortawesome/free-solid-svg-icons";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  createContext,
+} from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
+import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
+import video from "../../assets/video.mp4";
+import { videoType, imageType } from "../../util/types";
+import { getStoryUserDetails } from "../../util/functions";
+import PrevSlide from "./prevSlide";
+import NextSlide from "./nextSlide";
+import StoryHeader from "./StoryHeader";
 
-// looks like i'm prop drilling the authUser? Its less code than context
-const Story = ({ authUser }) => {
+export const StoryContext = createContext();
+const Story = ({ authUser: { otherStoryAuthors } }) => {
+  const navigate = useNavigate();
+  const { username, storyId } = useParams();
+
+  const {
+    data: story,
+    isLoading: storyFetchIsLoading,
+    isError: storyFetchFailed,
+  } = useGetStoryByIdQuery(storyId);
+  const { data: user, isLoading: userFetchIsLoading } = useGetUserByIdQuery(
+    story?.userId || ""
+  );
+
+  const [storyIndex, userIndex, users] = useMemo(() => {
+    const userStories = user?.myStories || [];
+    const storyIndex = userStories.findIndex(
+      (myStory) => myStory.storyId === Number(storyId)
+    );
+    const { userIndex, users } = getStoryUserDetails(
+      otherStoryAuthors,
+      user?.id
+    );
+    return [storyIndex, userIndex, users];
+  }, [user, storyId, otherStoryAuthors]);
+
+  const currentParams = { username, storyId };
+  const [{ prevParams, nextParams }, setParams] = useState({
+    prevParams: currentParams,
+    nextParams: currentParams,
+  });
+
+  //Transition
+  const handleTransition = useCallback(
+    (transitionType) => {
+      const { username: newUsername, storyId: newStoryId } =
+        transitionType === "prev"
+          ? prevParams
+          : transitionType === "next"
+          ? nextParams
+          : { username, storyId };
+      navigate(`/story/${newUsername}/${newStoryId}`);
+    },
+    [nextParams, navigate, prevParams, username, storyId]
+  );
+
+  const storyContextValues = useMemo(
+    () => ({
+      setParams,
+      handleTransition,
+      user,
+      story,
+      storyId,
+      users,
+      storyIndex,
+      userIndex,
+    }),
+    [handleTransition, user, story, storyId, users, storyIndex, userIndex]
+  );
+
   return (
-    <>
-      {authUser ? (
-        <>
-          <div className="story-header">
-            <Header />
+    <StoryContext.Provider value={storyContextValues}>
+      <main className="story-page-main">
+        <PrevSlide />
+        <section>
+          <div>
+            {!storyFetchFailed && story && user && (
+              <>
+                <StoryHeader />
+                {story.mediaType === videoType ? (
+                  <video src={video} alt="story" />
+                ) : (
+                  <img src={story.media} alt="story" />
+                )}
+              </>
+            )}
+            {storyFetchIsLoading && userFetchIsLoading && <Spinner />}
+            {storyFetchFailed && <WrongLinkAlert />}
           </div>
-          <main className="story-page">
-            <StorySidebar />
-            <StoryMainSection authUser={authUser} />
-          </main>
-        </>
-      ) : (
-        <Spinner />
-      )}
-    </>
+          <input type="text" name="" id="" placeholder="Reply" />
+        </section>
+        <NextSlide />
+      </main>
+    </StoryContext.Provider>
   );
 };
 
-const StoryMainSection = ({ authUser }) => {
+const WrongLinkAlert = () => {
   return (
-    <main className="story-page-main">
-      <aside className="prev-story">
-        <i>
-          <ArrowBackIosNewIcon style={iconStyle} />
-        </i>
-      </aside>
-      <section>
-        <div>
-          <StoryMainDescAndActions authUser={authUser} />
-          <img src={authUser.profileImage} alt="" />
-        </div>
-        <input type="text" name="" id="" placeholder="Reply" />
-      </section>
-      <aside className="next-story">
-        <i>
-          <ArrowForwardIosIcon style={iconStyle} />
-        </i>
-      </aside>
-    </main>
-  );
-};
-
-const StoryMainDescAndActions = ({
-  authUser: { id, profileImage, displayName, username },
-}) => {
-  return (
-    <aside className="story-desc-actions">
-      <div className="story-progress-container">
-        <progress min={0} max={100} value={20} />
-        <progress min={0} max={100} value={0} />
-        <progress min={0} max={100} value={0} />
-        <progress min={0} max={100} value={0} />
-      </div>
-      <div className="story-user-actions">
-        <UserCameo
-          {...{
-            userId: id,
-            alignItems: true,
-            single: true,
-            header: displayName,
-            sub: username,
-            aside: "12h",
-            avatarProp: { size: 2.5, src: profileImage },
-          }}
-        />
-        <StoryMainActions />,
-      </div>
-    </aside>
-  );
-};
-
-const StoryMainActions = () => {
-  return (
-    <div className="story-flex-container">
-      <i>
-        <FontAwesomeIcon icon={faPlay} />
-      </i>
-      {/* conditionally rendered. Ony with video mediaType */}
-      <i>
-        <FontAwesomeIcon icon={faVolumeXmark} />
-      </i>
-      <i>
-        <FontAwesomeIcon icon={faEllipsis} />
-      </i>
+    <div className="story-link-error">
+      <h3>This link does not contain any story</h3>
+      <p>Click on a user on the sidebar to view their story.</p>
     </div>
   );
 };

@@ -1,10 +1,69 @@
 import SettingsIcon from "@mui/icons-material/Settings";
 import AddIcon from "@mui/icons-material/Add";
 import { iconStyle } from "../../util/iconDescContent";
+import { useCallback, useContext, useMemo } from "react";
+import { GeneralContext } from "../../routes/Router";
+import { useGetUsersByIdQuery } from "../../app/api-slices/usersApiSlice";
+import {
+  convertToUserFriendlyTime,
+  prepareIdsForQuery,
+  sortStoryAuthors,
+} from "../../util/functions";
+import { userIdType } from "../../util/types";
+import { useSelector } from "react-redux";
+import { selectFetchedUsersById } from "../../app/api-slices/usersApiSlice";
+import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
+import video from "../../assets/video.mp4";
+import { videoType } from "../../util/types";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const story =
   "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bG92ZSUyMGZsb3dlcnN8ZW58MHx8MHx8&w=1000&q=80";
 export const StorySidebar = () => {
+  const {
+    authUser: { otherStoryAuthors, otherStories },
+  } = useContext(GeneralContext);
+
+  const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
+    useGetUsersByIdQuery({
+      userIds: prepareIdsForQuery(otherStoryAuthors, userIdType),
+    });
+
+  const isFetched = (id) => {
+    return (storyAuthors?.ids || []).includes(id);
+  };
+
+  // The otherStoryAuthors needs to be sorted on the backend endpoint that deals with updating otherStoryAuthors viewed property.
+  // This particular user with the viewed needs to be sliced out of its current position and then placed at the end of the array.
+
+  // For now, i'll be using a client side sorting with sortStoryAuthors
+  const viewed = otherStoryAuthors.filter((author) => author.viewed);
+  const notViewed = otherStoryAuthors.filter((author) => !author.viewed);
+
+  const viewedStories = viewed.map(
+    ({ userId, viewed }) =>
+      isFetched(userId) && (
+        <UserStory
+          key={userId}
+          userId={userId}
+          viewed={viewed}
+          allStories={otherStories}
+        />
+      )
+  );
+  const notViewedStories = notViewed.map(
+    ({ userId, viewed }) =>
+      isFetched(userId) && (
+        <UserStory
+          key={userId}
+          userId={userId}
+          viewed={viewed}
+          allStories={otherStories}
+        />
+      )
+  );
+
   return (
     <aside className="story-sidebar">
       <header>
@@ -16,54 +75,92 @@ export const StorySidebar = () => {
       <section className="auth-user-section">
         <p>Your story</p>
         <div className="story-list">
-          <div className="story-item">
-            <section className="create-story">
-              <i>
-                <AddIcon />
-              </i>
-            </section>
-            <article>
-              <div>ChillingChee</div>
-              <div>Create a story. Share a photo or video.</div>
-            </article>
-          </div>
-          {/* <div className="story-item">
-              <img src={story} alt="" />
-              <article>
-                <div>ChillingChee</div>
-                <div>20h</div>
-              </article>
-            </div> */}
+          <CreateStory />
         </div>
       </section>
       <section className="other-users-section">
-        <p>All story</p>
-        <div className="story-list">
-          <div className="story-item">
-            <img src={story} alt="" />
-            <article>
-              <div>
-                ChillingCheewfvhbewjnfkjnwdbwfbejbfjenfefhefheifhiefhiueh
-              </div>
-              <div>3m</div>
-            </article>
-          </div>
-          <div className="story-item">
-            <img src={story} alt="" />
-            <article>
-              <div>ChillingChee</div>
-              <div>20h</div>
-            </article>
-          </div>
-          <div className="story-item">
-            <img src={story} alt="" />
-            <article>
-              <div>ChillingChee</div>
-              <div>20h</div>
-            </article>
-          </div>
-        </div>
+        <p>Recent updates</p>
+        <div className="story-list">{notViewedStories}</div>
+        {/* skeleton whenever isLoading */}
+      </section>
+      <section className="other-users-section">
+        <p>Viewed updates</p>
+        <div className="story-list">{viewedStories}</div>
+        {/* skeleton whenever isLoading */}
       </section>
     </aside>
+  );
+};
+
+const CreateStory = () => {
+  return (
+    <div className="story-item create-story-container">
+      <section className="create-story">
+        <i>
+          <AddIcon />
+        </i>
+      </section>
+      <article>
+        <div>Create a story</div>
+        <div>Share a photo or video.</div>
+      </article>
+    </div>
+  );
+};
+
+const UserStory = ({ userId, viewed, allStories }) => {
+  const navigate = useNavigate();
+  const { username, myStories } = useSelector((state) =>
+    selectFetchedUsersById(state, userId)
+  );
+
+  const posterStoryId = useMemo(() => {
+    return myStories[myStories.length - 1].storyId;
+  }, [myStories]);
+
+  const { data: story, isLoading: storyIsLoading } =
+    useGetStoryByIdQuery(posterStoryId);
+
+  const storyToBeViewedId = useMemo(() => {
+    const checkViewStatus = (myStory) =>
+      allStories.find(
+        (aStory) => !aStory.viewed && aStory.storyId === myStory.storyId
+      );
+
+    const YetToBeViewedStories = myStories.filter((myStory) =>
+      checkViewStatus(myStory)
+    );
+
+    return YetToBeViewedStories[0]?.storyId || myStories[0].storyId;
+  }, [myStories, allStories]);
+
+  const handleClick = () => {
+    navigate(`/story/${username}/${storyToBeViewedId}`);
+  };
+
+  return (
+    <>
+      {story && (
+        <div className="story-item" onClick={handleClick}>
+          {story.mediaType === videoType ? (
+            <video
+              src={video}
+              alt="last story post vid"
+              className={`${viewed ? "viewed" : ""}`}
+            />
+          ) : (
+            <img
+              src={story.media}
+              alt="last story post"
+              className={`${viewed ? "viewed" : ""}`}
+            />
+          )}
+          <article>
+            <div>{username}</div>
+            <div>{convertToUserFriendlyTime(story.createdAt)}</div>
+          </article>
+        </div>
+      )}
+    </>
   );
 };

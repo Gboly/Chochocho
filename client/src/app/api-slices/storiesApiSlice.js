@@ -1,5 +1,5 @@
 import { apiSlice } from "../api";
-import { createEntityAdapter } from "@reduxjs/toolkit";
+import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 
 const storiesAdapter = createEntityAdapter({});
 

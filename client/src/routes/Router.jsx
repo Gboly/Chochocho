@@ -19,6 +19,7 @@ import SignIn from "../pages/sign-in/SignIn";
 import ForgotPassword from "../pages/forgot-password/ForgotPassword";
 import ViewPost from "../pages/view post/ViewPost";
 import Story from "../pages/story/Story";
+import StoryLayout from "../pages/story/StoryLayout";
 import { useGetUserByIdQuery } from "../app/api-slices/usersApiSlice";
 import { createContext, useRef, useState } from "react";
 
@@ -77,10 +78,13 @@ export default function Router() {
             <Route path="viewing" element={<Viewing />} />
           </Route>
         </Route>
-        <Route
-          path="/:username/story/:storyId"
-          element={<Story authUser={authUser} />}
-        />
+        <Route path="/story" element={<StoryLayout authUser={authUser} />}>
+          <Route />
+          <Route
+            path=":username/:storyId"
+            element={<Story authUser={authUser} />}
+          />
+        </Route>
       </Routes>
     </GeneralContext.Provider>
   );

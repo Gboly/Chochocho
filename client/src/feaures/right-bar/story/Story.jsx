@@ -12,10 +12,11 @@ import { useSelector } from "react-redux";
 import { useGetStoryByIdQuery } from "../../../app/api-slices/storiesApiSlice";
 import video from "../../../assets/video.mp4";
 import { GeneralContext } from "../../../routes/Router";
+import { useNavigate } from "react-router-dom";
 
 const Story = () => {
   const {
-    authUser: { otherStoryAuthors },
+    authUser: { otherStoryAuthors, otherStories },
   } = useContext(GeneralContext);
 
   const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
@@ -39,7 +40,12 @@ const Story = () => {
       {sortedAuthorsBasedonViewedStatus.map(
         ({ userId, viewed }) =>
           isFetched(userId) && (
-            <UserStory key={userId} userId={userId} viewed={viewed} />
+            <UserStory
+              key={userId}
+              userId={userId}
+              viewed={viewed}
+              allStories={otherStories}
+            />
           )
       )}
       {/* skeleton whenever isLoading */}
@@ -59,22 +65,40 @@ export const CreateStory = () => {
     </div>
   );
 };
-export const UserStory = ({ userId, viewed }) => {
-  const { username, myStory } = useSelector((state) =>
+export const UserStory = ({ userId, viewed, allStories }) => {
+  const navigate = useNavigate();
+  const { username, myStories } = useSelector((state) =>
     selectFetchedUsersById(state, userId)
   );
 
   const posterStoryId = useMemo(() => {
-    return myStory[myStory.length - 1].storyId;
-  }, [myStory]);
+    return myStories[myStories.length - 1].storyId;
+  }, [myStories]);
 
   const { data: story, isLoading: storyIsLoading } =
     useGetStoryByIdQuery(posterStoryId);
 
+  const storyToBeViewedId = useMemo(() => {
+    const checkViewStatus = (myStory) =>
+      allStories.find(
+        (aStory) => !aStory.viewed && aStory.storyId === myStory.storyId
+      );
+
+    const YetToBeViewedStories = myStories.filter((myStory) =>
+      checkViewStatus(myStory)
+    );
+
+    return YetToBeViewedStories[0]?.storyId || myStories[0].storyId;
+  }, [myStories, allStories]);
+
+  const handleClick = () => {
+    navigate(`/${username}/story/${storyToBeViewedId}`);
+  };
+
   return (
     <>
       {story && (
-        <div className="rightbar-story-item">
+        <div className="rightbar-story-item" onClick={handleClick}>
           {story.mediaType === videoType ? (
             <video
               src={video}
