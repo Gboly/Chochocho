@@ -23,6 +23,8 @@ const story =
 export const StorySidebar = () => {
   const {
     authUser: { otherStoryAuthors, otherStories },
+    viewedUsers,
+    activeUsers,
   } = useContext(GeneralContext);
 
   const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
@@ -34,31 +36,24 @@ export const StorySidebar = () => {
     return (storyAuthors?.ids || []).includes(id);
   };
 
-  // The otherStoryAuthors needs to be sorted on the backend endpoint that deals with updating otherStoryAuthors viewed property.
-  // This particular user with the viewed needs to be sliced out of its current position and then placed at the end of the array.
-
-  // For now, i'll be using a client side sorting with sortStoryAuthors
-  const viewed = otherStoryAuthors.filter((author) => author.viewed);
-  const notViewed = otherStoryAuthors.filter((author) => !author.viewed);
-
-  const viewedStories = viewed.map(
-    ({ userId, viewed }) =>
+  const viewedUserStories = viewedUsers.map(
+    ({ userId }) =>
       isFetched(userId) && (
         <UserStory
           key={userId}
           userId={userId}
-          viewed={viewed}
+          viewed={true}
           allStories={otherStories}
         />
       )
   );
-  const notViewedStories = notViewed.map(
-    ({ userId, viewed }) =>
+  const activeUserStories = activeUsers.map(
+    ({ userId }) =>
       isFetched(userId) && (
         <UserStory
           key={userId}
           userId={userId}
-          viewed={viewed}
+          viewed={false}
           allStories={otherStories}
         />
       )
@@ -80,12 +75,12 @@ export const StorySidebar = () => {
       </section>
       <section className="other-users-section">
         <p>Recent updates</p>
-        <div className="story-list">{notViewedStories}</div>
+        <div className="story-list">{activeUserStories}</div>
         {/* skeleton whenever isLoading */}
       </section>
       <section className="other-users-section">
         <p>Viewed updates</p>
-        <div className="story-list">{viewedStories}</div>
+        <div className="story-list">{viewedUserStories}</div>
         {/* skeleton whenever isLoading */}
       </section>
     </aside>

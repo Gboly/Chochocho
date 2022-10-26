@@ -18,7 +18,7 @@ import NextSlide from "./nextSlide";
 import StoryHeader from "./StoryHeader";
 
 export const StoryContext = createContext();
-const Story = ({ authUser: { otherStoryAuthors } }) => {
+const Story = ({ authUser }) => {
   const navigate = useNavigate();
   const { username, storyId } = useParams();
 
@@ -36,12 +36,9 @@ const Story = ({ authUser: { otherStoryAuthors } }) => {
     const storyIndex = userStories.findIndex(
       (myStory) => myStory.storyId === Number(storyId)
     );
-    const { userIndex, users } = getStoryUserDetails(
-      otherStoryAuthors,
-      user?.id
-    );
+    const { userIndex, users } = getStoryUserDetails(authUser, user?.id);
     return [storyIndex, userIndex, users];
-  }, [user, storyId, otherStoryAuthors]);
+  }, [user, storyId, authUser]);
 
   const currentParams = { username, storyId };
   const [{ prevParams, nextParams }, setParams] = useState({

@@ -363,8 +363,8 @@
             "lastSeen": "Oct 14, 2022, 4:47 PM",
             "settings": {"activeStatus": true, "messageSound": true},
             "myStories": [],
-            "otherStories": [{"storyId": 10, "viewed": false}, {"storyId": 8, "viewed": false}, {"storyId": 9, "viewed": false}, {"storyId": 4, "viewed": false}, {"storyId": 6, "viewed": false}, {"storyId": 7, "viewed": false}, {"storyId": 3, "viewed": false}, {"storyId": 5, "viewed": false}, {"storyId": 2, "viewed": false}],
-            "otherStoryAuthors": [{"userId": 3, "viewed": false}, {"userId": 6, "viewed": true}, {"userId": 10, "viewed": false}, {"userId": 9, "viewed": false}]
+            "otherStories": [{"storyId": 10, "userId": 3, "viewed": false}, {"storyId": 8, "userId": 6, "viewed": false}, {"storyId": 9, "userId": 3, "viewed": false}, {"storyId": 4, "userId": 9, "viewed": true}, {"storyId": 6, "userId": 3, "viewed": true}, {"storyId": 7, "userId": 3, "viewed": true}, {"storyId": 3, "userId": 10, "viewed": false}, {"storyId": 5, "userId": 6, "viewed": false}, {"storyId": 2, "userId": 4, "viewed": false}],
+            "otherStoryAuthors": [{"userId": 3}, {"userId": 6}, {"userId": 10}, {"userId": 9}]
         },
         {
             "id": 2,

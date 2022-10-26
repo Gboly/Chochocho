@@ -287,15 +287,25 @@ export const getUsersBasedOnLastSeen = (usersList) => {
   return [...online, ...offline, ...offActiveStatus];
 };
 
-export const sortStoryAuthors = (userList) => {
-  const viewed = userList.filter(({ userId, viewed }) => viewed);
-  const active = userList.filter(({ userId, viewed }) => !viewed);
-  return [...active, ...viewed];
-};
+export const sortByViewedStatus = (authUser) =>
+  authUser?.otherStoryAuthors.reduce(
+    (accum, author) => {
+      const isViewed = authUser?.otherStories
+        .filter((story) => story.userId === author.userId)
+        .every((story) => story.viewed);
+      accum = {
+        viewed: isViewed ? [...accum.viewed, author] : [...accum.viewed],
+        active: isViewed ? [...accum.active] : [...accum.active, author],
+      };
+      return accum;
+    },
+    { viewed: [], active: [] }
+  );
 
-export const getStoryUserDetails = (allStoryAuthors, userId) => {
-  const viewedAuthors = allStoryAuthors.filter((author) => author.viewed);
-  const activeAuthors = allStoryAuthors.filter((author) => !author.viewed);
+export const getStoryUserDetails = (authUser, userId) => {
+  const sortedUsers = sortByViewedStatus(authUser);
+  const viewedAuthors = sortedUsers.viewed;
+  const activeAuthors = sortedUsers.active;
   const isAViewedAuthor = viewedAuthors.some(
     (viewedAuthor) => viewedAuthor.userId === userId
   );

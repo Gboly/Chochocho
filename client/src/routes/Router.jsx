@@ -21,7 +21,8 @@ import ViewPost from "../pages/view post/ViewPost";
 import Story from "../pages/story/Story";
 import StoryLayout from "../pages/story/StoryLayout";
 import { useGetUserByIdQuery } from "../app/api-slices/usersApiSlice";
-import { createContext, useRef, useState } from "react";
+import { createContext, useMemo, useRef, useState } from "react";
+import { sortByViewedStatus } from "../util/functions";
 
 export const GeneralContext = createContext();
 export default function Router() {
@@ -33,6 +34,8 @@ export default function Router() {
   const isFollowing = (userId) => (authUser?.following || []).includes(userId);
   const isFollower = (userId) => (authUser?.followers || []).includes(userId);
   const isAuth = (userId) => authUser?.id === userId;
+
+  const groupedUsers = useMemo(() => sortByViewedStatus(authUser), [authUser]);
 
   const pageNodes = useRef();
   const [pageRefresh, setPageRefresh] = useState(false);
@@ -47,6 +50,8 @@ export default function Router() {
         pageNodes,
         pageRefresh,
         setPageRefresh,
+        viewedUsers: groupedUsers?.viewed,
+        activeUsers: groupedUsers?.active,
       }}
     >
       <Routes>

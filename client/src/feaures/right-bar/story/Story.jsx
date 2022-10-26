@@ -6,7 +6,7 @@ import {
   selectFetchedUsersById,
   useGetUsersByIdQuery,
 } from "../../../app/api-slices/usersApiSlice";
-import { prepareIdsForQuery, sortStoryAuthors } from "../../../util/functions";
+import { prepareIdsForQuery } from "../../../util/functions";
 import { imageType, userIdType, videoType } from "../../../util/types";
 import { useSelector } from "react-redux";
 import { useGetStoryByIdQuery } from "../../../app/api-slices/storiesApiSlice";
@@ -17,6 +17,8 @@ import { useNavigate } from "react-router-dom";
 const Story = () => {
   const {
     authUser: { otherStoryAuthors, otherStories },
+    viewedUsers,
+    activeUsers,
   } = useContext(GeneralContext);
 
   const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
@@ -28,22 +30,27 @@ const Story = () => {
     return (storyAuthors?.ids || []).includes(id);
   };
 
-  // The otherStoryAuthors needs to be sorted on the backend endpoint that deals with updating otherStoryAuthors viewed property.
-  // This particular user with the viewed needs to be sliced out of its current position and then placed at the end of the array.
-
-  // For now, i'll be using a client side sorting with sortStoryAuthors
-  const sortedAuthorsBasedonViewedStatus = sortStoryAuthors(otherStoryAuthors);
-
   return (
     <div className="story-container">
       <CreateStory />
-      {sortedAuthorsBasedonViewedStatus.map(
-        ({ userId, viewed }) =>
+      {activeUsers.map(
+        ({ userId }) =>
           isFetched(userId) && (
             <UserStory
               key={userId}
               userId={userId}
-              viewed={viewed}
+              viewed={false}
+              allStories={otherStories}
+            />
+          )
+      )}
+      {viewedUsers.map(
+        ({ userId }) =>
+          isFetched(userId) && (
+            <UserStory
+              key={userId}
+              userId={userId}
+              viewed={true}
               allStories={otherStories}
             />
           )
