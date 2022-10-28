@@ -271,70 +271,70 @@
                 "userId": 2,
                 "mediaType": "video",
                 "media": "",
-                "createdAt": "2022-10-23 03:29:55"
+                "createdAt": "2022-10-26 12:52:39"
             },
             {
                 "id": 2,
                 "userId": 4,
                 "mediaType": "image",
                 "media": "https://t4.ftcdn.net/jpg/05/11/26/55/360_F_511265561_FuYUWo6s2RJvhQuj2gMJYbAZe6FiJKtu.jpg",
-                "createdAt": "2022-10-23 13:15:07"
+                "createdAt": "2022-10-26 13:15:07"
             },
             {
                 "id": 3,
                 "userId": 10,
                 "mediaType": "image",
                 "media": "https://i.pinimg.com/originals/9e/b6/87/9eb6874f1430cb6735bb356a8c92ea38.jpg",
-                "createdAt": "2022-10-23 05:29:09"
+                "createdAt": "2022-10-26 18:34:02"
             },
             {
                 "id": 4,
                 "userId": 9,
                 "mediaType": "video",
                 "media": "",
-                "createdAt": "2022-10-23 08:14:13"
+                "createdAt": "2022-10-27 02:08:52"
             },
             {
                 "id": 5,
                 "userId": 6,
                 "mediaType": "image",
                 "media": "",
-                "createdAt": "2022-10-23 12:52:39"
+                "createdAt": "2022-10-27 03:00:44"
             },
             {
                 "id": 6,
                 "userId": 3,
                 "mediaType": "image",
                 "media": "https://carsguide-res.cloudinary.com/image/upload/f_auto%2Cfl_lossy%2Cq_auto%2Ct_default/v1/editorial/listicle/hero_image/2021-BMW-M4-coupe-yellow-1001x565-1.jpg",
-                "createdAt": "2022-10-23 18:34:02"
+                "createdAt": "2022-10-27 03:29:55"
             },
             {
                 "id": 7,
                 "userId": 3,
                 "mediaType": "video",
                 "media": "",
-                "createdAt": "2022-10-23 06:31:18"
+                "createdAt": "2022-10-27 05:29:09" 
             },
             {
                 "id": 8,
                 "userId": 6,
                 "mediaType": "image",
                 "media": "https://i.ytimg.com/vi/R_mwYj49myc/maxresdefault.jpg",
-                "createdAt": "2022-10-23 03:00:44"
+                "createdAt": "2022-10-27 06:31:18"
             },
             {
                 "id": 9,
                 "userId": 3,
                 "mediaType": "image",
                 "media": "https://static01.nyt.com/images/2021/04/30/multimedia/30xp-meme/29xp-meme-mediumSquareAt3X-v5.jpg",
-                "createdAt": "2022-10-23 07:02:14"
+                "createdAt": "2022-10-27 07:02:14"
             },
             {
                 "id": 10,
                 "userId": 3,
                 "mediaType": "image",
                 "media": "https://cdn.vox-cdn.com/thumbor/-5QeCxdkh-7dEypKEonW8KEIvX0=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/13207789/hey.jpg",
-                "createdAt": "2022-10-23 02:08:52"
+                "createdAt": "2022-10-27 08:14:13" 
             }
     ],
     "users": [
@@ -363,7 +363,7 @@
             "lastSeen": "Oct 14, 2022, 4:47 PM",
             "settings": {"activeStatus": true, "messageSound": true},
             "myStories": [],
-            "otherStories": [{"storyId": 10, "userId": 3, "viewed": false}, {"storyId": 8, "userId": 6, "viewed": false}, {"storyId": 9, "userId": 3, "viewed": false}, {"storyId": 4, "userId": 9, "viewed": true}, {"storyId": 6, "userId": 3, "viewed": true}, {"storyId": 7, "userId": 3, "viewed": true}, {"storyId": 3, "userId": 10, "viewed": false}, {"storyId": 5, "userId": 6, "viewed": false}, {"storyId": 2, "userId": 4, "viewed": false}],
+            "otherStories": [{"storyId": 3, "userId": 10, "viewed": false}, {"storyId": 4, "userId": 9, "viewed": true}, {"storyId": 5, "userId": 6, "viewed": false}, {"storyId": 6, "userId": 3, "viewed": true}, {"storyId": 7, "userId": 3, "viewed": false}, {"storyId": 8, "userId": 6, "viewed": false}, {"storyId": 9, "userId": 3, "viewed": false}, {"storyId": 10, "userId": 3, "viewed": false}],
             "otherStoryAuthors": [{"userId": 3}, {"userId": 6}, {"userId": 10}, {"userId": 9}]
         },
         {

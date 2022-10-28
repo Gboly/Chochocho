@@ -1,20 +1,37 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useCallback,
+  forwardRef,
+} from "react";
 import { StoryContext } from "./Story";
 import UserCameo from "../../components/user-cameo/UserCameo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
-import { faVolumeOff } from "@fortawesome/free-solid-svg-icons";
-import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { faPause } from "@fortawesome/free-solid-svg-icons";
+import {
+  faVolumeXmark,
+  faVolumeHigh,
+  faEllipsis,
+  faPlay,
+  faPause,
+} from "@fortawesome/free-solid-svg-icons";
+// import { faVolumeOff } from "@fortawesome/free-solid-svg-icons";
+// import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
+// import { faPlay } from "@fortawesome/free-solid-svg-icons";
+// import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { videoType, imageType } from "../../util/types";
+import { convertToUserFriendlyTime } from "../../util/functions";
+import { GeneralContext } from "../../routes/Router";
+import { useParams } from "react-router-dom";
 
-const imageTimeOut = 12;
-const initialTimingState = {
-  currentTime: 0,
-  duration: 0,
+const initialProgressState = {
+  value: 0,
+  max: 120,
+  progressing: true,
 };
-const StoryHeader = () => {
+const StoryHeader = forwardRef((_, videoRef) => {
   const {
     user: { id, profileImage, displayName, username, myStories },
     story,
@@ -22,47 +39,74 @@ const StoryHeader = () => {
     handleTransition,
   } = useContext(StoryContext);
 
-  const [{ currentTime, duration }, setTiming] = useState(initialTimingState);
+  const [{ value, max, progressing }, setProgress] =
+    useState(initialProgressState);
+
+  // Using the layout effect because there was a flicker with jst useEffect
+  useLayoutEffect(() => setProgress(initialProgressState), [storyId]);
+
+  const playPauseTransition = () =>
+    setProgress((progress) => ({ ...progress, progressing: !progressing }));
+
+  const videoProgressUpdate = useCallback(
+    (e) => {
+      const { currentTime, duration } = e.target;
+      setProgress((currentProgress) => ({
+        ...currentProgress,
+        value: (currentTime / duration) * max,
+      }));
+    },
+    [max]
+  );
+
+  const imageProgressUpdate = useCallback(() => {
+    return setInterval(
+      () =>
+        progressing &&
+        setProgress((currentProgress) => ({
+          ...currentProgress,
+          value: value + 1,
+        })),
+      100
+    );
+  }, [value, progressing]);
 
   useEffect(() => {
-    story?.mediaType === imageType &&
-      setTiming({
-        currentTime: 0,
-        duration: imageTimeOut,
-      });
-  }, [storyId, story]);
-
-  useEffect(() => {
-    if (story?.mediaType === imageType) {
-      if (currentTime <= duration) {
-        var interval = setInterval(
-          () =>
-            setTiming((currentTiming) => ({
-              ...currentTiming,
-              currentTime: currentTime + 1,
-            })),
-          1000
-        );
-      } else {
-        setTiming(initialTimingState);
-        //Register in the backend that this story is viewed
-        handleTransition("next");
-      }
+    const video = videoRef.current;
+    let interval;
+    if (value < max) {
+      //The video can only be truthy whenever the story's mediaType is a video.
+      video
+        ? video.addEventListener("timeupdate", videoProgressUpdate)
+        : (interval = imageProgressUpdate());
+    } else {
+      setProgress(initialProgressState);
+      //Register in the backend that this story is viewed
+      handleTransition("next");
     }
-
-    return () => clearInterval(interval);
-  }, [story, currentTime, duration, handleTransition]);
+    return () => {
+      interval && clearInterval(interval);
+      video && video.removeEventListener("timeupdate", videoProgressUpdate);
+    };
+  }, [
+    story,
+    value,
+    max,
+    handleTransition,
+    imageProgressUpdate,
+    videoProgressUpdate,
+    videoRef,
+  ]);
 
   return (
     <aside className="story-desc-actions">
       <div className="story-progress-container">
-        {(myStories || []).map((myStory) => (
-          <progress
-            key={myStory.storyId}
-            min={0}
-            max={duration}
-            value={myStory.storyId === Number(storyId) ? currentTime : 0}
-            className="story-progress"
+        {(myStories || []).map((userStory) => (
+          <StoryProgress
+            key={userStory.storyId}
+            userStory={userStory}
+            value={value}
+            max={max}
           />
         ))}
       </div>
@@ -74,32 +118,94 @@ const StoryHeader = () => {
             single: true,
             header: displayName,
             sub: username,
-            aside: "12h",
+            aside: convertToUserFriendlyTime(story.createdAt),
             avatarProp: { size: 2.5, src: profileImage },
           }}
         />
-        <StoryActions story={story} />,
+        <StoryActions
+          ref={videoRef}
+          story={story}
+          playPauseTransition={playPauseTransition}
+        />
+        ,
       </div>
     </aside>
   );
-};
+});
 
-const StoryActions = ({ story: { mediaType } }) => {
-  return (
-    <div className="story-flex-container">
-      <i>
-        <FontAwesomeIcon icon={faPlay} />
-      </i>
-      {/* conditionally rendered. Ony with video mediaType */}
-      {mediaType === videoType && (
-        <i>
-          <FontAwesomeIcon icon={faVolumeXmark} />
+const videoCheck = (mediaType) => mediaType === videoType;
+const initialActionsState = { playing: true, sound: true, options: false };
+const StoryActions = forwardRef(
+  ({ story: { mediaType }, playPauseTransition }, videoRef) => {
+    const { storyId } = useParams();
+    const [{ playing, sound, options }, setActionsState] =
+      useState(initialActionsState);
+
+    // Return to initialState for each story
+    useEffect(() => setActionsState(initialActionsState), [storyId]);
+    const isVideo = useMemo(() => videoCheck(mediaType), [mediaType]);
+
+    useEffect(() => {
+      const video = videoRef.current;
+    }, [videoRef]);
+
+    const handlePlayPause = () => {
+      setActionsState((actionsState) => ({
+        ...actionsState,
+        playing: !playing,
+      }));
+      isVideo
+        ? playing
+          ? videoRef.current.pause()
+          : videoRef.current.play()
+        : playPauseTransition();
+    };
+
+    const handleSound = () => {
+      setActionsState((actionsState) => ({ ...actionsState, sound: !sound }));
+      sound ? (videoRef.current.volume = 0) : (videoRef.current.volume = 1);
+    };
+
+    return (
+      <div className="story-flex-container">
+        <i onClick={handlePlayPause}>
+          <FontAwesomeIcon icon={playing ? faPause : faPlay} />
         </i>
-      )}
-      <i>
-        <FontAwesomeIcon icon={faEllipsis} />
-      </i>
-    </div>
+        {/* conditionally rendered. Only with video mediaType */}
+        {isVideo && (
+          <i onClick={handleSound}>
+            <FontAwesomeIcon icon={sound ? faVolumeXmark : faVolumeHigh} />
+          </i>
+        )}
+        <i>
+          <FontAwesomeIcon icon={faEllipsis} />
+        </i>
+      </div>
+    );
+  }
+);
+
+const StoryProgress = ({ userStory, value, max }) => {
+  const {
+    authUser: { otherStories },
+  } = useContext(GeneralContext);
+
+  const { storyId } = useParams();
+
+  const isViewed = useMemo(() => {
+    return otherStories.find(
+      (story) => story.storyId === userStory.storyId && story.viewed
+    );
+  }, [otherStories, userStory]);
+
+  return (
+    <progress
+      key={userStory.storyId}
+      min={0}
+      max={max}
+      value={userStory.storyId === Number(storyId) ? value : isViewed ? max : 0}
+      className="story-progress"
+    />
   );
 };
 

@@ -73,16 +73,20 @@ export const StorySidebar = () => {
           <CreateStory />
         </div>
       </section>
-      <section className="other-users-section">
-        <p>Recent updates</p>
-        <div className="story-list">{activeUserStories}</div>
-        {/* skeleton whenever isLoading */}
-      </section>
-      <section className="other-users-section">
-        <p>Viewed updates</p>
-        <div className="story-list">{viewedUserStories}</div>
-        {/* skeleton whenever isLoading */}
-      </section>
+      {activeUserStories.length > 0 && (
+        <section className="other-users-section">
+          <p>Recent updates</p>
+          <div className="story-list">{activeUserStories}</div>
+          {/* skeleton whenever isLoading */}
+        </section>
+      )}
+      {viewedUserStories.length > 0 && (
+        <section className="other-users-section">
+          <p>Viewed updates</p>
+          <div className="story-list">{viewedUserStories}</div>
+          {/* skeleton whenever isLoading */}
+        </section>
+      )}
     </aside>
   );
 };
@@ -117,17 +121,12 @@ const UserStory = ({ userId, viewed, allStories }) => {
     useGetStoryByIdQuery(posterStoryId);
 
   const storyToBeViewedId = useMemo(() => {
-    const checkViewStatus = (myStory) =>
-      allStories.find(
-        (aStory) => !aStory.viewed && aStory.storyId === myStory.storyId
-      );
-
-    const YetToBeViewedStories = myStories.filter((myStory) =>
-      checkViewStatus(myStory)
+    // This works fine only if the allStories result is sorted based on time created.
+    const storyToBeViewed = allStories.find(
+      (story) => story.userId === userId && !story.viewed
     );
-
-    return YetToBeViewedStories[0]?.storyId || myStories[0].storyId;
-  }, [myStories, allStories]);
+    return storyToBeViewed ? storyToBeViewed.storyId : myStories[0].storyId;
+  }, [myStories, allStories, userId]);
 
   const handleClick = () => {
     navigate(`/story/${username}/${storyToBeViewedId}`);

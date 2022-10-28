@@ -1,6 +1,6 @@
 import "./story.css";
 import Spinner from "../../components/Spinner/Spinner";
-import { useState, useMemo, useCallback, createContext } from "react";
+import { useState, useMemo, useCallback, createContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
@@ -16,6 +16,7 @@ export const StoryContext = createContext();
 const Story = ({ authUser }) => {
   const navigate = useNavigate();
   const { username, storyId } = useParams();
+  const videoRef = useRef();
 
   const {
     data: story,
@@ -60,31 +61,28 @@ const Story = ({ authUser }) => {
     [nextParams, navigate, prevParams, username, storyId]
   );
 
-  const storyContextValues = useMemo(
-    () => ({
-      setParams,
-      handleTransition,
-      user,
-      story,
-      storyId,
-      users,
-      storyIndex,
-      userIndex,
-    }),
-    [handleTransition, user, story, storyId, users, storyIndex, userIndex]
-  );
-
   return (
-    <StoryContext.Provider value={storyContextValues}>
+    <StoryContext.Provider
+      value={{
+        setParams,
+        handleTransition,
+        user,
+        story,
+        storyId,
+        users,
+        storyIndex,
+        userIndex,
+      }}
+    >
       <main className="story-page-main">
         <PrevSlide />
         <section>
           <div>
             {!storyFetchFailed && story && user && (
               <>
-                <StoryHeader />
+                <StoryHeader ref={videoRef} />
                 {story.mediaType === videoType ? (
-                  <video src={video} alt="story" />
+                  <video ref={videoRef} src={video} alt="story" autoPlay />
                 ) : (
                   <img src={story.media} alt="story" />
                 )}
