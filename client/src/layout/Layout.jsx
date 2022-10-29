@@ -36,7 +36,7 @@ import Spinner from "../components/Spinner/Spinner";
 import { getFriendsOptionsState } from "../feaures/right-bar/righbarSlice";
 import { closeFriendsOptions } from "../app/actions/rightbarActions";
 
-export default function Layout({ authUser }) {
+export default function Layout() {
   const dispatch = useDispatch();
 
   const { isOpen: opaqueOverlayIsOpen } = useSelector(getOpaqueOverlayState);
@@ -84,34 +84,26 @@ export default function Layout({ authUser }) {
 
   return (
     <>
-      {authUser ? (
-        // #18
-        <>
-          <Header />
-          <div className="main-container">
-            <div className="sidebar-container-flex">
-              {/* #1  */}
-              <Sidebar size="lg" />
-              {/* <AnimatePresence>
+      <Header />
+      <div className="main-container">
+        <div className="sidebar-container-flex">
+          {/* #1  */}
+          <Sidebar size="lg" />
+          {/* <AnimatePresence>
             {sidebarIsOpen && <Sidebar key={sidebarIsOpen} size="sm" />}
           </AnimatePresence> */}
-            </div>
-            <Outlet context={opaqueOverlayIsOpen} />
-          </div>
-          {/* #2 */}
-          {fullscreenIsOpen && <PostImageFullscreen />}
-          {confirmationIsOpen && <Confirmation type={confirmationType} />}
+        </div>
+        <Outlet context={opaqueOverlayIsOpen} />
+      </div>
+      {/* #2 */}
+      {fullscreenIsOpen && <PostImageFullscreen />}
+      {confirmationIsOpen && <Confirmation type={confirmationType} />}
 
-          {opaqueOverlayIsOpen && <OpaqueOverlay />}
-          {transparentLayer && (
-            <div onClick={removeTransparentOverlay}>
-              <TransparentOverlay />
-            </div>
-          )}
-        </>
-      ) : (
-        // This should be replaced with a loading animation screen(twitter-like)
-        <Spinner />
+      {opaqueOverlayIsOpen && <OpaqueOverlay />}
+      {transparentLayer && (
+        <div onClick={removeTransparentOverlay}>
+          <TransparentOverlay />
+        </div>
       )}
     </>
   );

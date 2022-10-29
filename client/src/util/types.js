@@ -58,4 +58,5 @@ export const imageType = "image";
 export const fulfilledType = "fulfilled";
 export const pendingType = "pending";
 export const rejectedType = "rejected";
+export const muteType = "mute";
 //export const

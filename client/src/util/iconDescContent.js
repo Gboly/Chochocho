@@ -22,6 +22,8 @@ import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
 import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 //visibilityOff
 
+import DoNotDisturbOnTotalSilenceIcon from "@mui/icons-material/DoNotDisturbOnTotalSilence";
+
 import {
   hidePost,
   openReportPost,
@@ -40,6 +42,7 @@ import {
   hidePostType,
   postNotifcationType,
   pinPostType,
+  muteType,
 } from "./types";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
@@ -126,6 +129,19 @@ export const userPostOptions = [
     desc: postNotifcationType,
     icon: <NotificationsOutlinedIcon style={iconStyle} />,
     action: "",
+  },
+];
+
+export const storyPostOptions = [
+  {
+    desc: reportPostType,
+    icon: <ReportOutlinedIcon style={iconStyle} />,
+    action: openReportPost,
+  },
+  {
+    desc: muteType,
+    icon: <DoNotDisturbOnTotalSilenceIcon style={iconStyle} />,
+    action: openReportPost,
   },
 ];
 

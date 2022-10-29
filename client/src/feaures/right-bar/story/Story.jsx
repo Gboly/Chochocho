@@ -94,7 +94,7 @@ export const UserStory = ({ userId, viewed, allStories }) => {
   }, [myStories, allStories, userId]);
 
   const handleClick = () => {
-    navigate(`/${username}/story/${storyToBeViewedId}`);
+    navigate(`/story/${username}/${storyToBeViewedId}`);
   };
 
   return (

@@ -7,13 +7,19 @@ import {
 import { showPopupOnOpaqueOverlay } from "../../../util/functions";
 import { capitalize } from "../../../util/functions";
 import { postNotifcationType } from "../../../util/types";
-import { useContext } from "react";
+import { useContext, useMemo } from "react";
 import { GeneralContext } from "../../../routes/Router";
 
-export default function PostOptions({ postId, userId }) {
+export default function PostOptions({ postId, userId, notPostOptions }) {
   const dispatch = useDispatch();
   const { isAuth } = useContext(GeneralContext);
-  const postOptions = isAuth(userId) ? userPostOptions : othersPostOptions;
+
+  // Trying to Make use of this post options for other features that isnt post
+  const postOptions = useMemo(
+    () =>
+      notPostOptions || isAuth(userId) ? userPostOptions : othersPostOptions,
+    [isAuth, userId, notPostOptions]
+  );
 
   const handleClick = (e, option) => {
     e && e.stopPropagation && e.stopPropagation();

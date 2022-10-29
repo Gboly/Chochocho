@@ -1,6 +1,13 @@
 import "./story.css";
 import Spinner from "../../components/Spinner/Spinner";
-import { useState, useMemo, useCallback, createContext, useRef } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  createContext,
+  useRef,
+  useContext,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
@@ -11,9 +18,11 @@ import PrevSlide from "./prevSlide";
 import NextSlide from "./nextSlide";
 import StoryHeader from "./StoryHeader";
 import { isEqual } from "lodash";
+import { GeneralContext } from "../../routes/Router";
 
 export const StoryContext = createContext();
-const Story = ({ authUser }) => {
+const Story = () => {
+  const { authUser } = useContext(GeneralContext);
   const navigate = useNavigate();
   const { username, storyId } = useParams();
   const videoRef = useRef();
@@ -56,7 +65,7 @@ const Story = ({ authUser }) => {
       // The nextParams remains the currentParam whenever it gets to the last story
       transitionType === "next" && isEqual(nextParams, { username, storyId })
         ? navigate("/story")
-        : navigate(`/story/${newUsername}/${newStoryId}`);
+        : navigate(`/story/${newUsername}/${newStoryId}`, { replace: true });
     },
     [nextParams, navigate, prevParams, username, storyId]
   );

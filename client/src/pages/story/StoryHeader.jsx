@@ -17,10 +17,6 @@ import {
   faPlay,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-// import { faVolumeOff } from "@fortawesome/free-solid-svg-icons";
-// import { faEllipsis } from "@fortawesome/free-solid-svg-icons";
-// import { faPlay } from "@fortawesome/free-solid-svg-icons";
-// import { faPause } from "@fortawesome/free-solid-svg-icons";
 import { videoType, imageType } from "../../util/types";
 import { convertToUserFriendlyTime } from "../../util/functions";
 import { GeneralContext } from "../../routes/Router";
@@ -133,7 +129,6 @@ const StoryHeader = forwardRef((_, videoRef) => {
   );
 });
 
-const videoCheck = (mediaType) => mediaType === videoType;
 const initialActionsState = { playing: true, sound: true, options: false };
 const StoryActions = forwardRef(
   ({ story: { mediaType }, playPauseTransition }, videoRef) => {
@@ -143,11 +138,7 @@ const StoryActions = forwardRef(
 
     // Return to initialState for each story
     useEffect(() => setActionsState(initialActionsState), [storyId]);
-    const isVideo = useMemo(() => videoCheck(mediaType), [mediaType]);
-
-    useEffect(() => {
-      const video = videoRef.current;
-    }, [videoRef]);
+    const isVideo = useMemo(() => mediaType === videoType, [mediaType]);
 
     const handlePlayPause = () => {
       setActionsState((actionsState) => ({
@@ -166,6 +157,8 @@ const StoryActions = forwardRef(
       sound ? (videoRef.current.volume = 0) : (videoRef.current.volume = 1);
     };
 
+    const showOptions = () => {};
+
     return (
       <div className="story-flex-container">
         <i onClick={handlePlayPause}>
@@ -177,7 +170,7 @@ const StoryActions = forwardRef(
             <FontAwesomeIcon icon={sound ? faVolumeXmark : faVolumeHigh} />
           </i>
         )}
-        <i>
+        <i onClick={showOptions}>
           <FontAwesomeIcon icon={faEllipsis} />
         </i>
       </div>
