@@ -7,6 +7,8 @@ import {
   closeConfirmation,
   openOpaqueOverlay,
   closeOpaqueOverlay,
+  openTransparentOverlay,
+  closeTransparentOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
 import {
@@ -184,7 +186,28 @@ export const closeNestedPopupOnOpaqueOverlay = (
   store.dispatch(openOpaqueOverlay(parentType));
   store.dispatch(closeAction(parameter));
 };
+export const showPopupOnTransparentOverlay = (
+  popupAction,
+  overlayParam,
+  popupParameter
+) => {
+  store.dispatch(openTransparentOverlay(overlayParam));
+  store.dispatch(popupAction(popupParameter));
+};
 
+export const closePopupOnTransparentOverlay = (closeAction, parameter) => {
+  store.dispatch(closeTransparentOverlay());
+  store.dispatch(closeAction(parameter));
+};
+
+export const closeNestedPopupOnTransparentOverlay = (
+  closeAction,
+  parentType,
+  parameter
+) => {
+  store.dispatch(openTransparentOverlay(parentType));
+  store.dispatch(closeAction(parameter));
+};
 export const getSessionStorageItem = (key) => {
   const stringifiedValue = sessionStorage.getItem(key) ?? `{}`;
   const value = JSON.parse(stringifiedValue);

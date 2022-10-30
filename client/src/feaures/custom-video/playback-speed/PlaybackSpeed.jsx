@@ -5,7 +5,7 @@ import {
   playbackSpeedOptionsStyle,
 } from "../../../util/formRadioOptions";
 import { playbackSpeedInNumber } from "../../../util/functions";
-import { useEffect, useState, forwardRef } from "react";
+import { useEffect, useState, forwardRef, useContext } from "react";
 import { useRef } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -14,11 +14,12 @@ import {
   closePlaybackSpeed,
   setPlaybackRate,
 } from "../../../app/actions/homeActions";
+import { GeneralContext } from "../../../routes/Router";
 
-const PlayBackSpeed = forwardRef(({ post }, ref) => {
+const PlayBackSpeed = forwardRef(() => {
   const dispatch = useDispatch();
-
   const { rateId: playbackRateId } = useSelector(getPlaybackRateState);
+  const { videoPostNode } = useContext(GeneralContext);
 
   return (
     <div className="playback-speed-container">
@@ -31,7 +32,8 @@ const PlayBackSpeed = forwardRef(({ post }, ref) => {
               sxx: playbackSpeedOptionsStyle,
               valueId: playbackRateId,
               setValue: (rateId) => {
-                ref.current.playbackRate = playbackSpeedInNumber(rateId);
+                videoPostNode.current.videoPost.playbackRate =
+                  playbackSpeedInNumber(rateId);
                 dispatch(setPlaybackRate(rateId));
                 dispatch(closePlaybackSpeed());
               },

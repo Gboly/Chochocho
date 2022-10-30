@@ -1,8 +1,5 @@
 .post-options-container{
     background-color: #fff;
-    position: absolute;
-    top: 1.6rem;
-    right: -0.5rem;
     box-shadow: 0 0 10px rgba(128,128,128,0.25);    
     border-radius: 0.5rem;
     z-index: 9999;

@@ -8,12 +8,12 @@ export const notificationSlice = createSlice({
   name: "notification",
   initialState,
   reducers: {
-    openNotificationOptions: (state) => {
-      state.optionsState.isOpen = true;
+    openNotificationOptions: (state, action) => {
+      state.optionsState = { isOpen: true };
       return state;
     },
     closeNotificationOptions: (state) => {
-      state.optionsState.isOpen = false;
+      state.optionsState = initialState.optionsState;
       return state;
     },
   },

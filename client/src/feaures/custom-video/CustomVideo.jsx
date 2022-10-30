@@ -1,6 +1,6 @@
 import "./custom-video.css";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import { useState, useRef } from "react";
+import { useState, useRef, useImperativeHandle, useContext } from "react";
 import { useEffect } from "react";
 import { iconStyle } from "../../util/iconDescContent";
 import video from "../../assets/video.mp4";
@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { getPlaybackRateState } from "../posts/post-excerpt/postExcerptSlice";
 
 import Controls from "./controls/Controls";
+import { GeneralContext } from "../../routes/Router";
 
 export default function CustomVideo({ src, postId }) {
   const [initialPlay, setInitialPlay] = useState(false);
@@ -19,6 +20,10 @@ export default function CustomVideo({ src, postId }) {
   const { isOpen: playbackIsOpen } = useSelector(getPlaybackRateState);
 
   const videoNode = useRef();
+  const { videoPostNode } = useContext(GeneralContext);
+  useImperativeHandle(videoPostNode, () => ({ videoPost: videoNode.current }), [
+    videoNode,
+  ]);
 
   useEffect(() => {
     videoNode.current.addEventListener("loadedmetadata", (e) => {

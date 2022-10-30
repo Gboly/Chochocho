@@ -12,8 +12,15 @@ import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { selectPostById } from "../../../app/api-slices/postsApiSlice";
 import { selectPostTotalComments } from "../../comments/commentsApiSlice";
+import { postShareType } from "../../../util/types";
+import { showPopupOnTransparentOverlay } from "../../../util/functions";
 
-export default function PostReaction({ postId, visibleFor, comment }) {
+export default function PostReaction({
+  postId,
+  username,
+  visibleFor,
+  comment,
+}) {
   const dispatch = useDispatch();
   const post = useSelector((state) => selectPostById(state, postId));
   const likesTotal = (post?.likes || []).length;
@@ -34,6 +41,25 @@ export default function PostReaction({ postId, visibleFor, comment }) {
     e && e.stopPropagation && e.stopPropagation();
     // Not all clicks here have actual click actions. Just making sure to stopPropagation
     action && action();
+  };
+
+  const showPostShare = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
+    const overlayParams = {
+      type: postShareType,
+      x: e.clientX,
+      y: e.clientY,
+      isBottom: true,
+    };
+    const postShareParams = {
+      postId,
+      username,
+    };
+    showPopupOnTransparentOverlay(
+      openPostShare,
+      overlayParams,
+      postShareParams
+    );
   };
 
   return (
@@ -102,10 +128,7 @@ export default function PostReaction({ postId, visibleFor, comment }) {
         />
       </span>
 
-      <span
-        className="pi-item"
-        onClick={(e) => handleClick(e, () => dispatch(openPostShare(postId)))}
-      >
+      <span className="pi-item" onClick={showPostShare}>
         <i className="pi-icon share">
           <ShareOutlinedIcon style={{ ...iconStyle, fontSize: "1.4rem" }} />
         </i>

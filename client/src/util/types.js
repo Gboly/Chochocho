@@ -59,4 +59,13 @@ export const fulfilledType = "fulfilled";
 export const pendingType = "pending";
 export const rejectedType = "rejected";
 export const muteType = "mute";
+export const postOptionsType = "post options";
+export const postShareType = "post share";
+export const playbackSpeedType = "playback speed";
+export const notificationOptionsType = "notification options";
+export const outletOptionsType = "outlet options";
+export const friendsOptionsType = "friends options";
+export const authUserType = "auth user";
+export const otherUsersType = "other users";
+export const storyOptionsType = "story options";
 //export const

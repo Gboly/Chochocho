@@ -4,7 +4,14 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import FullscreenOutlinedIcon from "@mui/icons-material/FullscreenOutlined";
 import { iconStyle } from "../../../util/iconDescContent";
 import PlaybackSpeed from "../playback-speed/PlaybackSpeed";
-import { useState, useRef, useCallback, useEffect, forwardRef } from "react";
+import {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  forwardRef,
+  createContext,
+} from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { getPlayState } from "../customVideoSlice";
@@ -12,15 +19,11 @@ import { openPlaybackSpeed } from "../../../app/actions/homeActions";
 import { getPlaybackRateState } from "../../posts/post-excerpt/postExcerptSlice";
 
 import "./controls.css";
-import { timing } from "../../../util/functions";
+import { showPopupOnTransparentOverlay, timing } from "../../../util/functions";
+import { playbackSpeedType } from "../../../util/types";
 
 const Controls = forwardRef(
   ({ postId, playing, handlePlayPause, duration }, ref) => {
-    const dispatch = useDispatch();
-
-    const { isOpen: playbackSpeedIsOpen, id: playbackId } =
-      useSelector(getPlaybackRateState);
-
     const [currentProgressIndicator, setCurrentProgressIndicator] =
       useState(false);
     const [currentTime, setCurrentTime] = useState("0:00");
@@ -114,9 +117,19 @@ const Controls = forwardRef(
           ref.current.mozRequestFullscreen();
     };
 
+    const showPlaybackSpeed = (e) => {
+      e && e.stopPropagation && e.stopPropagation();
+      const overlayParams = {
+        type: playbackSpeedType,
+        x: e.clientX,
+        y: e.clientY,
+        isBottom: true,
+      };
+      showPopupOnTransparentOverlay(openPlaybackSpeed, overlayParams, postId);
+    };
+
     return (
       <>
-        {playbackSpeedIsOpen && <PlaybackSpeed ref={ref} postId={postId} />}
         <div className="cvc-main">
           <div
             className="cvc-progress-container"
@@ -163,7 +176,7 @@ const Controls = forwardRef(
               </span>
               <button
                 className="cvc-playback-speed"
-                onClick={() => dispatch(openPlaybackSpeed(postId))}
+                onClick={showPlaybackSpeed}
               >
                 <SettingsOutlinedIcon style={iconStyle} />
               </button>

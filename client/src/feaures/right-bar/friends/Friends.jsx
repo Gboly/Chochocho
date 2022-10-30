@@ -11,6 +11,7 @@ import {
   prepareUserIdsForQuery,
   unNormalize,
   getUsersBasedOnLastSeen,
+  showPopupOnTransparentOverlay,
 } from "../../../util/functions";
 import Spinner from "../../../components/Spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +19,7 @@ import { getFriendsOptionsState } from "../righbarSlice";
 import FriendsOption from "./FriendsOption";
 import { openFriendsOptions } from "../../../app/actions/rightbarActions";
 import { GeneralContext } from "../../../routes/Router";
+import { friendsOptionsType } from "../../../util/types";
 
 export default function Friends() {
   const {
@@ -49,10 +51,14 @@ export default function Friends() {
     <Friend key={user.id} user={user} activeStatus={activeStatus} />
   ));
 
-  const dispatch = useDispatch();
-  const { isOpen: friendsOptionsIsOpen } = useSelector(getFriendsOptionsState);
-
-  const openOptions = () => dispatch(openFriendsOptions());
+  const openOptions = (e) => {
+    const overlayParams = {
+      type: friendsOptionsType,
+      x: e.clientX,
+      y: e.clientY,
+    };
+    showPopupOnTransparentOverlay(openFriendsOptions, overlayParams);
+  };
 
   return (
     <>
@@ -61,7 +67,6 @@ export default function Friends() {
         <i className="rfh-icon" onClick={openOptions}>
           <MoreHorizOutlinedIcon style={iconStyle} />
         </i>
-        {friendsOptionsIsOpen && <FriendsOption />}
       </div>
       {friendsList}
       {usersFetchIsLoading && <Spinner />}

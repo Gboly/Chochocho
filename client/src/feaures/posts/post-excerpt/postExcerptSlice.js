@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  postOptionsState: { isOpen: false, id: "" },
-  postShareState: { isOpen: false, id: "" },
+  postOptionsState: { isOpen: false, postId: "", optionType: "" },
+  postShareState: { isOpen: false, postId: "", username: "" },
   reportPostState: { isOpen: false, valueId: "", id: "" },
   followPosterState: { isOpen: false, id: "" },
   blockPosterState: { isOpen: false, id: "" },
@@ -20,20 +20,26 @@ export const postExcerptSlice = createSlice({
   name: "post-excerpt",
   initialState,
   reducers: {
-    openPostOption: (state, action) =>
-      (state = {
-        ...state,
-        postOptionsState: { isOpen: true, id: action.payload },
-      }),
+    openPostOption: (state, action) => {
+      const { postId, optionType } = action.payload;
+      state.postOptionsState = { isOpen: true, postId, optionType };
+      return state;
+    },
     closePostOption: (state) =>
-      (state = { ...state, postOptionsState: { isOpen: false, id: "" } }),
-    openPostShare: (state, action) =>
       (state = {
         ...state,
-        postShareState: { isOpen: true, id: action.payload },
+        postOptionsState: { isOpen: false, postId: "", optionType: "" },
       }),
+    openPostShare: (state, action) => {
+      const { postId, username } = action.payload;
+      state.postShareState = { isOpen: true, postId, username };
+      return state;
+    },
     closePostShare: (state) =>
-      (state = { ...state, postShareState: { isOpen: false, id: "" } }),
+      (state = {
+        ...state,
+        postShareState: { isOpen: false, postId: "", username: "" },
+      }),
     openEngagedUsersList: (state, action) => {
       const { type, userIds } = action.payload;
       state.engagedUsersListState = { isOpen: true, type, userIds };

@@ -17,10 +17,19 @@ import {
   faPlay,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-import { videoType, imageType } from "../../util/types";
-import { convertToUserFriendlyTime } from "../../util/functions";
+import {
+  videoType,
+  imageType,
+  postOptionsType,
+  storyOptionsType,
+} from "../../util/types";
+import {
+  convertToUserFriendlyTime,
+  showPopupOnTransparentOverlay,
+} from "../../util/functions";
 import { GeneralContext } from "../../routes/Router";
 import { useParams } from "react-router-dom";
+import { openPostOption } from "../../app/actions/homeActions";
 
 const initialProgressState = {
   value: 0,
@@ -157,7 +166,22 @@ const StoryActions = forwardRef(
       sound ? (videoRef.current.volume = 0) : (videoRef.current.volume = 1);
     };
 
-    const showOptions = () => {};
+    const showOptions = (e) => {
+      const overlayParams = {
+        type: postOptionsType,
+        x: e.clientX,
+        y: e.clientY,
+      };
+      const postOptionsParams = {
+        postId: storyId,
+        optionType: storyOptionsType,
+      };
+      showPopupOnTransparentOverlay(
+        openPostOption,
+        overlayParams,
+        postOptionsParams
+      );
+    };
 
     return (
       <div className="story-flex-container">

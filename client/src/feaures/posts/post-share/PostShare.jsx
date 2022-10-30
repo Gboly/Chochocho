@@ -7,15 +7,17 @@ import { iconStyle } from "../../../util/iconDescContent";
 import { useState } from "react";
 import { copyTextToClipboard } from "../../../util/functions";
 import { displayConfirmation } from "../../../util/functions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
 import {} from "../../../app/api-slices/usersApiSlice";
+import { getPostShareState } from "../post-excerpt/postExcerptSlice";
 
-export default function PostShare({ postId, userId, username }) {
+export default function PostShare() {
   const dispatch = useDispatch();
   const [{ bookmark: isBookmarked }, setIsChecked] = useState({
     bookmark: false,
   });
+  const { postId, username } = useSelector(getPostShareState);
 
   const handleCopy = () => {
     // Change post link.

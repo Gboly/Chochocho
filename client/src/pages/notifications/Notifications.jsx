@@ -13,6 +13,7 @@ import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { useRef, useContext, useImperativeHandle } from "react";
 import {
   notificationIdType,
+  notificationOptionsType,
   notificationsBasePathType,
 } from "../../util/types";
 import {
@@ -20,7 +21,10 @@ import {
   useGetNotificationsQuery,
 } from "../../app/api-slices/notificationsApiSlice";
 import { initialState } from "../../app/api-slices/notificationsApiSlice";
-import { prepareIdsForQuery } from "../../util/functions";
+import {
+  prepareIdsForQuery,
+  showPopupOnTransparentOverlay,
+} from "../../util/functions";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 
@@ -61,6 +65,15 @@ export default function Notifications() {
     <NotificationBlock key={notificationId} notificationId={notificationId} />
   ));
 
+  const showOptions = (e) => {
+    const overlayParams = {
+      type: notificationOptionsType,
+      x: e.clientX,
+      y: e.clientY,
+    };
+    showPopupOnTransparentOverlay(openNotificationOptions, overlayParams);
+  };
+
   return (
     <>
       <ScrollCache ref={notificationsNode}>
@@ -72,14 +85,12 @@ export default function Notifications() {
           <div>
             <header>
               <span>Notification</span>
-              <i onClick={() => dispatch(openNotificationOptions())}>
+              <i onClick={showOptions}>
                 <SettingsOutlinedIcon style={iconStyle} />
               </i>
-              <div className="post-options-container notification-options-conatiner">
-                {notificationOptionsIsOpen && (
-                  <NotificationOptions options={notificationOptions} />
-                )}
-              </div>
+              {/* {notificationOptionsIsOpen && (
+                <NotificationOptions options={notificationOptions} />
+              )} */}
             </header>
             {content}
             {notificationsIsLoading && <Spinner />}

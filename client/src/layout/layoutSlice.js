@@ -2,7 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   opaqueOverlay: { isOpen: false, type: "" },
-  transparentOverlay: { isOpen: false, type: "" },
+  transparentOverlay: {
+    isOpen: false,
+    type: "",
+    x: "",
+    y: "",
+    isBottom: false,
+  },
   sidebarNav: false,
   confirmation: { isOpen: false, type: "" },
   pageHeight: "",
@@ -21,11 +27,18 @@ export const layoutSlice = createSlice({
       return state;
     },
     openTransparentOverlay: (state, action) => {
-      state.transparentOverlay = { isOpen: true, type: action.payload || "" };
+      const { type, x, y, isBottom } = action.payload;
+      state.transparentOverlay = {
+        isOpen: true,
+        type,
+        x,
+        y,
+        isBottom: isBottom || false,
+      };
       return state;
     },
     closeTransparentOverlay: (state) => {
-      state.transparentOverlay = { isOpen: false, type: "" };
+      state.transparentOverlay = { isOpen: false, type: "", x: "", y: "" };
       return state;
     },
     openSidebarNav: (state) => {

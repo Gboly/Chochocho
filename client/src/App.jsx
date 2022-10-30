@@ -1,9 +1,22 @@
 import React from "react";
 import { useGetUserByIdQuery } from "./app/api-slices/usersApiSlice";
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, createContext } from "react";
 import { sortByViewedStatus } from "./util/functions";
 import { GeneralContext } from "./routes/Router";
 import Spinner from "./components/Spinner/Spinner";
+import PostImageFullscreen from "./feaures/posts/post-img-fullscreen/PostImgFullscreen";
+import Confirmation from "./components/confirmation/Confirmation";
+import {
+  OpaqueOverlay,
+  TransparentOverlay,
+} from "./components/overlay/Overlay";
+import {
+  getConfirmationState,
+  getOpaqueOverlayState,
+  getTransparentOverlayState,
+} from "./layout/layoutSlice";
+import { useSelector } from "react-redux";
+import { getFullscreenState } from "./feaures/posts/post-excerpt/postExcerptSlice";
 
 export default function App({ children }) {
   // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
@@ -18,7 +31,16 @@ export default function App({ children }) {
   const groupedUsers = useMemo(() => sortByViewedStatus(authUser), [authUser]);
 
   const pageNodes = useRef();
+  const videoPostNode = useRef();
   const [pageRefresh, setPageRefresh] = useState(false);
+
+  const { isOpen: opaqueOverlayIsOpen } = useSelector(getOpaqueOverlayState);
+  const { isOpen: TransparentOverlayIsOpen } = useSelector(
+    getTransparentOverlayState
+  );
+  const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
+  const { isOpen: confirmationIsOpen, type: confirmationType } =
+    useSelector(getConfirmationState);
 
   return (
     <GeneralContext.Provider
@@ -32,6 +54,7 @@ export default function App({ children }) {
         setPageRefresh,
         viewedUsers: groupedUsers?.viewed,
         activeUsers: groupedUsers?.active,
+        videoPostNode,
       }}
     >
       {authUser ? (
@@ -41,6 +64,12 @@ export default function App({ children }) {
           <Spinner />
         </main>
       )}
+      {/* #2 */}
+      {fullscreenIsOpen && <PostImageFullscreen />}
+      {confirmationIsOpen && <Confirmation type={confirmationType} />}
+
+      {opaqueOverlayIsOpen && <OpaqueOverlay />}
+      {TransparentOverlayIsOpen && <TransparentOverlay />}
     </GeneralContext.Provider>
   );
 }

@@ -1,24 +1,42 @@
 import "./post-options.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   othersPostOptions,
+  storyPostOptions,
   userPostOptions,
 } from "../../../util/iconDescContent";
 import { showPopupOnOpaqueOverlay } from "../../../util/functions";
 import { capitalize } from "../../../util/functions";
-import { postNotifcationType } from "../../../util/types";
-import { useContext, useMemo } from "react";
-import { GeneralContext } from "../../../routes/Router";
+import {
+  authUserType,
+  otherUsersType,
+  postNotifcationType,
+  storyOptionsType,
+} from "../../../util/types";
+import { useMemo } from "react";
+import { getPostOptionState } from "../post-excerpt/postExcerptSlice";
 
-export default function PostOptions({ postId, userId, notPostOptions }) {
+const options = [
+  {
+    type: authUserType,
+    data: userPostOptions,
+  },
+  {
+    type: otherUsersType,
+    data: othersPostOptions,
+  },
+  {
+    type: storyOptionsType,
+    data: storyPostOptions,
+  },
+];
+export default function PostOptions() {
   const dispatch = useDispatch();
-  const { isAuth } = useContext(GeneralContext);
+  const { postId, optionType } = useSelector(getPostOptionState);
 
-  // Trying to Make use of this post options for other features that isnt post
-  const postOptions = useMemo(
-    () =>
-      notPostOptions || isAuth(userId) ? userPostOptions : othersPostOptions,
-    [isAuth, userId, notPostOptions]
+  const optionData = useMemo(
+    () => options.find((option) => option.type === optionType)?.data || [],
+    [optionType]
   );
 
   const handleClick = (e, option) => {
@@ -31,7 +49,7 @@ export default function PostOptions({ postId, userId, notPostOptions }) {
     }
   };
 
-  const content = postOptions.reduce((accum, current, index) => {
+  const content = optionData.reduce((accum, current, index) => {
     const { desc, icon } = current;
     desc === postNotifcationType
       ? accum.push(

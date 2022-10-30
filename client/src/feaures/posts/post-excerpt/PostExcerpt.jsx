@@ -4,7 +4,6 @@ import PostContent from "../../../components/post/post-content/PostContent";
 import Likes from "../../../components/post/post-engagements/Likes";
 import Others from "../../../components/post/post-engagements/Others";
 import PostReaction from "../post-reaction/PostReaction";
-import PostOptions from "../post-options/PostOptions";
 import PostShare from "../post-share/PostShare";
 import { useSelector, useDispatch } from "react-redux";
 import { selectPostById } from "../../../app/api-slices/postsApiSlice";
@@ -12,14 +11,23 @@ import { openPostOption } from "../../../app/actions/homeActions";
 import { getPostOptionState, getPostShareState } from "./postExcerptSlice";
 import { closePostOption } from "../../../app/actions/homeActions";
 import { getEditPostState } from "../create-post/createPostSlice";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { iconStyle } from "../../../util/iconDescContent";
 import UserCameo from "../../../components/user-cameo/UserCameo";
-import { convertToUserFriendlyTime } from "../../../util/functions";
+import {
+  convertToUserFriendlyTime,
+  showPopupOnTransparentOverlay,
+} from "../../../util/functions";
 import { useNavigate } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../../app/api-slices/usersApiSlice";
 import NavigateWithScrollCache from "../../scroll-cache/NavigateWithScrollCache";
 import Spinner from "../../../components/Spinner/Spinner";
+import {
+  authUserType,
+  otherUsersType,
+  postOptionsType,
+} from "../../../util/types";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function PostExcerpt({ postId, viewPost, comment }) {
   const { userId } = useSelector((state) => selectPostById(state, postId));
@@ -51,6 +59,7 @@ export default function PostExcerpt({ postId, viewPost, comment }) {
 }
 
 const Excerpt = ({ postId, viewPost, comment, user }) => {
+  const { isAuth } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post = useSelector((state) => selectPostById(state, postId));
@@ -84,14 +93,26 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
 
   const { username, displayName, profileImage: src } = user;
 
+  const showPostOptions = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
+    const overlayParams = {
+      type: postOptionsType,
+      x: e.clientX,
+      y: e.clientY,
+    };
+    const postOptionsParams = {
+      postId,
+      optionType: isAuth(userId) ? authUserType : otherUsersType,
+    };
+    showPopupOnTransparentOverlay(
+      openPostOption,
+      overlayParams,
+      postOptionsParams
+    );
+  };
+
   const postOptionIcon = (
-    <i
-      className="ptr-icon"
-      onClick={(e) => {
-        e && e.stopPropagation && e.stopPropagation();
-        dispatch(openPostOption(postId));
-      }}
-    >
+    <i className="ptr-icon" onClick={showPostOptions}>
       <MoreHorizOutlinedIcon style={iconStyle} />
     </i>
   );
@@ -119,12 +140,9 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
         id={postId}
         onClick={(e) => handleClick(e)}
       >
-        {optionsIsOpen && optionsId === postId && (
-          <PostOptions {...{ postId, userId }} />
-        )}
-        {shareIsOpen && shareId === postId && (
+        {/* {shareIsOpen && shareId === postId && (
           <PostShare postId={shareId} userId={userId} username={username} />
-        )}
+        )} */}
 
         <div className="post-wrapper" onClick={(e) => handleClick(e)}>
           <div className="post-top">
@@ -163,6 +181,7 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
           )}
           <PostReaction
             postId={postId}
+            username={username}
             visibleFor={visibleFor}
             comment={comment}
           />

@@ -2,8 +2,9 @@ import "./notification-options.css";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { closeNotificationOptions } from "../../app/actions/notificationActions";
+import { notificationOptions } from "../../util/iconDescContent";
 
-export default function NotificationOptions({ options }) {
+export default function NotificationOptions() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -13,9 +14,9 @@ export default function NotificationOptions({ options }) {
   };
 
   return (
-    <>
+    <div className="post-options-container">
       <div className="post-options-wrapper notification-options-wrapper">
-        {options.map(({ desc, icon }, index) => (
+        {notificationOptions.map(({ desc, icon }, index) => (
           <div
             key={index}
             className="post-option notification-option"
@@ -26,6 +27,6 @@ export default function NotificationOptions({ options }) {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }

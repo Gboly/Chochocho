@@ -11,8 +11,12 @@ import {
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { getCommunityOutletIndexFromLocation } from "../../util/functions";
+import {
+  getCommunityOutletIndexFromLocation,
+  showPopupOnTransparentOverlay,
+} from "../../util/functions";
 import { GeneralContext } from "../../routes/Router";
+import { outletOptionsType } from "../../util/types";
 
 export default function Community() {
   const dispatch = useDispatch();
@@ -63,13 +67,22 @@ export default function Community() {
     style: "current-outlet",
   };
 
+  const showOptions = (e) => {
+    const overlayParams = {
+      type: outletOptionsType,
+      x: e.clientX,
+      y: e.clientY,
+    };
+    showPopupOnTransparentOverlay(openOutletOptions, overlayParams);
+  };
+
   return (
     <>
       <div className="community-wrapper">
         <div>
           <header>
             {content}
-            <div onClick={() => dispatch(openOutletOptions())}>
+            <div onClick={showOptions}>
               <CustomSelect {...CustomSelectProps} />
             </div>
           </header>
