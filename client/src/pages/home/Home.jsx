@@ -9,7 +9,6 @@ import { useSelector } from "react-redux";
 import { getCreatePostState } from "../../feaures/posts/create-post/createPostSlice";
 import { getPostOptionState } from "../../feaures/posts/post-excerpt/postExcerptSlice";
 
-import { useOutletContext } from "react-router-dom";
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
 import { createContext, useRef, useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
@@ -21,9 +20,8 @@ export default function Home() {
   const createPostIsActive = useSelector(getCreatePostState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
 
-  const opaqueLayer = useOutletContext();
   const homeNode = useRef();
-  const { pageNodes } = useContext(GeneralContext);
+  const { pageNodes, opaqueOverlayIsOpen } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(
@@ -39,7 +37,9 @@ export default function Home() {
       <ScrollCache ref={homeNode}>
         <div
           ref={homeNode}
-          className={`home-wrapper ${opaqueLayer ? "outlet-no-scroll" : ""}`}
+          className={`home-wrapper ${
+            opaqueOverlayIsOpen ? "outlet-no-scroll" : ""
+          }`}
           id={homePageType}
         >
           <div className="home-main-wrapper">

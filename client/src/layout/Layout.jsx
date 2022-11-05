@@ -27,30 +27,6 @@ import { getFriendsOptionsState } from "../feaures/right-bar/righbarSlice";
 import { closeFriendsOptions } from "../app/actions/rightbarActions";
 
 export default function Layout() {
-  const dispatch = useDispatch();
-
-  const { isOpen: opaqueOverlayIsOpen } = useSelector(getOpaqueOverlayState);
-  const { isOpen: TransparentOverlayIsOpen } = useSelector(
-    getTransparentOverlayState
-  );
-
-  const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
-  const { isOpen: friendsOptionsIsOpen } = useSelector(getFriendsOptionsState);
-  const { isOpen: confirmationIsOpen, type: confirmationType } =
-    useSelector(getConfirmationState);
-
-  const [transparentLayer, setTransparentLayer] = useState(false);
-
-  useEffect(() => {
-    friendsOptionsIsOpen
-      ? setTransparentLayer(true)
-      : setTransparentLayer(false);
-  }, [friendsOptionsIsOpen]);
-
-  const removeTransparentOverlay = () => {
-    friendsOptionsIsOpen && dispatch(closeFriendsOptions());
-  };
-
   return (
     <>
       <Header />
@@ -62,14 +38,8 @@ export default function Layout() {
             {sidebarIsOpen && <Sidebar key={sidebarIsOpen} size="sm" />}
           </AnimatePresence> */}
         </div>
-        <Outlet context={opaqueOverlayIsOpen} />
+        <Outlet />
       </div>
-      {/* #2 */}
-      {fullscreenIsOpen && <PostImageFullscreen />}
-      {confirmationIsOpen && <Confirmation type={confirmationType} />}
-
-      {opaqueOverlayIsOpen && <OpaqueOverlay />}
-      {TransparentOverlayIsOpen && <TransparentOverlay />}
     </>
   );
 }

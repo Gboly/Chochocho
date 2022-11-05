@@ -55,6 +55,7 @@ export default function App({ children }) {
         viewedUsers: groupedUsers?.viewed,
         activeUsers: groupedUsers?.active,
         videoPostNode,
+        opaqueOverlayIsOpen
       }}
     >
       {authUser ? (
