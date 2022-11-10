@@ -7,6 +7,7 @@ import { profileReducer } from "../pages/profile/profileSlice";
 import { notificationReducer } from "../pages/notifications/notificationSlice";
 import { communityReducer } from "../pages/community/communitySlice";
 import { rightbarReducer } from "../feaures/right-bar/righbarSlice";
+import { storyReducer } from "../pages/story/storySlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     notification: notificationReducer,
     community: communityReducer,
     rightbar: rightbarReducer,
+    story: storyReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

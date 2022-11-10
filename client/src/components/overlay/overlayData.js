@@ -18,6 +18,8 @@ import {
   outletOptionsType,
   friendsOptionsType,
   storyOptionsType,
+  reportStoryType,
+  muteStoryType,
 } from "../../util/types";
 import WriteAlt from "../../feaures/posts/write-alt/WriteAlt";
 import ReportPost from "../../feaures/posts/report-post/ReportPost";
@@ -57,6 +59,13 @@ import { closeOutletOptions } from "../../app/actions/communityActions";
 import FriendsOption from "../../feaures/right-bar/friends/FriendsOption";
 import { closeFriendsOptions } from "../../app/actions/rightbarActions";
 import NotificationOptions from "../../feaures/notification-block/NotificationOptions";
+import StoryOptions from "../../pages/story/StoryOptions";
+import {
+  closeMuteStoryAuthor,
+  closeReportStory,
+  closeStoryOptions,
+} from "../../app/actions/storyActions";
+import MuteStoryAuthor from "../../pages/story/MuteStoryAuthor";
 
 export const opaqueOverlayComponents = [
   {
@@ -119,6 +128,16 @@ export const opaqueOverlayComponents = [
     component: <EngagedUsersList />,
     closeAction: closeEngagedUsersList,
   },
+  {
+    type: reportStoryType,
+    component: <ReportPost />,
+    closeAction: closeReportStory,
+  },
+  {
+    type: muteStoryType,
+    component: <MuteStoryAuthor />,
+    closeAction: closeMuteStoryAuthor,
+  },
 ];
 
 export const TransparentOverlayComponents = [
@@ -151,5 +170,10 @@ export const TransparentOverlayComponents = [
     type: friendsOptionsType,
     component: <FriendsOption />,
     closeAction: closeFriendsOptions,
+  },
+  {
+    type: storyOptionsType,
+    component: <StoryOptions />,
+    closeAction: closeStoryOptions,
   },
 ];

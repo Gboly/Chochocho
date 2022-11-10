@@ -2,19 +2,21 @@ import "./post-options.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   othersPostOptions,
-  storyPostOptions,
   userPostOptions,
 } from "../../../util/iconDescContent";
-import { showPopupOnOpaqueOverlay } from "../../../util/functions";
+import {
+  closePopupOnTransparentOverlay,
+  showPopupOnOpaqueOverlay,
+} from "../../../util/functions";
 import { capitalize } from "../../../util/functions";
 import {
   authUserType,
   otherUsersType,
   postNotifcationType,
-  storyOptionsType,
 } from "../../../util/types";
 import { useMemo } from "react";
 import { getPostOptionState } from "../post-excerpt/postExcerptSlice";
+import { closePostOption } from "../../../app/actions/homeActions";
 
 const options = [
   {
@@ -24,10 +26,6 @@ const options = [
   {
     type: otherUsersType,
     data: othersPostOptions,
-  },
-  {
-    type: storyOptionsType,
-    data: storyPostOptions,
   },
 ];
 export default function PostOptions() {
@@ -47,6 +45,7 @@ export default function PostOptions() {
         ? dispatch(action(postId))
         : showPopupOnOpaqueOverlay(action, desc, postId);
     }
+    closePopupOnTransparentOverlay(closePostOption);
   };
 
   const content = optionData.reduce((accum, current, index) => {

@@ -23,6 +23,7 @@ import StoryLayout from "../pages/story/StoryLayout";
 import { createContext } from "react";
 import StoryIndexOutlet from "../pages/story/StoryIndexOutlet";
 import App from "../App";
+import StoryPreview from "../pages/story/StoryPreview";
 
 export const GeneralContext = createContext();
 export default function Router() {
@@ -73,6 +74,7 @@ export default function Router() {
       >
         <Route index element={<StoryIndexOutlet />} />
         <Route path=":username/:storyId" element={<Story />} />
+        <Route path="preview" element={<StoryPreview />} />
       </Route>
     </Routes>
   );

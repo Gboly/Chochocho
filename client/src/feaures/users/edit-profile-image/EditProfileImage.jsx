@@ -1,9 +1,5 @@
 import SimpleHeader from "../../../components/simple-header/SimpleHeader";
 import "./edit-profile-image.css";
-import { Stack, Slider } from "@mui/material";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import { closeEditProfileImage } from "../../../app/actions/profileActions";
 import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
 import { useSelector } from "react-redux";
@@ -26,6 +22,8 @@ import {
   closeNestedPopupOnOpaqueOverlay,
   closePopupOnOpaqueOverlay,
 } from "../../../util/functions";
+import useZoom from "../../../components/zoom/useZoom";
+import Zoom from "../../../components/zoom/Zoom";
 
 const translateInitialState = { x: 0, y: 0 };
 const overflowInitialState = {
@@ -39,7 +37,7 @@ export default function EditProfileImage() {
   const { src, imageType, reading, initiatingRoute } = useSelector(
     getEditProfileImageState
   );
-  const [zoom, setZoom] = useState(1);
+  const { zoomIn, zoomOut, zoom, setZoom, reset: resetZoom } = useZoom();
   const [translate, setTranslate] = useState(translateInitialState);
   const [initialOverflow, setInitialOverflow] = useState(overflowInitialState);
 
@@ -80,9 +78,6 @@ export default function EditProfileImage() {
 
   //   setInitialOverflow(overflow);
   // }, [getOverflow]);
-
-  const zoomIn = () => zoom < 2 && setZoom((prev) => prev + 0.1);
-  const zoomOut = () => zoom > 0.5 && setZoom((prev) => prev - 0.1);
 
   // const moveImageWithinBorder = ()
 
@@ -126,7 +121,7 @@ export default function EditProfileImage() {
   };
 
   const reset = () => {
-    setZoom(1);
+    resetZoom();
     setTranslate(translateInitialState);
   };
 
@@ -160,33 +155,16 @@ export default function EditProfileImage() {
       ) : (
         ""
       )}
-      <section>
-        <aside>
-          <div>
-            <Stack spacing={1.5} direction="row" alignItems="center">
-              <i onClick={zoomOut}>
-                <RemoveCircleOutlineIcon style={{ fontSize: "1.2rem" }} />
-              </i>
-              <Slider
-                sx={{ width: "12rem", color: "#c32aa3" }}
-                step={0.1}
-                min={0.5}
-                max={2}
-                value={zoom}
-                onChange={(e) => setZoom(e.target.value)}
-              />
-              <i onClick={zoomIn}>
-                <AddCircleOutlineIcon style={{ fontSize: "1.2rem" }} />
-              </i>
-            </Stack>
-          </div>
-          <span>{Math.round((zoom - 1) * 100)}%</span>
-          <i onClick={reset}>
-            <RestartAltIcon />
-          </i>
-        </aside>
-        <button>Save</button>
-      </section>
+      <Zoom
+        {...{
+          zoomIn,
+          zoomOut,
+          zoom,
+          setZoom,
+          reset,
+          button: <button>Save</button>,
+        }}
+      />
     </div>
   );
 }

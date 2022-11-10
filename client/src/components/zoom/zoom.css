@@ -1,0 +1,30 @@
+.zoom-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    margin: 1rem 0;
+    width: inherit;
+}
+.zoom-container > button {
+    padding: 0.4rem 1rem;
+    background-color: #c32aa3;
+    border: none;
+    border-radius: 0.4rem;
+    color: #fff;
+}
+.zoom-container > aside {
+    display: flex;
+    align-items: center;
+}
+.zoom-container > aside > span {
+    margin-left: 0.5rem;
+}
+.zoom-container > aside > i {
+    margin-left: 1rem;
+}
+.zoom-container > button:focus {
+    outline: none;
+}
+.zoom-container > button:hover{
+    opacity: 0.85;
+}

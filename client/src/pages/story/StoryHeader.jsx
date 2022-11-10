@@ -30,6 +30,7 @@ import {
 import { GeneralContext } from "../../routes/Router";
 import { useParams } from "react-router-dom";
 import { openPostOption } from "../../app/actions/homeActions";
+import { openStoryOptions } from "../../app/actions/storyActions";
 
 const initialProgressState = {
   value: 0,
@@ -168,19 +169,11 @@ const StoryActions = forwardRef(
 
     const showOptions = (e) => {
       const overlayParams = {
-        type: postOptionsType,
+        type: storyOptionsType,
         x: e.clientX,
         y: e.clientY,
       };
-      const postOptionsParams = {
-        postId: storyId,
-        optionType: storyOptionsType,
-      };
-      showPopupOnTransparentOverlay(
-        openPostOption,
-        overlayParams,
-        postOptionsParams
-      );
+      showPopupOnTransparentOverlay(openStoryOptions, overlayParams, storyId);
     };
 
     return (

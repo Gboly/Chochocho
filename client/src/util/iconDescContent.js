@@ -43,6 +43,8 @@ import {
   postNotifcationType,
   pinPostType,
   muteType,
+  reportStoryType,
+  muteStoryType,
 } from "./types";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
@@ -58,6 +60,10 @@ import {
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
 import { faCakeCandles } from "@fortawesome/free-solid-svg-icons";
+import {
+  openMuteStoryAuthor,
+  openReportStory,
+} from "../app/actions/storyActions";
 
 export const iconStyle = {
   fontSize: "inherit",
@@ -132,16 +138,16 @@ export const userPostOptions = [
   },
 ];
 
-export const storyPostOptions = [
+export const storyOptions = [
   {
-    desc: reportPostType,
+    desc: reportStoryType,
     icon: <ReportOutlinedIcon style={iconStyle} />,
-    action: openReportPost,
+    action: openReportStory,
   },
   {
-    desc: muteType,
+    desc: muteStoryType,
     icon: <DoNotDisturbOnTotalSilenceIcon style={iconStyle} />,
-    action: openReportPost,
+    action: openMuteStoryAuthor,
   },
 ];
 

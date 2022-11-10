@@ -61,7 +61,7 @@ export const TransparentOverlay = () => {
         : "";
     }
   };
-  console.log(currentType);
+
   const content = TransparentOverlayComponents.reduce(
     (accum, current, index) => {
       const { type, component, closeAction } = current;

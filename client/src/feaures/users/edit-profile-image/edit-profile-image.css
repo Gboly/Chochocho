@@ -100,31 +100,3 @@
     border: 4px solid #fff;
     opacity: 1;
 } */
-.edit-profile-image-container > section {
-    display: flex;
-    justify-content: space-between;
-    margin: 1rem 0;
-}
-.edit-profile-image-container > section > button {
-    padding: 0.4rem 1rem;
-    background-color: #c32aa3;
-    border: none;
-    border-radius: 0.4rem;
-    color: #fff;
-}
-.edit-profile-image-container > section > aside {
-    display: flex;
-    align-items: center;
-}
-.edit-profile-image-container > section > aside > span {
-    margin-left: 0.5rem;
-}
-.edit-profile-image-container > section > aside > i {
-    margin-left: 1rem;
-}
-.edit-profile-image-container > section > button:focus {
-    outline: none;
-}
-.edit-profile-image-container > section > button:hover{
-    opacity: 0.85;
-}
