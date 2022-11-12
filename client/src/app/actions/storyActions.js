@@ -7,4 +7,6 @@ export const {
   closeMuteStoryAuthor,
   openReportStory,
   closeReportStory,
+  readUploadedMedia,
+  removeMedia,
 } = storySlice.actions;

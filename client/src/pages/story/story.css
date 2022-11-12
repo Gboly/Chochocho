@@ -49,8 +49,18 @@
 .story-item:hover{
     background-color: rgba(121, 121, 121, 0.1);
 }
+.create-story-container > label{
+    width: inherit;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+}
 .create-story-container:hover{
     background-color: inherit;
+}
+.create-story-container > input {
+    display: none;
 }
 .create-story, .story-item > img, .story-item > video{
     width: 3.5rem;
@@ -339,12 +349,11 @@
     margin-top: 1rem;
     overflow: hidden;
 }
-.story-preview-box > img{
+.story-preview-box > img, .story-preview-box > video{
     width: 100%;
     max-height: 100%;
     object-fit: contain;
     cursor: pointer;
-    transform: rotate(180);
 }
 .story-edit{
     height: 3rem;

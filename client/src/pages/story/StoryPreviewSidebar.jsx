@@ -3,11 +3,22 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import { iconStyle } from "../../util/iconDescContent";
 import UserCameo from "../../components/user-cameo/UserCameo";
 import { GeneralContext } from "../../routes/Router";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { removeMedia } from "../../app/actions/storyActions";
 
 const StoryPreviewSidebar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     authUser: { id, username, displayName, profileImage },
   } = useContext(GeneralContext);
+
+  const discard = () => {
+    dispatch(removeMedia());
+    navigate(-1);
+  };
+
   return (
     <aside className="story-sidebar">
       <header>
@@ -27,7 +38,7 @@ const StoryPreviewSidebar = () => {
         }}
       />
       <div className="sps-buttons">
-        <button>Discard</button>
+        <button onClick={discard}>Discard</button>
         <button>Share to story</button>
       </div>
     </aside>

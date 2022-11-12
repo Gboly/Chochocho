@@ -4,6 +4,7 @@ const initialState = {
   options: { isOpen: false, storyId: "" },
   mute: { isOpen: false, storyId: "", username: "" },
   report: { isOpen: false, storyId: "", username: "" },
+  uploadedMedia: { type: "", src: "", reading: false },
 };
 
 export const storySlice = createSlice({
@@ -36,6 +37,23 @@ export const storySlice = createSlice({
       state.report = initialState.report;
       return state;
     },
+    readUploadedMedia: (state, action) => {
+      const { type, src, reading } = action.payload;
+      if (reading === true) {
+        state.uploadedMedia.reading = true;
+      } else {
+        state.uploadedMedia = {
+          type: type.startsWith("video") ? "video" : "image",
+          src,
+          reading: false,
+        };
+      }
+      return state;
+    },
+    removeMedia: (state) => {
+      state.uploadedMedia = { type: "", src: "", reading: false };
+      return state;
+    },
   },
 });
 
@@ -46,3 +64,5 @@ export const getStoryOptionsState = (state) => state.story.options;
 export const getMuteStoryAuthorState = (state) => state.story.mute;
 
 export const getReportStoryState = (state) => state.story.report;
+
+export const getUploadedMedia = (state) => state.story.uploadedMedia;
