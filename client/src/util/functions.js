@@ -64,7 +64,7 @@ export const truncateEngagements = (value) => {
   }
 };
 
-export const handleMediaUpload = (e, dispatch) => {
+export const handleMediaUpload = (e, action) => {
   const fileObject = e.target.files[0];
   const { type, size } = fileObject;
 
@@ -74,11 +74,11 @@ export const handleMediaUpload = (e, dispatch) => {
 
   const reader = new FileReader();
   reader.addEventListener("loadstart", (e) => {
-    dispatch("reading");
+    store.dispatch(action({ reading: true }));
   });
   reader.addEventListener("load", (e) => {
     const src = e.target.result;
-    dispatch(false, type, src);
+    store.dispatch(action({ type, src }));
   });
   reader.readAsDataURL(fileObject);
 };

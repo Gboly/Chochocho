@@ -1,17 +1,19 @@
 import "./icon-description.css";
-import { useState } from "react";
 import { iconDescContent } from "../../util/iconDescContent";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   readUploadedMedia,
   openCreatePost,
 } from "../../app/actions/homeActions";
 import { getCreatePostState } from "../../feaures/posts/create-post/createPostSlice";
-import { handleMediaUpload } from "../../util/functions";
+import {
+  handleMediaUpload,
+  showPopupOnOpaqueOverlay,
+} from "../../util/functions";
+import { createPostType } from "../../util/types";
 
 export default function IconDescription() {
-  const dispatch = useDispatch();
   const { isOpen: createPostIsActive } = useSelector(getCreatePostState);
 
   const MainContent = ({ icon, desc }) => (
@@ -21,17 +23,10 @@ export default function IconDescription() {
     </>
   );
 
-  const mediaUploadAction = (reading, type, src) => {
-    if (reading === "reading") {
-      dispatch(readUploadedMedia({ reading: true }));
-    } else {
-      dispatch(readUploadedMedia({ type, src }));
-    }
-  };
-
   const handleMedia = (e) => {
-    !createPostIsActive && dispatch(openCreatePost());
-    handleMediaUpload(e, mediaUploadAction);
+    !createPostIsActive &&
+      showPopupOnOpaqueOverlay(openCreatePost, createPostType);
+    handleMediaUpload(e, readUploadedMedia);
   };
 
   const contentList = iconDescContent.reduce((accum, current, i) => {
