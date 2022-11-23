@@ -13,6 +13,12 @@ const style = {
 
 const visibilityOptions = ["Everyone", "Followers", "Only me"];
 const switchTypes = ["on", "off"];
+const storyVisibilityOptions = [
+  "Friends",
+  "Mutuals",
+  "Custom select",
+  "Custom exempt",
+];
 
 const viewingSettingOptions = [
   {
@@ -35,9 +41,15 @@ const viewingSettingOptions = [
     heading: "Who can follow you?",
     options: [visibilityOptions[0], switchTypes[1]],
   },
+  {
+    section: "story",
+    heading: "Who can view your story?",
+    options: storyVisibilityOptions,
+  },
 ];
 
 const initialState = viewingSettingOptions.reduce((accum, current) => {
+  // This needs to updated so that the default is generated from the backend
   accum = { ...accum, [current.section]: 0 };
   return accum;
 }, {});

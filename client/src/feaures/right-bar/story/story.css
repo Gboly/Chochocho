@@ -60,6 +60,9 @@
     left: calc(50%);
     transform: translateY(-50%) translateX(-50%);
 }
+.home-create-story{
+    display: none;
+}
 
 @media screen and (max-width: 1240px) { 
     .story-container{

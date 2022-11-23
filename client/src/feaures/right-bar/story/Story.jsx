@@ -6,13 +6,14 @@ import {
   selectFetchedUsersById,
   useGetUsersByIdQuery,
 } from "../../../app/api-slices/usersApiSlice";
-import { prepareIdsForQuery } from "../../../util/functions";
+import { handleMediaUpload, prepareIdsForQuery } from "../../../util/functions";
 import { imageType, userIdType, videoType } from "../../../util/types";
 import { useSelector } from "react-redux";
 import { useGetStoryByIdQuery } from "../../../app/api-slices/storiesApiSlice";
 import video from "../../../assets/video.mp4";
 import { GeneralContext } from "../../../routes/Router";
 import { useNavigate } from "react-router-dom";
+import { readUploadedMedia } from "../../../app/actions/storyActions";
 
 const Story = () => {
   const {
@@ -61,15 +62,31 @@ const Story = () => {
 };
 
 export const CreateStory = () => {
+  const navigate = useNavigate();
+  const handleMedia = (e) => {
+    handleMediaUpload(e, readUploadedMedia);
+    navigate("/story/preview");
+  };
+
   return (
-    <div className="rightbar-story-item">
-      <section className="rightbar-create-story">
-        <i>
-          <AddIcon style={iconStyle} />
-        </i>
-      </section>
-      <div>Create a story</div>
-    </div>
+    <>
+      <label htmlFor="home-create-story" className="rightbar-story-item">
+        <section className="rightbar-create-story">
+          <i>
+            <AddIcon style={iconStyle} />
+          </i>
+        </section>
+        <div>Create a story</div>
+      </label>
+      <input
+        type="file"
+        name=""
+        id="home-create-story"
+        onChange={handleMedia}
+        accept="image/*, video/*"
+        className="home-create-story"
+      />
+    </>
   );
 };
 export const UserStory = ({ userId, viewed, allStories }) => {

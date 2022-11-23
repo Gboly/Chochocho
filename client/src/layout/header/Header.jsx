@@ -5,9 +5,10 @@ import { useDispatch } from "react-redux";
 import { openSidebarNav } from "../../app/actions/layoutActions";
 import { showPopupOnOpaqueOverlay } from "../../util/functions";
 import { sidebarType } from "../../util/types";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   return (
     <nav className="nav-container">
@@ -23,7 +24,9 @@ export default function Header() {
           />
         </div>
         <div className="nav-center">
-          <span className="app-name">Chochocho</span>
+          <span className="app-name" onClick={() => navigate("/")}>
+            Chochocho
+          </span>
         </div>
         <div className="nav-right">
           <LocalPostOfficeOutlinedIcon />
