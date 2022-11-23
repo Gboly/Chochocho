@@ -5,13 +5,19 @@ import UserCameo from "../../components/user-cameo/UserCameo";
 import { GeneralContext } from "../../routes/Router";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { removeMedia } from "../../app/actions/storyActions";
+import {
+  changeVisibilityType,
+  openSettings,
+  removeMedia,
+} from "../../app/actions/storyActions";
+import { storyVisibilitySettingsType } from "../../util/types";
+import { showPopupOnOpaqueOverlay } from "../../util/functions";
 
 const StoryPreviewSidebar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
-    authUser: { id, username, displayName, profileImage },
+    authUser: { id, username, displayName, profileImage, storyVisibility },
   } = useContext(GeneralContext);
 
   const discard = () => {
@@ -19,11 +25,16 @@ const StoryPreviewSidebar = () => {
     navigate(-1);
   };
 
+  const showSettings = () => {
+    dispatch(changeVisibilityType(storyVisibility.type));
+    showPopupOnOpaqueOverlay(openSettings, storyVisibilitySettingsType);
+  };
+
   return (
     <aside className="story-sidebar">
       <header>
         <h1>Your Story</h1>
-        <i>
+        <i onClick={showSettings}>
           <SettingsIcon style={iconStyle} />
         </i>
       </header>

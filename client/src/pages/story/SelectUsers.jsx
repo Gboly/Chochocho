@@ -64,7 +64,13 @@ const SelectUsers = () => {
       <section>
         {/* Make this infinite scroll like */}
         {followers.map((userId) => {
-          return <CheckboxPerUser userId={userId} searchText={searchText} />;
+          return (
+            <CheckboxPerUser
+              key={userId}
+              userId={userId}
+              searchText={searchText}
+            />
+          );
         })}
       </section>
 
@@ -105,8 +111,8 @@ const CheckboxPerUser = ({ userId, searchText }) => {
 
   // Better search algorithm needs to be implemented
   if (
-    !displayName.toLowerCase().includes(searchText.toLowerCase()) &&
-    !username.toLowerCase().includes(searchText.toLowerCase())
+    !(displayName || "").toLowerCase().includes(searchText.toLowerCase()) &&
+    !(username || "").toLowerCase().includes(searchText.toLowerCase())
   ) {
     return null;
   }
