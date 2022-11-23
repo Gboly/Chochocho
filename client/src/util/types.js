@@ -69,4 +69,6 @@ export const friendsOptionsType = "friends options";
 export const authUserType = "auth user";
 export const otherUsersType = "other users";
 export const storyOptionsType = "story options";
+export const storyVisibilitySettingsType = "story visibility settings";
+export const selectUsersType = "select users";
 //export const

@@ -1,0 +1,7 @@
+.custom-checkbox{
+    width: 100%;
+    background-color: inherit;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

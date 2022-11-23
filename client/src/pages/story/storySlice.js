@@ -5,6 +5,12 @@ const initialState = {
   mute: { isOpen: false, storyId: "", username: "" },
   report: { isOpen: false, storyId: "", username: "" },
   uploadedMedia: { type: "", src: "", reading: false },
+  settings: {
+    isOpen: false,
+    visibilityType: "",
+    selectUserIsOpen: false,
+    users: [],
+  },
 };
 
 export const storySlice = createSlice({
@@ -54,6 +60,43 @@ export const storySlice = createSlice({
       state.uploadedMedia = { type: "", src: "", reading: false };
       return state;
     },
+    openSettings: (state) => {
+      state.settings.isOpen = true;
+      return state;
+    },
+    changeVisibilityType: (state, action) => {
+      const customTypes = ["custom select", "custom exempt"];
+      state.settings.visibilityType = action.payload;
+      !customTypes.includes(action.payload) && (state.settings.users = []);
+    },
+    openSelectUser: (state) => {
+      state.settings.selectUserIsOpen = true;
+    },
+    closeSelectUserAsCancel: (state, action) => {
+      state.settings.selectUserIsOpen = false;
+      //action.payload is the default selected users from backend
+      state.settings.users = [...action.payload];
+    },
+    closeSelectUserAsDone: (state) => {
+      state.settings.selectUserIsOpen = false;
+    },
+    supplyCheckedUsers: (state, action) => {
+      state.settings.users = [...action.payload];
+      return state;
+    },
+    selectUser: (state, action) => {
+      state.settings.users.push(action.payload);
+      return state;
+    },
+    deselectUser: (state, action) => {
+      const userIndex = state.settings.users.indexOf(action.payload);
+      state.settings.users.splice(userIndex, 1);
+      return state;
+    },
+    closeSettings: (state) => {
+      state.settings = initialState.settings;
+      return state;
+    },
   },
 });
 
@@ -66,3 +109,5 @@ export const getMuteStoryAuthorState = (state) => state.story.mute;
 export const getReportStoryState = (state) => state.story.report;
 
 export const getUploadedMedia = (state) => state.story.uploadedMedia;
+
+export const getStorySettingsState = (state) => state.story.settings;

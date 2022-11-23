@@ -20,6 +20,8 @@ import {
   storyOptionsType,
   reportStoryType,
   muteStoryType,
+  storyVisibilitySettingsType,
+  selectUsersType,
 } from "../../util/types";
 import WriteAlt from "../../feaures/posts/write-alt/WriteAlt";
 import ReportPost from "../../feaures/posts/report-post/ReportPost";
@@ -27,7 +29,6 @@ import EditPost from "../../feaures/posts/edit-post/EditPost";
 import DeletePost from "../../feaures/posts/delete-post/DeletePost";
 import BlockUser from "../../feaures/posts/block-user/BlockUser";
 import FollowUnfollowPoster from "../../feaures/posts/follow-unfollow-poster/followUnfollowPoster";
-import Sidebar from "../../layout/sidebar/Sidebar";
 import EditProfileImage from "../../feaures/users/edit-profile-image/EditProfileImage";
 import {
   closeAltMessage,
@@ -63,9 +64,13 @@ import StoryOptions from "../../pages/story/StoryOptions";
 import {
   closeMuteStoryAuthor,
   closeReportStory,
+  closeSelectUserAsCancel,
+  closeSettings,
   closeStoryOptions,
 } from "../../app/actions/storyActions";
 import MuteStoryAuthor from "../../pages/story/MuteStoryAuthor";
+import StoryVisibilitySettings from "../../pages/story/StoryVisibilitySettings";
+import SelectUsers from "../../pages/story/SelectUsers";
 
 export const opaqueOverlayComponents = [
   {
@@ -137,6 +142,16 @@ export const opaqueOverlayComponents = [
     type: muteStoryType,
     component: <MuteStoryAuthor />,
     closeAction: closeMuteStoryAuthor,
+  },
+  {
+    type: storyVisibilitySettingsType,
+    component: <StoryVisibilitySettings />,
+    closeAction: closeSettings,
+  },
+  {
+    type: selectUsersType,
+    component: <SelectUsers />,
+    closeAction: closeSelectUserAsCancel,
   },
 ];
 

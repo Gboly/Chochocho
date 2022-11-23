@@ -364,7 +364,8 @@
             "settings": {"activeStatus": true, "messageSound": true},
             "myStories": [],
             "otherStories": [{"storyId": 3, "userId": 10, "viewed": false}, {"storyId": 4, "userId": 9, "viewed": true}, {"storyId": 5, "userId": 6, "viewed": false}, {"storyId": 6, "userId": 3, "viewed": true}, {"storyId": 7, "userId": 3, "viewed": false}, {"storyId": 8, "userId": 6, "viewed": false}, {"storyId": 9, "userId": 3, "viewed": false}, {"storyId": 10, "userId": 3, "viewed": false}],
-            "otherStoryAuthors": [{"userId": 3}, {"userId": 6}, {"userId": 10}, {"userId": 9}]
+            "otherStoryAuthors": [{"userId": 3}, {"userId": 6}, {"userId": 10}, {"userId": 9}],
+            "storyVisibility": {"type": "followers", "users": []}
         },
         {
             "id": 2,

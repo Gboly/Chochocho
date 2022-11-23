@@ -9,4 +9,13 @@ export const {
   closeReportStory,
   readUploadedMedia,
   removeMedia,
+  openSettings,
+  changeVisibilityType,
+  openSelectUser,
+  closeSelectUserAsCancel,
+  closeSelectUserAsDone,
+  supplyCheckedUsers,
+  selectUser,
+  deselectUser,
+  closeSettings,
 } = storySlice.actions;

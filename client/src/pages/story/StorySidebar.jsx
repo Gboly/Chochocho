@@ -8,19 +8,25 @@ import {
   convertToUserFriendlyTime,
   handleMediaUpload,
   prepareIdsForQuery,
+  showPopupOnOpaqueOverlay,
 } from "../../util/functions";
-import { userIdType } from "../../util/types";
-import { useSelector } from "react-redux";
+import { storyVisibilitySettingsType, userIdType } from "../../util/types";
+import { useDispatch, useSelector } from "react-redux";
 import { selectFetchedUsersById } from "../../app/api-slices/usersApiSlice";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import video from "../../assets/video.mp4";
 import { videoType } from "../../util/types";
 import { useNavigate } from "react-router-dom";
-import { readUploadedMedia } from "../../app/actions/storyActions";
+import {
+  changeVisibilityType,
+  openSettings,
+  readUploadedMedia,
+} from "../../app/actions/storyActions";
 
 export const StorySidebar = () => {
+  const dispatch = useDispatch();
   const {
-    authUser: { otherStoryAuthors, otherStories },
+    authUser: { otherStoryAuthors, otherStories, storyVisibility },
     viewedUsers,
     activeUsers,
   } = useContext(GeneralContext);
@@ -57,11 +63,16 @@ export const StorySidebar = () => {
       )
   );
 
+  const showSettings = () => {
+    dispatch(changeVisibilityType(storyVisibility.type));
+    showPopupOnOpaqueOverlay(openSettings, storyVisibilitySettingsType);
+  };
+
   return (
     <aside className="story-sidebar">
       <header>
         <h1>Stories</h1>
-        <i>
+        <i onClick={showSettings}>
           <SettingsIcon style={iconStyle} />
         </i>
       </header>

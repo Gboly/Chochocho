@@ -17,13 +17,14 @@ import {
   writeAltType,
   sidebarType,
   editProfileImageType,
+  selectUsersType,
 } from "../../util/types";
 import {
   opaqueOverlayComponents,
   TransparentOverlayComponents,
 } from "./overlayData";
 
-const nestedPopups = [writeAltType, editProfileImageType];
+const nestedPopups = [writeAltType, editProfileImageType, selectUsersType];
 const clickExceptions = [reportPostType];
 
 export const TransparentOverlay = () => {
