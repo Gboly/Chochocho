@@ -231,6 +231,11 @@ export const settingsContent = [
     pathName: "blocking",
   },
   {
+    desc: "Story",
+    icon: <VisibilityOffOutlinedIcon style={iconStyle} />,
+    pathName: "story",
+  },
+  {
     desc: "Password & security",
     icon: <GppGoodOutlinedIcon style={iconStyle} />,
     pathName: "security",

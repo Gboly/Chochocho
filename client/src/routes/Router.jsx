@@ -24,6 +24,7 @@ import { createContext } from "react";
 import StoryIndexOutlet from "../pages/story/StoryIndexOutlet";
 import App from "../App";
 import StoryPreview from "../pages/story/StoryPreview";
+import StorySetting from "../feaures/settings-outlet/story/Story";
 
 export const GeneralContext = createContext();
 export default function Router() {
@@ -60,6 +61,7 @@ export default function Router() {
           <Route path="profile" element={<EditProfile />} />
           <Route path="notification" element={<Notification />} />
           <Route path="blocking" element={<Blocking />} />
+          <Route path="story" element={<StorySetting />} />
           <Route path="security" element={<Security />} />
           <Route path="viewing" element={<Viewing />} />
         </Route>

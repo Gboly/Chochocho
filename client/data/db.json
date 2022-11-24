@@ -365,7 +365,8 @@
             "myStories": [],
             "otherStories": [{"storyId": 3, "userId": 10, "viewed": false}, {"storyId": 4, "userId": 9, "viewed": true}, {"storyId": 5, "userId": 6, "viewed": false}, {"storyId": 6, "userId": 3, "viewed": true}, {"storyId": 7, "userId": 3, "viewed": false}, {"storyId": 8, "userId": 6, "viewed": false}, {"storyId": 9, "userId": 3, "viewed": false}, {"storyId": 10, "userId": 3, "viewed": false}],
             "otherStoryAuthors": [{"userId": 3}, {"userId": 6}, {"userId": 10}, {"userId": 9}],
-            "storyVisibility": {"type": "followers", "users": []}
+            "storyVisibility": {"type": "followers", "users": []},
+            "mutedStoryAuthors": [{"userId": 2, "date": "04/11/2020"},{"userId": 3, "date": "01/12/2020"},{"userId": 4, "date": "01/12/2020"},{"userId": 5, "date": "28/05/2021"},{"userId": 6, "date": "15/06/2021"},{"userId": 7, "date": "02/12/2021"},{"userId": 9, "date": "04/07/2022"},{"userId": 10, "date": "04/07/2022"}]
         },
         {
             "id": 2,

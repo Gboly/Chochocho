@@ -1,0 +1,11 @@
+.muted-story-authors{
+    margin-top: 3rem;
+    width: 50%;
+    min-width: 25rem;
+}
+.muted-story-authors > header {
+    margin-bottom: 1.5rem !important;
+}
+.muted-story-authors ul {
+    margin-top: 2rem;
+}

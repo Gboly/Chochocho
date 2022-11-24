@@ -4,6 +4,8 @@ import { capitalize } from "../../util/functions";
 import { useContext } from "react";
 import { GeneralContext } from "../../routes/Router";
 
+const darkButtons = ["unblock", "unmute"];
+
 export default function UserCameo({
   userId,
   buttonType,
@@ -55,7 +57,7 @@ export default function UserCameo({
                     ? "followed"
                     : ""
                   : ""
-              } ${buttonType === "unblock" ? "unblock" : ""}`}
+              } ${darkButtons.includes(buttonType) ? "dark-button" : ""}`}
             >
               {buttonType === "follow"
                 ? isFollowing(userId)
