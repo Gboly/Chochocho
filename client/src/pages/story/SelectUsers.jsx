@@ -8,7 +8,10 @@ import {
   selectUser,
   supplyCheckedUsers,
 } from "../../app/actions/storyActions";
-import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
+import {
+  useGetUserByIdQuery,
+  useGetUsersByIdQuery,
+} from "../../app/api-slices/usersApiSlice";
 import CustomCheckbox from "../../components/custom-checkbox/CustomCheckbox";
 import Searchbar from "../../components/searchbar/Searchbar";
 import Spinner from "../../components/Spinner/Spinner";
@@ -17,6 +20,7 @@ import { GeneralContext } from "../../routes/Router";
 import {
   closeNestedPopupOnOpaqueOverlay,
   closePopupOnOpaqueOverlay,
+  prepareUserIdsForQuery,
 } from "../../util/functions";
 import { storyVisibilitySettingsType } from "../../util/types";
 import { getStorySettingsState } from "./storySlice";
@@ -61,6 +65,18 @@ const SelectUsers = () => {
         );
   };
 
+  const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
+
+  const { isLoading: followersFetchIsLoading, data: followersFetchResult } =
+    useGetUsersByIdQuery({
+      userIds: prepareUserIdsForQuery(followers),
+      start: skip,
+      end: limit,
+    });
+
+  const isFetched = (userId) =>
+    (followersFetchResult || []).ids?.includes(userId) || false;
+
   return (
     <div className="story-visibility-settings select-user">
       <h3>Select people</h3>
@@ -77,13 +93,16 @@ const SelectUsers = () => {
         {/* Make this infinite scroll like */}
         {followers.map((userId) => {
           return (
-            <CheckboxPerUser
-              key={userId}
-              userId={userId}
-              searchText={searchText}
-            />
+            isFetched(userId) && (
+              <CheckboxPerUser
+                key={userId}
+                userId={userId}
+                searchText={searchText}
+              />
+            )
           );
         })}
+        {followersFetchIsLoading && <Spinner />}
       </section>
 
       <div className="report-post-bottom">
