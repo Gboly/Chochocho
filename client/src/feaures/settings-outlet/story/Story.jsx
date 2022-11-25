@@ -5,8 +5,21 @@ import Searchbar from "../../../components/searchbar/Searchbar";
 import { SettingsHeader } from "../../../pages/settings/Settings";
 import { GeneralContext } from "../../../routes/Router";
 import { useGetUsersByIdQuery } from "../../../app/api-slices/usersApiSlice";
-import { prepareUserIdsForQuery } from "../../../util/functions";
+import {
+  prepareUserIdsForQuery,
+  showPopupOnOpaqueOverlay,
+} from "../../../util/functions";
 import MutedStoryAuthors from "./MutedStoryAuthors";
+import {
+  customTypes,
+  visibilityOptionsData,
+} from "../../../util/iconDescContent";
+import { useDispatch } from "react-redux";
+import {
+  changeVisibilityType,
+  openSelectUser,
+} from "../../../app/actions/storyActions";
+import { selectUsersType } from "../../../util/types";
 
 const style = {
   fontSize: "1rem",
@@ -16,6 +29,7 @@ const style = {
 };
 
 const Story = () => {
+  const dispatch = useDispatch();
   const [valueId, setValueId] = useState(0);
   const [searchText, setSearchText] = useState("");
 
@@ -28,6 +42,13 @@ const Story = () => {
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 
   const mutedStoryAuthorsIds = mutedStoryAuthors.map((user) => user.userId);
+
+  const setValue = (optionIndex) => {
+    const selectedOption = visibilityOptionsData[optionIndex].type;
+    dispatch(changeVisibilityType(selectedOption));
+    customTypes.includes(selectedOption) &&
+      showPopupOnOpaqueOverlay(openSelectUser, selectUsersType);
+  };
 
   const {
     isLoading: mutedStoryAuthorsFetchIsLoading,
@@ -50,7 +71,10 @@ const Story = () => {
           options={["Friends", "Mutuals", "Custom select", "Custom exempt"]}
           labelStyle={style}
           valueId={valueId}
-          setValue={(valId) => setValueId(valId)}
+          setValue={(valId) => {
+            setValueId(valId);
+            setValue(valId);
+          }}
         />
       </section>
       <section className="muted-story-authors">

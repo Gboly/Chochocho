@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
   closeSelectUserAsCancel,
   closeSelectUserAsDone,
@@ -13,12 +14,16 @@ import Searchbar from "../../components/searchbar/Searchbar";
 import Spinner from "../../components/Spinner/Spinner";
 import UserCameo from "../../components/user-cameo/UserCameo";
 import { GeneralContext } from "../../routes/Router";
-import { closeNestedPopupOnOpaqueOverlay } from "../../util/functions";
+import {
+  closeNestedPopupOnOpaqueOverlay,
+  closePopupOnOpaqueOverlay,
+} from "../../util/functions";
 import { storyVisibilitySettingsType } from "../../util/types";
 import { getStorySettingsState } from "./storySlice";
 
 const SelectUsers = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
   const {
     authUser: { storyVisibility, followers },
   } = useContext(GeneralContext);
@@ -34,19 +39,26 @@ const SelectUsers = () => {
   };
 
   const handleClose = () => {
-    closeNestedPopupOnOpaqueOverlay(
-      closeSelectUserAsCancel,
-      storyVisibilitySettingsType,
-      // Passing the pre registered users back
-      storyVisibility.users
-    );
+    location.pathname.includes("settings")
+      ? closePopupOnOpaqueOverlay(
+          closeSelectUserAsCancel,
+          storyVisibility.users
+        )
+      : closeNestedPopupOnOpaqueOverlay(
+          closeSelectUserAsCancel,
+          storyVisibilitySettingsType,
+          // Passing the pre registered users back
+          storyVisibility.users
+        );
   };
 
   const handleDone = () => {
-    closeNestedPopupOnOpaqueOverlay(
-      closeSelectUserAsDone,
-      storyVisibilitySettingsType
-    );
+    location.pathname.includes("settings")
+      ? closePopupOnOpaqueOverlay(closeSelectUserAsDone)
+      : closeNestedPopupOnOpaqueOverlay(
+          closeSelectUserAsDone,
+          storyVisibilitySettingsType
+        );
   };
 
   return (

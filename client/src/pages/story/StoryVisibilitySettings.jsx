@@ -1,11 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUsers,
-  faUserGroup,
-  faUserPen,
-  faUserSlash,
-} from "@fortawesome/free-solid-svg-icons";
 import FormRadioOptions from "../../components/form-radio-options/FormRadioOptions";
 import { playbackSpeedOptionsStyle } from "../../util/formRadioOptions";
 import {
@@ -21,6 +15,8 @@ import {
 } from "../../app/actions/storyActions";
 import { getStorySettingsState } from "./storySlice";
 import { selectUsersType } from "../../util/types";
+import { customTypes } from "../../util/iconDescContent";
+import { visibilityOptionsData } from "../../util/iconDescContent";
 
 const VisibilityOption = ({ icon, type, desc }) => {
   return (
@@ -37,27 +33,6 @@ const VisibilityOption = ({ icon, type, desc }) => {
     </section>
   );
 };
-
-const visibilityOptionsData = [
-  { type: "followers", icon: faUsers, desc: "All users who follow you" },
-  {
-    type: "mutuals",
-    icon: faUserGroup,
-    desc: "All users who you both follow yourselves",
-  },
-  {
-    type: "custom select",
-    icon: faUserPen,
-    desc: "Select who can view your story",
-  },
-  {
-    type: "custom exempt",
-    icon: faUserSlash,
-    desc: "Select who cannot view your story",
-  },
-];
-
-const customTypes = ["custom select", "custom exempt"];
 
 const visibilityOptions = visibilityOptionsData.map((data) => (
   <VisibilityOption {...data} />

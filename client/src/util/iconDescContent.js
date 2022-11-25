@@ -64,6 +64,12 @@ import {
   openMuteStoryAuthor,
   openReportStory,
 } from "../app/actions/storyActions";
+import {
+  faUsers,
+  faUserGroup,
+  faUserPen,
+  faUserSlash,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const iconStyle = {
   fontSize: "inherit",
@@ -301,3 +307,24 @@ export const profileDetails = [
     desc: "",
   },
 ];
+
+export const visibilityOptionsData = [
+  { type: "followers", icon: faUsers, desc: "All users who follow you" },
+  {
+    type: "mutuals",
+    icon: faUserGroup,
+    desc: "All users who you both follow yourselves",
+  },
+  {
+    type: "custom select",
+    icon: faUserPen,
+    desc: "Select who can view your story",
+  },
+  {
+    type: "custom exempt",
+    icon: faUserSlash,
+    desc: "Select who cannot view your story",
+  },
+];
+
+export const customTypes = ["custom select", "custom exempt"];
