@@ -124,21 +124,20 @@ const CheckboxPerUser = ({ userId, searchText }) => {
 
   const { displayName, username, profileImage: src } = user || [];
 
-  const label = (
-    <UserCameo
+  const select = (id) => dispatch(selectUser(id));
+  const deselect = (id) => dispatch(deselectUser(id));
+
+  const icon = (
+    <CustomCheckbox
       {...{
-        userId,
-        avatarProp: { size: 3, src },
-        header: displayName,
-        sub: username,
-        alignItems: true,
-        single: true,
+        label: "",
+        checked: users.includes(userId),
+        id: userId,
+        select,
+        deselect,
       }}
     />
   );
-
-  const select = (id) => dispatch(selectUser(id));
-  const deselect = (id) => dispatch(deselectUser(id));
 
   // Better search algorithm needs to be implemented
   if (
@@ -153,13 +152,15 @@ const CheckboxPerUser = ({ userId, searchText }) => {
       {
         // spinner should be replaced with skeleton
         user ? (
-          <CustomCheckbox
+          <UserCameo
             {...{
-              label,
-              checked: users.includes(userId),
-              id: userId,
-              select,
-              deselect,
+              userId,
+              avatarProp: { size: 3, src },
+              header: displayName,
+              sub: username,
+              alignItems: true,
+              single: true,
+              icon,
             }}
           />
         ) : (

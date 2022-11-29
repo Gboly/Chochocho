@@ -14,6 +14,7 @@ export default function UserCameo({
   avatarProp,
   header,
   sub,
+  notUsername,
   main,
   aside,
   single,
@@ -32,11 +33,15 @@ export default function UserCameo({
       <section>
         <HomeUserAvatar {...{ ...avatarProp, userId }} />
       </section>
-      <section>
+      <section style={{ width: `calc(100% - ${avatarProp.size + 1}rem)` }}>
         <div style={{ alignItems: icon ? "center" : "" }} className="cameo-top">
           <div
-            style={{ justifyContent: space ? "space-between" : "" }}
-            className={buttonType ? "button-based" : icon ? "icon-based" : ""}
+            style={{
+              justifyContent: space ? "space-between" : "",
+            }}
+            className={`cameo-top-head ${
+              buttonType ? "button-based" : icon ? "icon-based" : ""
+            }`}
           >
             <div
               className={
@@ -44,9 +49,12 @@ export default function UserCameo({
               }
             >
               <header>{header || ""}</header>
-              <span>{aside || ""}</span>
+              <div>{aside || ""}</div>
             </div>
-            <div className="cameo-sub-header">@{sub || ""}</div>
+            <div className="cameo-sub-header">
+              {notUsername ? "" : "@"}
+              {sub || ""}
+            </div>
           </div>
           {/* followed style can be found in profile.css */}
           {buttonType && (
@@ -66,7 +74,7 @@ export default function UserCameo({
                 : capitalize(buttonType)}
             </button>
           )}
-          {icon || ""}
+          <div className="user-cameo-icon">{icon || ""}</div>
         </div>
         <div>{main || ""}</div>
       </section>

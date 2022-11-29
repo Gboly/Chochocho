@@ -8,55 +8,58 @@
     width: fit-content;
 }
 .user-cameo-container > section:last-of-type{
-    width: 100%;
+    /* width: calc(100% - 3.5rem); */
+    box-sizing: border-box;
 }
 .cameo-top{
     height: 2.8rem;
-    /* display: flex;
-    justify-content: space-between; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     position: relative;
 }
-.cameo-top > div {
+.cameo-top-head {
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
     height: inherit;
     display: inline-block;
-}
-.button-based{
-    /* 100% - (width of button + 1rem space) */
-    width: calc(100% - 9rem);
-}
-.icon-based{
-    /* 100% - (width of icon + 1rem space) */
-    width: calc(100% - 2.5rem);
+    /* flex: 1; */
+    min-width: 0;
 }
 .cameo-header-no-aside, .cameo-header-aside{
     display: flex;
     align-items: center;
-    /* gap: 0.5rem; */
     width: 100%;
-    /* overflow: hidden;
-    text-overflow: ellipsis; */
+    font-weight: 700;
+    font-size: 1.02rem;
 }
 .cameo-header-aside{
     gap: 0.5rem;
+    position: relative;
 }
 .cameo-header-aside > header{
     width: fit-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 .cameo-header-no-aside > header{
-    font-weight: 700;
-    font-size: 1.02rem;
+    /* font-weight: 700;
+    font-size: 1.02rem; */
     width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.cameo-header-aside > span{
+.cameo-header-aside > div{
     opacity: 0.9;
     font-size: 0.95rem;
+    font-weight: normal;
+    position: absolute;
+    /* more like line height's dimension here for balance */
+    top: 0.15rem;
+    right: -2rem;
 }
 .cameo-sub-header{
     opacity: 0.75;
@@ -85,11 +88,11 @@
 .dark-button{
     background-color: #1b1b1b;
 }
-.user-cameo-container i{
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
+.user-cameo-icon{
+    height: fit-content;
+    width: fit-content;
+    padding-left: 3rem;
+    box-sizing: border-box;
 }
 
 @media screen and (max-width: 480px) {

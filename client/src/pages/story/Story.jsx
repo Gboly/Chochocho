@@ -84,6 +84,12 @@ const Story = () => {
       }}
     >
       <main className="story-page-main">
+        <div
+          className="media-option-custom-icon close-story"
+          onClick={() => navigate(-1)}
+        >
+          ✖
+        </div>
         <PrevSlide />
         <section>
           <div>

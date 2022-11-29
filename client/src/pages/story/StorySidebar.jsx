@@ -16,14 +16,14 @@ import { selectFetchedUsersById } from "../../app/api-slices/usersApiSlice";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import video from "../../assets/video.mp4";
 import { videoType } from "../../util/types";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   changeVisibilityType,
   openSettings,
   readUploadedMedia,
 } from "../../app/actions/storyActions";
 
-export const StorySidebar = () => {
+export const StorySidebar = ({ indexPage }) => {
   const dispatch = useDispatch();
   const {
     authUser: { otherStoryAuthors, otherStories, storyVisibility },
@@ -69,7 +69,7 @@ export const StorySidebar = () => {
   };
 
   return (
-    <aside className="story-sidebar">
+    <aside className={`story-sidebar ${indexPage ? "index-ssb" : "other-ssb"}`}>
       <header>
         <h1>Stories</h1>
         <i onClick={showSettings}>

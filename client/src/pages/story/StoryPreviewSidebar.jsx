@@ -31,7 +31,7 @@ const StoryPreviewSidebar = () => {
   };
 
   return (
-    <aside className="story-sidebar">
+    <aside className="story-sidebar story-preview-sidebar">
       <header>
         <h1>Your Story</h1>
         <i onClick={showSettings}>

@@ -126,14 +126,15 @@ const StoryHeader = forwardRef((_, videoRef) => {
             sub: username,
             aside: convertToUserFriendlyTime(story.createdAt),
             avatarProp: { size: 2.5, src: profileImage },
+            icon: (
+              <StoryActions
+                ref={videoRef}
+                story={story}
+                playPauseTransition={playPauseTransition}
+              />
+            ),
           }}
         />
-        <StoryActions
-          ref={videoRef}
-          story={story}
-          playPauseTransition={playPauseTransition}
-        />
-        ,
       </div>
     </aside>
   );

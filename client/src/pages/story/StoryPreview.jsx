@@ -1,14 +1,30 @@
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useContext, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../components/Spinner/Spinner";
 import useZoom from "../../components/zoom/useZoom";
 import Zoom from "../../components/zoom/Zoom";
-import { imageType, videoType } from "../../util/types";
+import {
+  imageType,
+  storyVisibilitySettingsType,
+  videoType,
+} from "../../util/types";
 import { getUploadedMedia } from "./storySlice";
 import video from "../../assets/video.mp4";
+import UserCameo from "../../components/user-cameo/UserCameo";
+import { GeneralContext } from "../../routes/Router";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import {
+  changeVisibilityType,
+  openSettings,
+} from "../../app/actions/storyActions";
+import { showPopupOnOpaqueOverlay } from "../../util/functions";
 
 const StoryPreview = () => {
+  const dispatch = useDispatch();
+  const {
+    authUser: { id, profileImage, storyVisibility },
+  } = useContext(GeneralContext);
   const { type, src, reading } = useSelector(getUploadedMedia);
 
   const { zoomIn, zoomOut, zoom, setZoom, reset } = useZoom();
@@ -39,6 +55,11 @@ const StoryPreview = () => {
         onClick={startEdit}
       />
     );
+
+  const showSettings = () => {
+    dispatch(changeVisibilityType(storyVisibility.type));
+    showPopupOnOpaqueOverlay(openSettings, storyVisibilitySettingsType);
+  };
 
   return (
     <div className="story-preview-main">
@@ -72,6 +93,29 @@ const StoryPreview = () => {
             ) : (
               ""
             )}
+          </div>
+          <div className="story-preview-actions-md">
+            <div onClick={showSettings}>
+              <UserCameo
+                {...{
+                  userId: id,
+                  alignItems: true,
+                  single: true,
+                  header: "Your story",
+                  sub: (
+                    <div className="dropdown-icon-desc">
+                      <span>Followers</span>
+                      <i>
+                        <ArrowDropDownIcon />
+                      </i>
+                    </div>
+                  ),
+                  avatarProp: { size: 2.5, src: profileImage },
+                  notUsername: true,
+                }}
+              />
+            </div>
+            <button>Share</button>
           </div>
         </div>
       </section>
