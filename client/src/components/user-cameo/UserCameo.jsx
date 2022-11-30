@@ -33,7 +33,11 @@ export default function UserCameo({
       <section>
         <HomeUserAvatar {...{ ...avatarProp, userId }} />
       </section>
-      <section style={{ width: `calc(100% - ${avatarProp.size + 1}rem)` }}>
+      <section
+        style={{
+          width: `calc(100% - ${Number(avatarProp.size) + 1}rem)`,
+        }}
+      >
         <div style={{ alignItems: icon ? "center" : "" }} className="cameo-top">
           <div
             style={{
@@ -57,24 +61,26 @@ export default function UserCameo({
             </div>
           </div>
           {/* followed style can be found in profile.css */}
-          {buttonType && (
-            <button
-              className={`round-button ${
-                buttonType === "follow"
-                  ? isFollowing(userId)
-                    ? "followed"
+          <div className="user-cameo-icon">
+            {buttonType && (
+              <button
+                className={`round-button ${
+                  buttonType === "follow"
+                    ? isFollowing(userId)
+                      ? "followed"
+                      : ""
                     : ""
-                  : ""
-              } ${darkButtons.includes(buttonType) ? "dark-button" : ""}`}
-            >
-              {buttonType === "follow"
-                ? isFollowing(userId)
-                  ? "Following"
-                  : "Follow"
-                : capitalize(buttonType)}
-            </button>
-          )}
-          <div className="user-cameo-icon">{icon || ""}</div>
+                } ${darkButtons.includes(buttonType) ? "dark-button" : ""}`}
+              >
+                {buttonType === "follow"
+                  ? isFollowing(userId)
+                    ? "Following"
+                    : "Follow"
+                  : capitalize(buttonType)}
+              </button>
+            )}
+            {icon || ""}
+          </div>
         </div>
         <div>{main || ""}</div>
       </section>
