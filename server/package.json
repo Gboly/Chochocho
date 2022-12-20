@@ -1,0 +1,29 @@
+{
+  "name": "chochocho",
+  "version": "1.0.0",
+  "description": "A social app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Gboly/chochocho.git"
+  },
+  "author": "Ahmed Gbolahan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Gboly/chochocho/issues"
+  },
+  "homepage": "https://github.com/Gboly/chochocho#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^6.0.1",
+    "mongoose": "^6.7.5",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  },
+  "type": "module"
+}
