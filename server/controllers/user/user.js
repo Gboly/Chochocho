@@ -20,9 +20,8 @@ const getUser = async (req, res) => {
 };
 
 const getUsersById = async (req, res) => {
-  const { id, id_ne } = req.query;
   try {
-    const users = await fetchUsers(id, id_ne);
+    const users = await fetchUsers(req.query);
     users.length > 0
       ? res.status(200).json(users)
       : res.status(404).json({ error: "No user found" });
@@ -35,14 +34,17 @@ const getUsersById = async (req, res) => {
 };
 
 // Other functions
-const fetchUsers = async (id, id_ne) => {
+const fetchUsers = async (query) => {
+  const { id, id_ne, _start, _end } = query;
   const users = await User.find(
     {
       _id:
         id_ne && id_ne.length > 0 ? { $ne: id_ne } : id && id.length > 0 && id,
     },
     { password: 0 }
-  );
+  )
+    .skip(_start)
+    .limit(_end);
 
   return users;
 };
