@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import MutedStoryAuthors from "../../client/src/feaures/settings-outlet/story/MutedStoryAuthors";
 
 const subUserSchema = new mongoose.Schema({
+  // Use reference types
   userId: Number,
   storyId: Number,
   notificationId: Number,
@@ -23,8 +23,8 @@ const userSchema = new mongoose.Schema({
   website: { type: String, default: "" },
   followers: { type: [subUserSchema], default: [] },
   following: { type: [subUserSchema], default: [] },
-  DOB: { type: String, default: "" },
-  joinedDate: { type: String, default: "" },
+  DOB: { type: Date, default: "" },
+  joinedDate: { type: Date, default: new Date() },
   Location: { type: String, default: "" },
   email: { type: String, default: "" },
   linkedIn: { type: String, default: "" },
@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
   online: { type: Boolean, default: true },
   notifications: { type: [subUserSchema], default: [] },
   blocked: { type: [subUserSchema], default: [] },
+  //socket.io should keep track of online and offline status and should be reflected here based on time
   lastSeen: { type: Date, default: new Date() },
   settings: {
     type: { activeStatus: Boolean, messageSound: Boolean },
