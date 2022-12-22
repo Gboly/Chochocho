@@ -38,6 +38,14 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         ...result.ids.map((id) => ({ type: "Users", id })),
       ],
     }),
+    userSignUp: builder.mutation({
+      query: (credentials) => ({
+        url: "register",
+        method: "POST",
+        body: credentials,
+      }),
+      invalidatesTags: [{ type: "Users", id: "List" }],
+    }),
   }),
 });
 
@@ -46,6 +54,7 @@ export const {
   useGetUserByIdQuery,
   useGetUsersByIdQuery,
   useGetUsersByIdExceptionsQuery,
+  useUserSignUpMutation,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];

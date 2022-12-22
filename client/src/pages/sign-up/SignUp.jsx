@@ -16,6 +16,7 @@ import {
   PasswordInput,
   CustomInput,
 } from "../../components/standard-input/StandardInput";
+import { useUserSignUpMutation } from "../../app/api-slices/usersApiSlice";
 
 const signUpInputData = [
   {
@@ -55,6 +56,13 @@ const initialState = signUpInputData.reduce((accum, current) => {
 
 export default function SignUp() {
   const [signUpDetails, setSignUpDetails] = useState(initialState);
+
+  const isFilled = Object.values(signUpDetails).every(
+    (detail) => detail.length > 2
+  );
+
+  const [register, { isLoading: isRegistering, data }] =
+    useUserSignUpMutation();
 
   const handleChange = (e) => {
     setSignUpDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -97,6 +105,17 @@ export default function SignUp() {
     </button>
   ));
 
+  const registerUser = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isFilled) {
+      register(signUpDetails);
+      //Depending on the data recieved from the backend, you should redirect to home page or not.
+      console.log(data);
+      setSignUpDetails(initialState);
+    }
+  };
+
   return (
     <main className="signup-container">
       <img className="illustration1" src={illustration3} alt="" />
@@ -112,9 +131,11 @@ export default function SignUp() {
           <div className="signup-or">
             <span>OR</span>
           </div>
-          <form action="" className="signup-form">
+          <form action="" className="signup-form" onSubmit={registerUser}>
             {inputContent}
-            <button>Sign up</button>
+            <button type="submit">
+              {isRegistering ? "Signing up ..." : "Sign up"}
+            </button>
           </form>
           <p>
             <span>Already have an account?</span>
