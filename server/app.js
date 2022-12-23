@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import runDb from "./config/db.config.js";
 import localAuthRoute from "./routes/auth/localAuth.js";
 import userRoute from "./routes/user/user.js";
+import postRoute from "./routes/post/post.js";
 import { protect } from "./middlewares/authorize.js";
 
 dotenv.config();
@@ -30,6 +31,7 @@ runDb();
 //routing
 app.use("/auth", localAuthRoute);
 app.use("/user", protect, userRoute);
+app.use("/post", protect, postRoute);
 
 app.listen(PORT, (e) =>
   console.log(e || `Successfully connected to server ${PORT}`)

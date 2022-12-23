@@ -20,7 +20,7 @@ const register = async (req, res) => {
 
   try {
     const newUser = new User({ email, username, password: hash });
-    newUser.save();
+    await newUser.save();
 
     const token = generateToken(newUser.id);
 
