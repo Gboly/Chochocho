@@ -1,15 +1,15 @@
 import mongoose from "mongoose";
+const schema = mongoose.Schema;
 
-const subUserSchema = new mongoose.Schema({
-  // Use reference types
-  userId: Number,
-  storyId: Number,
-  notificationId: Number,
+const subUserSchema = new schema({
+  userId: { type: schema.Types.ObjectId, ref: "User" },
+  storyId: { type: schema.Types.ObjectId, ref: "Post" },
+  notificationId: { type: schema.Types.ObjectId, ref: "Notification" },
   viewed: Boolean,
-  date: Date,
+  date: { type: Date, default: new Date() },
 });
 
-const userSchema = new mongoose.Schema({
+const userSchema = new schema({
   username: { type: String, default: "", required: true, unique: true },
   password: { type: String, default: "", required: true, minlength: 6 },
   //If the user doesn't pass a displayName for any reason, just use the username in both instances. Do this in the frontend.

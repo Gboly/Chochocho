@@ -4,13 +4,13 @@ const schema = mongoose.Schema;
 const engagementSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
   postId: { type: schema.Types.ObjectId, ref: "Post" },
-  timeStamp: { type: Date, default: new Date() },
+  date: { type: Date, default: new Date() },
 });
 
 const postSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
   content: { type: String, default: "" },
-  mediaType: { type: String, default: "" },
+  mediaType: { type: String, default: "", enum: ["", "image", "video"] },
   media: { type: [{ src: String, alt: String }], default: "" },
   likes: { type: [engagementSchema], default: [] },
   repost: { type: [engagementSchema], default: [] },
