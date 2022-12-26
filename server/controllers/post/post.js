@@ -2,12 +2,17 @@ import Notification from "../../models/notification.js";
 import Post from "../../models/post.js";
 import User from "../../models/user.js";
 import { sendNotification } from "../notification/notification.js";
+import {
+  deriveSnippet,
+  getMutuals,
+  getAnArrayOfSpecificKeyPerObjectInArray,
+} from "../../util/helperFunctions.js";
 
 const addNewPost = async (req, res) => {
   // For comments, The parents array should already be updated in the frontend by spreading the parents of the post being commented on
   // and then attaching an object of its postId and userId after.
   // This way i can easily pick the last item in the array as the post being commented on.
-  const { type, parents } = req.body;
+  const { type, parents, content, mediaType } = req.body;
   const { id: userId, followers, following } = req.user;
   try {
     const post = new Post({ userId, ...req.body });
@@ -16,17 +21,18 @@ const addNewPost = async (req, res) => {
     if (type === "comment") {
       const updatedPost = await Post.updateOne(
         { _id: parents[parents.length - 1].postId },
-        { $push: { comments: { postId: post.id, userId } } } // confirm if date was auto added
+        { $push: { comments: { postId: post.id, userId } } }
       );
       console.log(updatedPost);
     }
 
     // If its a regualr post, make mutuals recieve nots. for comments, only users who were part of the conversation should get the nots
     await sendNotification({
-      body: req.body,
+      type,
+      snippet: deriveSnippet(content, mediaType),
       userId,
       postId: post.id,
-      recievers:
+      recipient:
         type === "post"
           ? getMutuals(followers, following)
           : getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
@@ -40,19 +46,6 @@ const addNewPost = async (req, res) => {
       .json({ error: "An error was encountered. Incorrect details." });
   }
 };
-
-// Expected result from above controller
-
-// POST
-// - Add a new post
-// - Add a new notification
-// - update mutuals notification field
-
-// COMMENT
-// - Add a new post (comment). This new post comes with a pre-assembled parents data from the frontend
-// - update the comment field of the post whose postId is in the last position of the parents data gotten.
-// - Add a new notification
-// - update all user's notification field in the parents data
 
 const getPosts = async (req, res) => {
   const { id, _start, _end } = req.query;
@@ -87,21 +80,78 @@ const getPostById = async (req, res) => {
   }
 };
 
-// util functions
-const getMutuals = (followers, followings) => {
-  const mutuals = followers.filter((follower) =>
-    // The regualar equality (===) doesn't work with objectIds. The equals method fixes this.
-    followings.some((following) => following.userId.equals(follower.userId))
-  );
-  const mutualsIds = getAnArrayOfSpecificKeyPerObjectInArray(mutuals, "userId");
-  return mutualsIds;
+const updatePost = async (req, res) => {
+  // The following are the fields that can be updated here; mediaType, media, visibleFor, content.
+  try {
+    const updatedPost = await Post.updateOne({ _id: req.params.id }, req.body);
+    res.status(201).json(updatedPost);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
 };
 
-const getAnArrayOfSpecificKeyPerObjectInArray = (
-  originalArray,
-  specificKey
-) => {
-  return originalArray.map((item) => item[specificKey]);
+const reactToPost = async (req, res) => {
+  const { type } = req.body;
+  const { id: userId } = req.user;
+
+  // check if the likes or repost already contain the authUser as one of its userId. If, it does, make it undo the reaction.(e.g; like and dislike)
+  try {
+    const post = await Post.findById({
+      _id: req.params.id,
+    });
+
+    const reactionRecord = post[type].find((reaction) =>
+      reaction.userId.equals(userId)
+    );
+
+    const updatePost = await Post.updateOne(
+      { _id: req.params.id },
+      reactionRecord
+        ? { $pull: { [type]: reactionRecord } }
+        : { $push: { [type]: { userId } } }
+    );
+
+    // notification
+    // nots should only be sent when the action is a like or repost and not when reversing thes action(i.e dislike, "un-repost")
+    if (!reactionRecord) {
+      await sendNotification({
+        userId,
+        postId: post.id,
+        snippet: deriveSnippet(content, mediaType),
+        type,
+        recipient: post.userId,
+      });
+    }
+
+    res.status(201).json(updatePost);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
 };
 
-export { addNewPost, getPosts, getPostById };
+const deletePost = async (req, res) => {
+  try {
+    const deletedPost = await Post.deleteOne({ _id: req.params.id });
+    res.status(200).json(deletedPost);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
+export {
+  addNewPost,
+  getPosts,
+  getPostById,
+  updatePost,
+  deletePost,
+  reactToPost,
+};

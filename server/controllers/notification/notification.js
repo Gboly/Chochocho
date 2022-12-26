@@ -31,18 +31,25 @@ const getNotifications = async (req, res) => {
   }
 };
 
-const sendNotification = async ({ body, userId, postId, recievers }) => {
-  const { type, content, mediaType } = body;
+const sendNotification = async ({
+  type,
+  snippet,
+  userId,
+  postId,
+  recipient,
+}) => {
   const notification = new Notification({
     userId,
     postId,
     type,
-    snippet: deriveSnippet(content, mediaType),
+    snippet,
   });
   await notification.save();
 
+  const _id = Array.isArray(recipient) ? recipient : [recipient];
+
   const updatedUser = await User.updateMany(
-    { _id: recievers },
+    { _id },
     {
       $push: {
         notifications: { notificationId: notification.id, viewed: false },
@@ -50,15 +57,6 @@ const sendNotification = async ({ body, userId, postId, recievers }) => {
     }
   );
   console.log(updatedUser);
-};
-
-// util functions
-const deriveSnippet = (content, mediaType) => {
-  return content
-    ? content.slice(0, 11)
-    : mediaType === "image"
-    ? "photo"
-    : "video";
 };
 
 export { getNotifications, addNotification, sendNotification };

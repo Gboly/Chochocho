@@ -29,10 +29,10 @@ const userSchema = new schema({
   email: { type: String, default: "" },
   linkedIn: { type: String, default: "" },
   url: { type: String, default: "" },
-  online: { type: Boolean, default: true },
   notifications: { type: [subUserSchema], default: [] },
   blocked: { type: [subUserSchema], default: [] },
   //socket.io should keep track of online and offline status and should be reflected here based on time
+  online: { type: Boolean, default: true },
   lastSeen: { type: Date, default: new Date() },
   settings: {
     type: { activeStatus: Boolean, messageSound: Boolean },
