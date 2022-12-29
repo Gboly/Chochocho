@@ -15,6 +15,10 @@ dotenv.config();
 const PORT = "3100";
 const app = express();
 
+// Changes made from frontend
+// followers and following becomes an array of objects and then the userId key is used to get the ids
+// There's no more otherStoryAuthors field in the user document. Each userId is attached to their record in the otherStories field.
+
 //Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

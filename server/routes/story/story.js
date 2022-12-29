@@ -1,10 +1,16 @@
 import { Router } from "express";
-import { addNewStory, getStoryById } from "../../controllers/story/story.js";
-import Story from "../../models/story.js";
+import {
+  addNewStory,
+  getStoryById,
+  muteStoryAuthor,
+  viewStory,
+  deleteStory,
+} from "../../controllers/story/story.js";
 
 const router = Router();
 
-router.get("/:id", getStoryById);
+router.route("/:id").get(getStoryById).patch(viewStory).delete(deleteStory);
 router.post("/", addNewStory);
+router.put("/:id/mute", muteStoryAuthor);
 
 export default router;

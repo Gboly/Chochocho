@@ -31,12 +31,34 @@ const getNotifications = async (req, res) => {
   }
 };
 
+// update notification view status for user
+const updateNotificationViewStatus = async (req, res) => {
+  const { id: notificationId } = req.params;
+  const { id: authUserId } = req.user;
+
+  try {
+    const updatedUser = await User.updateOne(
+      { _id: authUserId },
+      { "notifications.$[notn].viewed": true },
+      { arrayFilters: [{ "notn.notificationId": notificationId }] }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
 const sendNotification = async ({
   type,
   snippet,
   userId,
   postId,
   recipient,
+  username,
 }) => {
   const notification = new Notification({
     userId,
@@ -48,15 +70,19 @@ const sendNotification = async ({
 
   const _id = Array.isArray(recipient) ? recipient : [recipient];
 
-  const updatedUser = await User.updateMany(
-    { _id },
-    {
-      $push: {
-        notifications: { notificationId: notification.id, viewed: false },
-      },
-    }
-  );
+  const query = username ? { username: _id } : { _id };
+
+  const updatedUser = await User.updateMany(query, {
+    $push: {
+      notifications: { notificationId: notification.id, viewed: false },
+    },
+  });
   console.log(updatedUser);
 };
 
-export { getNotifications, addNotification, sendNotification };
+export {
+  getNotifications,
+  addNotification,
+  sendNotification,
+  updateNotificationViewStatus,
+};

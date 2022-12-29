@@ -6,6 +6,7 @@ import {
   deriveSnippet,
   getMutuals,
   getAnArrayOfSpecificKeyPerObjectInArray,
+  extractMentionedUsers,
 } from "../../util/helperFunctions.js";
 
 const addNewPost = async (req, res) => {
@@ -26,6 +27,15 @@ const addNewPost = async (req, res) => {
       console.log(updatedPost);
     }
 
+    // -- Treating mention in the frontend
+    // create a recursive function that takes "content" and "recycledContent" as parameters
+    // Create a component that takes the username as prop. Style the component by giving it color, make it clickable just so it navigates to user's profile and then give it the userCameoHover effect.
+    // in the function, let readyContent = recycledContent || "";
+    // use regex to for search in cases like the spaceIndex because (its not really just space but any character that's not a word)
+    // derive the following; atIndex, spaceIndex, username(with @ attached), initials( slice from 0 to atIndex ), result (readyContent + initials + component above), remainderContent
+    // The function is then called again taking remainderContent and result as parameters.
+    // return readyContent when @ is no more included.
+
     // If its a regualr post, make mutuals recieve nots. for comments, only users who were part of the conversation should get the nots
     await sendNotification({
       type,
@@ -37,6 +47,19 @@ const addNewPost = async (req, res) => {
           ? getMutuals(followers, following)
           : getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
     });
+
+    // Treat mention notification.
+    const mentionedUsers = extractMentionedUsers(content);
+    if (mentionedUsers) {
+      await sendNotification({
+        type: "mention",
+        snippet: deriveSnippet(content, mediaType),
+        userId,
+        postId: post.id,
+        recipient: mentionedUsers,
+        username: true,
+      });
+    }
 
     res.status(201).json(post);
   } catch (error) {

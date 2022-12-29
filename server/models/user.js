@@ -40,7 +40,8 @@ const userSchema = new schema({
   },
   myStories: { type: [subUserSchema], default: [] },
   otherStories: { type: [subUserSchema], default: [] },
-  otherStoryAuthors: { type: [subUserSchema], default: [] },
+  // Taking this out and it would be corrected by including the userId to each record in the otherStories field.
+  // otherStoryAuthors: { type: [subUserSchema], default: [] },
   MutedStoryAuthors: { type: [subUserSchema], default: [] },
   storyVisibility: {
     type: { type: String, default: "followers" },
@@ -51,3 +52,4 @@ const userSchema = new schema({
 const User = mongoose.model("user", userSchema);
 
 export default User;
+export { subUserSchema };

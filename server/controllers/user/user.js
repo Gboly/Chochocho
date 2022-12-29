@@ -37,7 +37,7 @@ const getUsersById = async (req, res) => {
 
 const updateUserDetails = async (req, res) => {
   try {
-    const updatedUser = await User.updateOne({ _id: req.params.id }, req.body);
+    const updatedUser = await User.updateOne({ _id: req.user.id }, req.body);
     res.status(201).json(updatedUser);
   } catch (error) {
     console.log(error);
@@ -131,9 +131,6 @@ const blockUser = async (req, res) => {
       .json({ error: "An error was encountered. Incorrect details." });
   }
 };
-
-// stories part should be handled in respective files
-// password update would be handled in the auth folder
 
 const deleteUser = async (req, res) => {
   // This is a red zone. Account deactivation

@@ -11,9 +11,9 @@ import {
 
 const router = Router();
 
-router.route("/").get(getUsersById).delete(deleteUser);
+router.route("/").get(getUsersById).patch(updateUserDetails).delete(deleteUser);
 router.get("/authenticatedUser", getAuthenticatedUser);
-router.route("/:id").get(getUser).patch(updateUserDetails);
+router.route("/:id").get(getUser);
 router.put("/:id/follow", followUser);
 router.put("/:id/block", blockUser);
 
