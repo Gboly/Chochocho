@@ -72,10 +72,9 @@ const addNewPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   const { id, _start, _end } = req.query;
+  const query = id ? { ...req.query, _id: id } : req.query;
   try {
-    const posts = await Post.find({ ...req.query, _id: id })
-      .skip(_start)
-      .limit(_end);
+    const posts = await Post.find(query).skip(_start).limit(_end);
 
     posts.length > 0
       ? res.status(200).json(posts)

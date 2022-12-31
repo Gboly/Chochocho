@@ -11,8 +11,11 @@ import {
 
 const router = Router();
 
-router.route("/").get(getUsersById).patch(updateUserDetails).delete(deleteUser);
-router.get("/authenticatedUser", getAuthenticatedUser);
+router.route("/").get(getUsersById);
+router
+  .get("/authUser", getAuthenticatedUser)
+  .patch(updateUserDetails)
+  .delete(deleteUser);
 router.route("/:id").get(getUser);
 router.put("/:id/follow", followUser);
 router.put("/:id/block", blockUser);

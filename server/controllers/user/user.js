@@ -148,13 +148,17 @@ const deleteUser = async (req, res) => {
 // Other functions
 const fetchUsers = async (query) => {
   const { id, id_ne, _start, _end } = query;
-  const users = await User.find(
-    {
-      _id:
-        id_ne && id_ne.length > 0 ? { $ne: id_ne } : id && id.length > 0 && id,
-    },
-    { password: 0 }
-  )
+  const dbQuery =
+    id || id_ne
+      ? {
+          ...query,
+          _id:
+            id_ne && id_ne.length > 0
+              ? { $nin: id_ne }
+              : id && id.length > 0 && id,
+        }
+      : query;
+  const users = await User.find(dbQuery, { password: 0 })
     .skip(_start)
     .limit(_end);
 

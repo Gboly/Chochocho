@@ -36,8 +36,8 @@ runDb();
 
 //routing
 app.use("/auth", localAuthRoute);
-app.use("/user", protect, userRoute);
-app.use("/post", protect, postRoute);
+app.use("/users", protect, userRoute);
+app.use("/posts", protect, postRoute);
 app.use("/story", protect, storyRoute);
 app.use("/notification", protect, notificationRoute);
 
