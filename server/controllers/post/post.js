@@ -72,7 +72,15 @@ const addNewPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   const { id, _start, _end } = req.query;
-  const query = id ? { ...req.query, _id: id } : req.query;
+  const { following } = req.user;
+  // Whenever a request is sent to this endpoint without passing ids as query,
+  // then, post from those authUser follows should be supplied.
+  const query = id
+    ? { ...req.query, _id: id }
+    : {
+        ...req.query,
+        userId: getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
+      };
   try {
     const posts = await Post.find(query).skip(_start).limit(_end);
 

@@ -1,5 +1,6 @@
 import Notification from "../../models/notification.js";
 import User from "../../models/user.js";
+import { getAnArrayOfSpecificKeyPerObjectInArray } from "../../util/helperFunctions.js";
 
 const addNotification = async (req, res) => {
   try {
@@ -15,13 +16,24 @@ const addNotification = async (req, res) => {
 };
 
 const getNotifications = async (req, res) => {
-  const { _start, _end } = req.query;
+  const { id, _start, _end } = req.query;
+  const { notifications } = req.user;
+  // This should only supply the authUser's notifications
+  const query = id
+    ? { ...req.query, _id: id }
+    : {
+        ...req.query,
+        _id: getAnArrayOfSpecificKeyPerObjectInArray(
+          notifications,
+          "notificationId"
+        ),
+      };
   try {
-    const notifications = await Notification.find(req.query)
+    const myNotifications = await Notification.find(query)
       .skip(_start)
       .limit(_end);
-    notifications.length > 0
-      ? res.status(200).json(notifications)
+    myNotifications.length > 0
+      ? res.status(200).json(myNotifications)
       : res.status(404).json({ error: "No post found" });
   } catch (error) {
     console.log(error);
