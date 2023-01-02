@@ -7,13 +7,15 @@ import illustration1 from "../../assets/illustration1.jpg";
 import illustration2 from "../../assets/illustration2.jpg";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Checkbox, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   PasswordInput,
   CustomInput,
 } from "../../components/standard-input/StandardInput";
 
 import { useState } from "react";
+import { useUserSigninMutation } from "../../app/api-slices/usersApiSlice";
+import { useEffect } from "react";
 
 const sx = {
   "&.Mui-checked": {
@@ -55,6 +57,10 @@ const getIsChecked = () => localStorage.getItem("rememberMeIsActivated");
 const getLoginDetails = () => localStorage.getItem("loginDetails");
 
 export default function SignIn() {
+  const navigate = useNavigate();
+  const [login, { isLoading, isSuccess, data, isError, error }] =
+    useUserSigninMutation();
+
   const [signInDetails, setSignUpDetails] = useState(
     !getLoginDetails() ? initialState : JSON.parse(getLoginDetails())
   );
@@ -85,7 +91,16 @@ export default function SignIn() {
           })
         )
       : localStorage.removeItem("loginDetails");
+
+    login(signInDetails);
+
+    // This is handling a successfull login
+    isSuccess && data && navigate("/");
+    // Handle the unsuccessful one beneath
   };
+  useEffect(() => {
+    isSuccess && data && navigate("/");
+  }, [isSuccess, data, navigate]);
 
   const inputContent = signUpInputData.reduce((accum, current, index) => {
     const { type, placeholder, name, icon } = current;
@@ -163,7 +178,7 @@ export default function SignIn() {
           </form>
           <p>
             <span>You don't have an account?</span>
-            <Link to="/auth">Sign Up</Link>
+            <Link to="/auth">{isLoading ? "Signing up" : "Sign Up"}</Link>
           </p>
         </div>
       </section>

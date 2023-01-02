@@ -40,11 +40,30 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
     }),
     userSignUp: builder.mutation({
       query: (credentials) => ({
-        url: "/register",
+        url: "/auth/register",
         method: "POST",
         body: credentials,
       }),
       invalidatesTags: [{ type: "Users", id: "List" }],
+    }),
+    userSignin: builder.mutation({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
+        credentials: "include",
+        // mode: "cors",
+      }),
+      transformResponse: (response) => {
+        sessionStorage.setItem("authToken", response.token);
+
+        return response;
+      },
+      invalidatesTags: [{ type: "Users", id: "List" }],
+    }),
+    getAuthUser: builder.query({
+      query: () => "/users/authUser",
+      providesTags: (result, error, arg) => [{ type: "Users", id: "auth" }],
     }),
   }),
 });
@@ -55,6 +74,8 @@ export const {
   useGetUsersByIdQuery,
   useGetUsersByIdExceptionsQuery,
   useUserSignUpMutation,
+  useUserSigninMutation,
+  useGetAuthUserQuery,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];

@@ -1,5 +1,8 @@
 import React from "react";
-import { useGetUserByIdQuery } from "./app/api-slices/usersApiSlice";
+import {
+  useGetAuthUserQuery,
+  useGetUserByIdQuery,
+} from "./app/api-slices/usersApiSlice";
 import { useMemo, useState, useRef, createContext } from "react";
 import { sortByViewedStatus } from "./util/functions";
 import { GeneralContext } from "./routes/Router";
@@ -22,8 +25,10 @@ export default function App({ children }) {
   // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
   // There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext.
   // #3
-  const authUserId = 1;
-  const { data: authUser } = useGetUserByIdQuery(authUserId);
+  // const authUserId = 1;
+  // const { data: authUser } = useGetUserByIdQuery(authUserId);
+  const { data: authUser } = useGetAuthUserQuery();
+  console.log(authUser);
   const isFollowing = (userId) => (authUser?.following || []).includes(userId);
   const isFollower = (userId) => (authUser?.followers || []).includes(userId);
   const isAuth = (userId) => authUser?.id === userId;
@@ -55,7 +60,7 @@ export default function App({ children }) {
         viewedUsers: groupedUsers?.viewed,
         activeUsers: groupedUsers?.active,
         videoPostNode,
-        opaqueOverlayIsOpen
+        opaqueOverlayIsOpen,
       }}
     >
       {authUser ? (

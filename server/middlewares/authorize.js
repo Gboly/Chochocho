@@ -2,12 +2,12 @@ import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 
 const protect = async (req, res, next) => {
-  let token;
+  let authToken;
 
-  if (req.headers.cookies) {
+  if (req.headers["auth-token"]) {
     try {
-      token = req.headers.cookies;
-      const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+      authToken = req.headers["auth-token"];
+      const decodedToken = jwt.verify(authToken, process.env.JWT_SECRET);
 
       // Remove password from the result since i'll be attaching it to req.user and would then be passsed to the frontend
       const user = await User.findById(decodedToken.id, { password: 0 });
@@ -20,7 +20,7 @@ const protect = async (req, res, next) => {
     }
   }
 
-  if (!token) {
+  if (!authToken) {
     return res
       .status(401)
       .json({ error: "User is not authorized. Token not found" });

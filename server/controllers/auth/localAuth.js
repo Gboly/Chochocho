@@ -47,10 +47,9 @@ const login = async (req, res) => {
 
     const token = generateToken(id);
 
-    res
-      .cookie("token", token, { maxAge: process.env.JWT_EXPIRY * 1000 })
-      .status(200)
-      .json({ _id: id, email, username, token });
+    //res.setHeader("Set-Cookie", ["token=token"]);
+
+    res.status(200).json({ _id: id, email, username, token });
   } else {
     res.status(401).json({ error: "Invalid credentials" });
   }

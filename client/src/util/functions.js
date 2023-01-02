@@ -354,3 +354,6 @@ export const getStoryUserDetails = (authUser, userId) => {
 
   return { userIndex, users };
 };
+
+export const findByIdKey = (array, key, id) =>
+  array.some((item) => item[key] === id);

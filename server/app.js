@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import runDb from "./config/db.config.js";
 import localAuthRoute from "./routes/auth/localAuth.js";
@@ -20,6 +21,7 @@ const app = express();
 // There's no more otherStoryAuthors field in the user document. Each userId is attached to their record in the otherStories field.
 
 //Middlewares
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(
@@ -30,6 +32,7 @@ app.use(
   })
 );
 app.use(helmet());
+app.use(morgan("combined"));
 
 //Database connection
 runDb();
