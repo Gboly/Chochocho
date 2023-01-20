@@ -1,6 +1,6 @@
 import "./home-user-avatar.css";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import defaultProfileImage from "../../assets/account.png";
 import NavigateWithScrollCache from "../../feaures/scroll-cache/NavigateWithScrollCache";
 
@@ -29,8 +29,11 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
       : action && action();
   };
 
-  const handleRouting = () => navigate(userProfileRoute);
-  const cleanUp = () => setRoute(false);
+  const [handleRouting, cleanUp] = useMemo(() => {
+    const handleRouting = () => navigate(userProfileRoute);
+    const cleanUp = () => setRoute(false);
+    return [handleRouting, cleanUp];
+  }, [navigate, userProfileRoute]);
 
   return (
     <>
