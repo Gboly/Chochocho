@@ -40,6 +40,17 @@ export default function CreatePostActive({ placeholder }) {
   const { type: fileType, src, reading } = useSelector(getUploadedMedia);
   const postText = useSelector(getPostText);
 
+  const addNewPost = (e) => {
+    e && e.preventDefault();
+    console.log({
+      type: "post",
+      content: postText,
+      mediaType: fileType && fileType.split("/")[0],
+      media: src,
+      visibleFor: visibilityOptions[valueId],
+    });
+  };
+
   const mediasection = reading ? (
     <Spinner sxx={"media-load-spinner"} />
   ) : fileType.startsWith("video") ? (
@@ -83,7 +94,10 @@ export default function CreatePostActive({ placeholder }) {
         visibilityOptionsIsOpen && dispatch(hideVisibiltyOptions())
       }
     >
-      <form className="create-wrapper create-wrapper-focus">
+      <form
+        className="create-wrapper create-wrapper-focus"
+        onSubmit={addNewPost}
+      >
         <div className="create-top-styled">
           <div className="create-top">
             <span className="create-top-description">Create a post</span>

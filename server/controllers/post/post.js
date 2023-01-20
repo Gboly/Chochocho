@@ -71,16 +71,39 @@ const addNewPost = async (req, res) => {
 };
 
 const getPosts = async (req, res) => {
-  const { id, _start, _end } = req.query;
+  const { id, userId, _start, _end } = req.query;
   const { following } = req.user;
   // Whenever a request is sent to this endpoint without passing ids as query,
   // then, post from those authUser follows should be supplied.
+  // if a userId param is passed, fetch posts from a particular user
   const query = id
     ? { ...req.query, _id: id }
     : {
         ...req.query,
-        userId: getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
+        userId: userId || [
+          ...getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
+          req.user.id,
+        ],
       };
+  try {
+    const posts = await Post.find(query).skip(_start).limit(_end);
+
+    posts.length > 0
+      ? res.status(200).json(posts)
+      : res.status(404).json({ error: "No post found" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
+const getPostsByAuthUser = async (req, res) => {
+  const { _start, _end } = req.query;
+  const { id: authUserId } = req.user;
+
+  const query = { userId: authUserId };
   try {
     const posts = await Post.find(query).skip(_start).limit(_end);
 
@@ -184,4 +207,5 @@ export {
   updatePost,
   deletePost,
   reactToPost,
+  getPostsByAuthUser,
 };

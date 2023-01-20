@@ -39,7 +39,7 @@ const Story = () => {
   const [storyIndex, userIndex, users] = useMemo(() => {
     const userStories = user?.myStories || [];
     const storyIndex = userStories.findIndex(
-      (myStory) => myStory.storyId === Number(storyId)
+      (myStory) => myStory.storyId === storyId
     );
     const { userIndex, users } = getStoryUserDetails(authUser, user?.id);
     return [storyIndex, userIndex, users];

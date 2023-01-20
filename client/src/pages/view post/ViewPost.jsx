@@ -2,7 +2,11 @@ import "./view-post.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import RightBar from "../../feaures/right-bar/RightBar";
 import { SettingsHeader } from "../settings/Settings";
-import { capitalize } from "../../util/functions";
+import {
+  capitalize,
+  getAnArrayOfSpecificKeyPerObjectInArray,
+  prepareIdsForQuery,
+} from "../../util/functions";
 import { postType, viewPostPageType } from "../../util/types";
 import PostExcerpt from "../../feaures/posts/post-excerpt/PostExcerpt";
 import CreatePost from "../../feaures/posts/create-post/CreatePost";
@@ -22,9 +26,11 @@ import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import useOffsetTop from "../../util/useCallbackRef";
 import { useCallback } from "react";
 import { GeneralContext } from "../../routes/Router";
+import PostList from "../../feaures/posts/post-list/PostList";
 
 export const ViewPostContext = createContext();
 
+const initialPage = { skip: 0, limit: 1 };
 export default function ViewPost() {
   const navigate = useNavigate();
   const opaqueLayer = useOutletContext();
@@ -32,38 +38,55 @@ export default function ViewPost() {
   const postsIds = useSelector(selectPostsIds);
   const post = useSelector((state) => selectPostById(state, postId));
 
-  const { isLoading: postIsLoading, isSuccess: postLoadIsSuccessful } =
-    useGetPostsQuery();
+  // const { isLoading: postIsLoading, isSuccess: postLoadIsSuccessful } =
+  //   useGetPostsQuery();
 
+  const [postRange, setPostRange] = useState(initialPage);
   const [comments, setComments] = useState([]);
   const [commentsSearchQuery, setCommentsSearchQuery] = useState("");
 
   const [parents, setParents] = useState([]);
   const [parentsSearchQuery, setParentsSearchQuery] = useState("");
 
-  const { isLoading: commentIsLoading } =
-    useGetPostCommentsQuery(commentsSearchQuery);
+  const { isLoading: commentIsLoading } = useGetPostCommentsQuery({
+    ids: commentsSearchQuery,
+    ...postRange,
+  });
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setPostRange(({ limit }) => ({
+          skip: limit,
+          limit: limit + initialPage.limit,
+        })),
+      60000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   // This particular post would have been loaded as a comment or regular post(for direct post) already by the parent.
   // The issue now is when the page link is loaded directly on the browser, the comment is yet to be loaded then.
   // So, this is making sure it is loaded even in such scenario.
-  const { isLoading: viewPostExcerptIsLaoding } =
-    useGetPostCommentsQuery(postId);
+  const { isLoading: viewPostExcerptIsLaoding } = useGetPostCommentsQuery({
+    ids: postId,
+  });
 
-  const { isSuccess: parentsLoadIsSuccessful } =
-    useGetPostCommentsQuery(parentsSearchQuery);
+  const { isSuccess: parentsLoadIsSuccessful } = useGetPostCommentsQuery({
+    ids: parentsSearchQuery,
+  });
 
   useEffect(() => {
     setComments(post?.comments || []);
-    setCommentsSearchQuery((post?.comments || []).join("&id=") || "");
+    setCommentsSearchQuery(prepareIdsForQuery(post?.comments, "postId"));
 
     setParents(post?.parents || []);
-    setParentsSearchQuery((post?.parents || []).join("&id=") || "");
+    setParentsSearchQuery(prepareIdsForQuery(post?.parents, "postId"));
   }, [post]);
 
   const isFetched = useCallback(
     (postId) => {
-      return postsIds.includes(Number(postId));
+      return postsIds.includes(postId);
     },
     [postsIds]
   );
@@ -104,27 +127,39 @@ export default function ViewPost() {
               closePopup={goBack}
               overlay={true}
             />
-            {postIsLoading && <Spinner />}
+            {/* {postIsLoading && <Spinner />}
             {postLoadIsSuccessful && (
-              <>
-                {parentsLoadIsSuccessful && (
-                  <ParentsList parents={parents} isFetched={isFetched} />
+              <> */}
+            {parentsLoadIsSuccessful && (
+              <PostList
+                postIds={getAnArrayOfSpecificKeyPerObjectInArray(
+                  parents,
+                  "postId"
                 )}
-                {!isFetched(postId) ? (
+                comment={true}
+              />
+            )}
+            {!isFetched(postId) ? (
+              <Spinner />
+            ) : (
+              <div ref={handleRef} className="postWithComments">
+                <PostExcerpt postId={postId} viewPost={true} />
+                <CreatePost placeholder={commentCreatePostPlaceholder} />
+                {commentIsLoading ? (
                   <Spinner />
                 ) : (
-                  <div ref={handleRef} className="postWithComments">
-                    <PostExcerpt postId={postId} viewPost={true} />
-                    <CreatePost placeholder={commentCreatePostPlaceholder} />
-                    {commentIsLoading ? (
-                      <Spinner />
-                    ) : (
-                      <CommentsList comments={comments} isFetched={isFetched} />
+                  <PostList
+                    postIds={getAnArrayOfSpecificKeyPerObjectInArray(
+                      comments,
+                      "postId"
                     )}
-                  </div>
+                    comment={true}
+                  />
                 )}
-              </>
+              </div>
             )}
+            {/* </>
+            )} */}
           </div>
         </div>
         <div className="rightbar-container">
@@ -139,9 +174,9 @@ export default function ViewPost() {
 export const CommentsList = ({ comments, isFetched }) => {
   // #13, #14
   const commentList = comments.map(
-    (commentId) =>
-      isFetched(commentId) && (
-        <PostExcerpt key={commentId} postId={commentId} comment={true} />
+    ({ postId }) =>
+      isFetched(postId) && (
+        <PostExcerpt key={postId} postId={postId} comment={true} />
       )
   );
 
@@ -151,9 +186,9 @@ export const CommentsList = ({ comments, isFetched }) => {
 export const ParentsList = ({ parents, isFetched }) => {
   // #13, #14
   const parentList = parents.map(
-    (parentId) =>
-      isFetched(parentId) && (
-        <PostExcerpt key={parentId} postId={parentId} comment={true} />
+    ({ postId }) =>
+      isFetched(postId) && (
+        <PostExcerpt key={postId} postId={postId} comment={true} />
       )
   );
 

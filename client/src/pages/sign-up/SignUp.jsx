@@ -9,9 +9,9 @@ import illustration3 from "../../assets/illustration3.jpg";
 import illustration4 from "../../assets/illustration4.jpg";
 import illustration1 from "../../assets/illustration1.jpg";
 import illustration2 from "../../assets/illustration2.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   PasswordInput,
   CustomInput,
@@ -28,7 +28,7 @@ const signUpInputData = [
   {
     type: "text",
     placeholder: "Your Name",
-    name: "name",
+    name: "username",
     icon: <PersonOutlineOutlinedIcon style={iconStyle} />,
   },
   {
@@ -55,13 +55,10 @@ const initialState = signUpInputData.reduce((accum, current) => {
 }, {});
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const [signUpDetails, setSignUpDetails] = useState(initialState);
 
-  const isFilled = Object.values(signUpDetails).every(
-    (detail) => detail.length > 2
-  );
-
-  const [register, { isLoading: isRegistering, data }] =
+  const [register, { isLoading: isRegistering, isSuccess, error, data }] =
     useUserSignUpMutation();
 
   const handleChange = (e) => {
@@ -77,6 +74,7 @@ export default function SignUp() {
             {...{
               placeholder,
               name,
+              minLength: "6",
               value: signUpDetails[name],
               handleChange,
             }}
@@ -89,6 +87,7 @@ export default function SignUp() {
               type,
               placeholder,
               name,
+              minLength: "3",
               value: signUpDetails[name],
               handleChange,
               icon,
@@ -108,13 +107,13 @@ export default function SignUp() {
   const registerUser = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (isFilled) {
-      register(signUpDetails);
-      //Depending on the data recieved from the backend, you should redirect to home page or not.
-      console.log(data);
-      setSignUpDetails(initialState);
-    }
+    register(signUpDetails);
+    setSignUpDetails(initialState);
   };
+
+  useEffect(() => {
+    isSuccess && data && navigate("/settings/profile");
+  }, [isSuccess, data, navigate]);
 
   return (
     <main className="signup-container">

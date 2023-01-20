@@ -4,6 +4,7 @@ import { selectTotalFetchedResult, unNormalize } from "../../util/functions";
 
 const notificationsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
+  selectId: (notification) => notification._id,
 });
 
 export const initialState = notificationsAdapter.getInitialState();
@@ -18,15 +19,15 @@ const extendedNotificationsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotifications: builder.query({
       // When using proper backend, the searchQuery is not need because req.user would settle it
-      query: ({ searchQuery, start, end }) =>
-        `/notifications?id=${searchQuery}&_start=${start}&_end=${end}`,
+      query: ({ skip, limit }) => `/notifications?_start=${skip}&_end=${limit}`,
       // Normally, i should use this queryState instead of initialState together with upsertMany but it just doesn't produce the right result
       // I'm combining the prvious result together with the new just so the skip-limit process is better
       transformResponse: (response, meta, { queryState }) => {
-        const refinedNotification = refineNotification(response);
-        const presentState = unNormalize(queryState);
-        const newState = [...presentState, ...refinedNotification];
-        return notificationsAdapter.setAll(initialState, newState);
+        // const refinedNotification = refineNotification(response);
+        // const presentState = unNormalize(queryState);
+        // const newState = [...presentState, ...refinedNotification];
+        // return notificationsAdapter.setAll(initialState, newState);
+        return notificationsAdapter.setAll(initialState, response);
       },
       providesTags: (result) => {
         return [

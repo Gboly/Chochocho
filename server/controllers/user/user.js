@@ -24,9 +24,10 @@ const getUser = async (req, res) => {
 const getUsersById = async (req, res) => {
   try {
     const users = await fetchUsers(req.query);
+    //res.status(200).json(users);
     users.length > 0
       ? res.status(200).json(users)
-      : res.status(404).json({ error: "No user found" });
+      : res.status(204).json(users);
   } catch (error) {
     console.log(error);
     return res

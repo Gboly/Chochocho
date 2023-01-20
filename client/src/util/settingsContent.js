@@ -1,6 +1,6 @@
 export const profileDetails = [
   {
-    name: "name",
+    name: "displayName",
     label: "Display name",
     type: "text",
     placeholder: "Ahmed Quamordeen",
@@ -21,7 +21,7 @@ export const profileDetails = [
     autoComplete: "off",
   },
   {
-    name: "birthday",
+    name: "DOB",
     label: "Birthday",
     type: "date",
     placeholder: "18/07/2002",

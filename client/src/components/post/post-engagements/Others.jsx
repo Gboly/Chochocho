@@ -1,5 +1,6 @@
 import "./others.css";
 import {
+  getAnArrayOfSpecificKeyPerObjectInArray,
   showPopupOnOpaqueOverlay,
   truncateEngagements,
 } from "../../../util/functions";
@@ -20,8 +21,14 @@ export default function Others({ postId, reposts, likes, comments }) {
   const commentsOrLikesType = likes ? otherLikeType : othercommentType;
 
   const types = {
-    [otherRepostType]: { type: repostType, userIds: reposts },
-    [otherLikeType]: { type: likeType, userIds: likes },
+    [otherRepostType]: {
+      type: repostType,
+      userIds: getAnArrayOfSpecificKeyPerObjectInArray(reposts, "userId"),
+    },
+    [otherLikeType]: {
+      type: likeType,
+      userIds: getAnArrayOfSpecificKeyPerObjectInArray(likes, "userId"),
+    },
   };
 
   const handleClick = (e, type) => {

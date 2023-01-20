@@ -1,6 +1,10 @@
 import "./follow-details.css";
 import { openEngagedUsersList } from "../../../app/actions/homeActions";
-import { capitalize, showPopupOnOpaqueOverlay } from "../../../util/functions";
+import {
+  capitalize,
+  getAnArrayOfSpecificKeyPerObjectInArray,
+  showPopupOnOpaqueOverlay,
+} from "../../../util/functions";
 import {
   engagedUsersListType,
   followersType,
@@ -14,7 +18,10 @@ export default function FollowDetails(followDetails) {
     const type = e.currentTarget.id;
     showPopupOnOpaqueOverlay(openEngagedUsersList, engagedUsersListType, {
       type,
-      userIds: followDetails[type],
+      userIds: getAnArrayOfSpecificKeyPerObjectInArray(
+        followDetails[type],
+        "userId"
+      ),
     });
   };
 

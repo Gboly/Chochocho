@@ -13,19 +13,37 @@ import PostListLoader from "../../feaures/posts/post-list/postListLoader";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { createContext, useContext, useImperativeHandle } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
+import PostList from "../../feaures/posts/post-list/PostList";
+import { useGetPostsByUserIdQuery } from "../../app/api-slices/postsApiSlice";
 
 export const ProfileContext = createContext();
-
+const initialPage = { skip: 0, limit: 1 };
 export const Profile = () => {
-  const { userId: id } = useParams();
-  const userId = Number(id);
-  //const user = useSelector((state) => selectUserById(state, userId));
+  const { userId } = useParams();
+  const [postRange, setPostRange] = useState(initialPage);
+
   const { isLoading: userIsLoading, data: user } = useGetUserByIdQuery(userId);
+  const { isLoading: userPostsIsLoading } = useGetPostsByUserIdQuery({
+    userId,
+    ...postRange,
+  });
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setPostRange(({ limit }) => ({
+          skip: limit,
+          limit: limit + initialPage.limit,
+        })),
+      10000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <>
@@ -79,7 +97,7 @@ function ProfileComponent({ user, userId }) {
                 </i>
               </button>
               <img
-                src={coverPhoto}
+                src={coverPhoto || "https://www.colorhexa.com/c32aa3.png"}
                 alt="profile cover"
                 className="profile-coverphoto"
                 onClick={() => dispatch(openFullscreen(coverPhoto))}
@@ -123,7 +141,7 @@ function ProfileComponent({ user, userId }) {
                   </div>
                 )}
               </div>
-              <p className="profile-username">{displayName}</p>
+              <p className="profile-username">{displayName || username}</p>
               <p>@{username}</p>
               <p className="profile-bio">{bio}</p>
             </div>
@@ -143,7 +161,7 @@ function ProfileComponent({ user, userId }) {
                 )}
               </div>
               <div>
-                <PostListLoader />
+                <PostList />
               </div>
             </div>
           </div>

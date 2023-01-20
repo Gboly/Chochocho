@@ -9,7 +9,7 @@ import {
   setOutletOption,
 } from "../../app/actions/communityActions";
 import { Outlet } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useLayoutEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   getCommunityOutletIndexFromLocation,
@@ -20,7 +20,7 @@ import { outletOptionsType } from "../../util/types";
 
 export default function Community() {
   const dispatch = useDispatch();
-  const { isOpen: outletOptionIsOpen, valueId: value } =
+  const { isOpen: outletOptionIsOpen, valueId } =
     useSelector(getOutletOptionState);
 
   const { authUser } = useContext(GeneralContext);
@@ -30,11 +30,15 @@ export default function Community() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [valueId, setvalueId] = useState(value);
+  // const [valueId, setvalueId] = useState(value);
+  // console.log(value, valueId);
 
-  useEffect(() => {
-    setvalueId(getCommunityOutletIndexFromLocation(location.pathname));
-  }, [location]);
+  useLayoutEffect(() => {
+    //setvalueId(getCommunityOutletIndexFromLocation(location.pathname));
+    dispatch(
+      setOutletOption(getCommunityOutletIndexFromLocation(location.pathname))
+    );
+  }, [location, dispatch]);
 
   const outlets = [
     `${followers.length} Followers`,

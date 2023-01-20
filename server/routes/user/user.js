@@ -13,7 +13,8 @@ const router = Router();
 
 router.route("/").get(getUsersById);
 router
-  .get("/authUser", getAuthenticatedUser)
+  .route("/authUser")
+  .get(getAuthenticatedUser)
   .patch(updateUserDetails)
   .delete(deleteUser);
 router.route("/:id").get(getUser);

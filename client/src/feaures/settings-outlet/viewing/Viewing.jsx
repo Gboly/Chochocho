@@ -84,7 +84,7 @@ export default function Viewing() {
         const { heading, options, section } = option;
 
         return (
-          <section>
+          <section key={index}>
             <header>{heading}</header>
             <FormRadioOptions
               options={options}

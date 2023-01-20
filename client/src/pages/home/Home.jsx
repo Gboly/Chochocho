@@ -10,13 +10,26 @@ import { getCreatePostState } from "../../feaures/posts/create-post/createPostSl
 import { getPostOptionState } from "../../feaures/posts/post-excerpt/postExcerptSlice";
 
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
-import { createContext, useRef, useImperativeHandle, useContext } from "react";
+import {
+  createContext,
+  useRef,
+  useImperativeHandle,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { GeneralContext } from "../../routes/Router";
+import { useGetPostsQuery } from "../../app/api-slices/postsApiSlice";
+import PostList from "../../feaures/posts/post-list/PostList";
+import Spinner from "../../components/Spinner/Spinner";
 
 export const HomeContext = createContext();
 
+const initialPage = { skip: 0, limit: 1 };
 export default function Home() {
+  const [postRange, setPostRange] = useState(initialPage);
+  const { isLoading } = useGetPostsQuery(postRange);
   const createPostIsActive = useSelector(getCreatePostState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
 
@@ -31,6 +44,18 @@ export default function Home() {
     }),
     [homeNode]
   );
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setPostRange(({ limit }) => ({
+          skip: limit,
+          limit: limit + initialPage.limit,
+        })),
+      10000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <>
@@ -62,7 +87,8 @@ export default function Home() {
             </section>
 
             <section>
-              <PostListLoader {...{ createPostIsActive }} />
+              <PostList />
+              {isLoading && <Spinner />}
             </section>
           </div>
         </div>

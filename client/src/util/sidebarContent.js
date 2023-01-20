@@ -10,6 +10,7 @@ import {
   chatsBasePathType,
   communityBasePathType,
   homeBasePathType,
+  logOutType,
   notificationsBasePathType,
   profileBasePathType,
   settingsBasePathType,
@@ -54,6 +55,6 @@ export const sidebarContent = [
   {
     name: "Logout",
     icon: <LogoutOutlinedIcon />,
-    id: "log-out",
+    id: logOutType,
   },
 ];

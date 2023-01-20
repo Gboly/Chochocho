@@ -68,7 +68,7 @@ export default function EngagedUsersList() {
             action: handleClose,
             src: profileImage,
           },
-          header: displayName,
+          header: displayName || username,
           sub: username,
           main: bio,
         }}

@@ -148,7 +148,7 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
                 icon: postOptionIcon,
                 avatarProp: { size: 3, src },
                 aside: !viewPost && convertToUserFriendlyTime(date),
-                header: displayName,
+                header: displayName || username,
                 sub: username,
                 single: true,
               }}

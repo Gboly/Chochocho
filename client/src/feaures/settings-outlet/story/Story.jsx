@@ -6,6 +6,7 @@ import { SettingsHeader } from "../../../pages/settings/Settings";
 import { GeneralContext } from "../../../routes/Router";
 import { useGetUsersByIdQuery } from "../../../app/api-slices/usersApiSlice";
 import {
+  prepareIdsForQuery,
   prepareUserIdsForQuery,
   showPopupOnOpaqueOverlay,
 } from "../../../util/functions";
@@ -41,8 +42,6 @@ const Story = () => {
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 
-  const mutedStoryAuthorsIds = mutedStoryAuthors.map((user) => user.userId);
-
   const setValue = (optionIndex) => {
     const selectedOption = visibilityOptionsData[optionIndex].type;
     dispatch(changeVisibilityType(selectedOption));
@@ -54,7 +53,7 @@ const Story = () => {
     isLoading: mutedStoryAuthorsFetchIsLoading,
     data: mutedStoryAuthorsFetchResult,
   } = useGetUsersByIdQuery({
-    userIds: prepareUserIdsForQuery(mutedStoryAuthorsIds),
+    userIds: prepareIdsForQuery(mutedStoryAuthors, "userId"),
     start: skip,
     end: limit,
   });

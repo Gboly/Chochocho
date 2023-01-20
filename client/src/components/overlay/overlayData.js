@@ -22,6 +22,7 @@ import {
   muteStoryType,
   storyVisibilitySettingsType,
   selectUsersType,
+  logOutType,
 } from "../../util/types";
 import WriteAlt from "../../feaures/posts/write-alt/WriteAlt";
 import ReportPost from "../../feaures/posts/report-post/ReportPost";
@@ -44,7 +45,7 @@ import {
   closeReportPost,
   closeWriteAlt,
 } from "../../app/actions/homeActions";
-import { closeSidebarNav } from "../../app/actions/layoutActions";
+import { closeLogOut, closeSidebarNav } from "../../app/actions/layoutActions";
 import PostImageAlt from "../../feaures/posts/post-image-alt/PostImageAlt";
 import EditProfile from "../../feaures/users/edit-profile/EditProfile";
 import {
@@ -71,6 +72,7 @@ import {
 import MuteStoryAuthor from "../../pages/story/MuteStoryAuthor";
 import StoryVisibilitySettings from "../../pages/story/StoryVisibilitySettings";
 import SelectUsers from "../../pages/story/SelectUsers";
+import LogOut from "../../feaures/logout/LogOut";
 
 export const opaqueOverlayComponents = [
   {
@@ -152,6 +154,11 @@ export const opaqueOverlayComponents = [
     type: selectUsersType,
     component: <SelectUsers />,
     closeAction: closeSelectUserAsCancel,
+  },
+  {
+    type: logOutType,
+    component: <LogOut />,
+    closeAction: closeLogOut,
   },
 ];
 

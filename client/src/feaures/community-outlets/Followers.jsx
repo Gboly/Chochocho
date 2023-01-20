@@ -1,28 +1,39 @@
 import "./community-outlet.css";
-import { useGetUsersByIdQuery } from "../../app/api-slices/usersApiSlice";
+import {
+  selectFetchedUsersIds,
+  useGetUsersByIdQuery,
+} from "../../app/api-slices/usersApiSlice";
 import CommunityBlock from "./CommunityBlock";
 import { useOutletContext } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner/Spinner";
-import { prepareUserIdsForQuery } from "../../util/functions";
+import {
+  getAnArrayOfSpecificKeyPerObjectInArray,
+  prepareIdsForQuery,
+  prepareUserIdsForQuery,
+} from "../../util/functions";
+import { useSelector } from "react-redux";
 
 export default function Followers() {
-  const { followers } = useOutletContext();
+  const {
+    authUser: { followers },
+  } = useOutletContext();
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 
   const { isLoading: followersFetchIsLoading, data: followersResult } =
     useGetUsersByIdQuery({
-      userIds: prepareUserIdsForQuery(followers),
+      userIds: prepareIdsForQuery(followers, "userId"),
       start: skip,
       end: limit,
     });
 
+  const fetchedUserIds = useSelector(selectFetchedUsersIds);
   const isFetched = (userId) =>
-    (followersResult || []).ids?.includes(userId) || false;
+    (fetchedUserIds || []).includes(userId) || false;
 
   return (
     <>
-      {followers.map(
+      {getAnArrayOfSpecificKeyPerObjectInArray(followers, "userId").map(
         (userId, index) =>
           isFetched(userId) && <CommunityBlock key={index} {...{ userId }} />
       )}

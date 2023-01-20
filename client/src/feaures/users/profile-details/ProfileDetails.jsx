@@ -1,6 +1,6 @@
 import "./profile-details.css";
 import { profileDetails } from "../../../util/iconDescContent";
-import { getUsernameFromLink } from "../../../util/functions";
+import { getUsernameFromLink, getFullDate } from "../../../util/functions";
 
 const socials = ["facebook", "twitter", "instagram", "linkedin"];
 export default function ProfileDetails({ user }) {
@@ -14,6 +14,8 @@ export default function ProfileDetails({ user }) {
             {`${desc} ${
               socials.includes(type)
                 ? getUsernameFromLink(user[type])
+                : type === "joinedDate"
+                ? getFullDate(user[type], { month: true, year: true })
                 : user[type]
             }`}
           </div>

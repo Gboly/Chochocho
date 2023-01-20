@@ -1,5 +1,5 @@
 import "./edit-profile.css";
-import coverPhoto from "../../../assets/cover-photo.png";
+//import coverPhoto from "../../../assets/cover-photo.png";
 import avi2 from "../../../assets/avatar-square.png";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
 import { iconStyle } from "../../../util/iconDescContent";
@@ -10,10 +10,11 @@ import {
   closePopupOnOpaqueOverlay,
   handleprofileImageUpload,
 } from "../../../util/functions";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useContext } from "react";
 import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
 import { editProfileData } from "../../../util/iconDescContent";
 import { avatarType, coverPhotoType } from "../../../util/types";
+import { GeneralContext } from "../../../routes/Router";
 
 const initialState = editProfileData.reduce((accum, current) => {
   accum = { ...accum, [current.name]: "" };
@@ -21,6 +22,9 @@ const initialState = editProfileData.reduce((accum, current) => {
 }, {});
 
 export default function EditProfile() {
+  const {
+    authUser: { profileImage, coverPhoto },
+  } = useContext(GeneralContext);
   const [profile, setProfile] = useState(initialState);
 
   const { isOpen: editProfileImageIsOpen } = useSelector(
@@ -104,7 +108,7 @@ export default function EditProfile() {
         />
       </div>
       <div className="edit-profile-avatar-wrapper edit-profile-image-wrapper">
-        <img src={avi2} alt="" className="edit-profile-avatar" />
+        <img src={profileImage} alt="" className="edit-profile-avatar" />
         <label htmlFor="edit-avatar">
           <i>
             <FileUploadOutlinedIcon style={iconStyle} />

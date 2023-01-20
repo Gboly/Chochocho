@@ -5,13 +5,17 @@ import { iconStyle } from "../../../util/iconDescContent";
 import { useContext } from "react";
 import HomeUserAvatar from "../../../components/home-user-avatar/HomeUserAvatar";
 import { useState } from "react";
-import { useGetUsersByIdQuery } from "../../../app/api-slices/usersApiSlice";
+import {
+  useGetAuthUserQuery,
+  useGetUsersByIdQuery,
+} from "../../../app/api-slices/usersApiSlice";
 import {
   convertToUserFriendlyTime,
   prepareUserIdsForQuery,
   unNormalize,
   getUsersBasedOnLastSeen,
   showPopupOnTransparentOverlay,
+  prepareIdsForQuery,
 } from "../../../util/functions";
 import Spinner from "../../../components/Spinner/Spinner";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,17 +27,17 @@ import { friendsOptionsType } from "../../../util/types";
 
 export default function Friends() {
   const {
-    authUser: {
+    data: {
       following,
       settings: { activeStatus },
     },
-  } = useContext(GeneralContext);
+  } = useGetAuthUserQuery();
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
 
   const { isLoading: usersFetchIsLoading, data: usersFetchResult } =
     useGetUsersByIdQuery({
-      userIds: prepareUserIdsForQuery(following),
+      userIds: prepareIdsForQuery(following, "userId"),
       start: skip,
       end: limit,
     });
@@ -78,6 +82,7 @@ const Friend = ({ user, activeStatus: authUserActiveStatus }) => {
   const {
     id,
     displayName,
+    username,
     profileImage,
     online,
     lastSeen,
@@ -93,7 +98,7 @@ const Friend = ({ user, activeStatus: authUserActiveStatus }) => {
           userId={id}
           style={{ marginRight: "1rem" }}
         />
-        <span className="rfli-name">{displayName}</span>
+        <span className="rfli-name">{displayName || username}</span>
       </div>
       {authUserActiveStatus && userActiveStatus && (
         <div className="rfli-online-status">

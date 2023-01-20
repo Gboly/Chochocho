@@ -5,7 +5,7 @@ import { iconStyle } from "../../util/iconDescContent";
 import NotificationBlock from "../../feaures/notification-block/NotificationBlock";
 import { notificationOptions } from "../../util/iconDescContent";
 import NotificationOptions from "../../feaures/notification-block/NotificationOptions";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getNotificationOptionsState } from "./notificationSlice";
 import { openNotificationOptions } from "../../app/actions/notificationActions";
@@ -29,6 +29,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 
 // Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
+const initialPage = { skip: 0, limit: 1 };
 export default function Notifications() {
   const dispatch = useDispatch();
   const { isOpen: notificationOptionsIsOpen } = useSelector(
@@ -49,21 +50,44 @@ export default function Notifications() {
     [notificationsNode]
   );
 
-  const [fetchQuery, setFetchQuery] = useState({
-    queryState: initialState,
-    searchQuery: prepareIdsForQuery(notifications, notificationIdType),
-    start: 0,
-    end: 10,
+  const [pageRange, setPageRange] = useState({
+    // queryState: initialState,
+    ...initialPage,
   });
 
   const { isLoading: notificationsIsLoading } =
-    useGetNotificationsQuery(fetchQuery);
+    useGetNotificationsQuery(pageRange);
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setPageRange(({ limit }) => ({
+          skip: limit,
+          limit: limit + initialPage.limit,
+        })),
+      10000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   const notificationIds = useSelector(selectNotificationsIds);
+  const isFetched = useCallback(
+    (notId) => {
+      return notificationIds.includes(notId);
+    },
+    [notificationIds]
+  );
 
-  const content = notificationIds.map((notificationId) => (
-    <NotificationBlock key={notificationId} notificationId={notificationId} />
-  ));
+  const content = notifications.map(
+    ({ notificationId, viewed }) =>
+      isFetched(notificationId) && (
+        <NotificationBlock
+          key={notificationId}
+          notificationId={notificationId}
+          viewed={viewed}
+        />
+      )
+  );
 
   const showOptions = (e) => {
     const overlayParams = {

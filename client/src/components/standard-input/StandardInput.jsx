@@ -13,6 +13,8 @@ const CustomInput = ({
   handleChange,
   icon,
   style,
+  minLength,
+  maxLength,
 }) => {
   return (
     <div className="standard-input-container">
@@ -23,6 +25,8 @@ const CustomInput = ({
         placeholder={placeholder}
         name={name}
         value={value}
+        minLength={minLength}
+        maxLength={maxLength}
         onChange={handleChange}
         required
       />
@@ -31,7 +35,15 @@ const CustomInput = ({
   );
 };
 
-const PasswordInput = ({ name, placeholder, value, handleChange, style }) => {
+const PasswordInput = ({
+  name,
+  placeholder,
+  value,
+  handleChange,
+  style,
+  minLength,
+  maxLength,
+}) => {
   const [isHidden, setIsHidden] = useState(true);
   return (
     <div className="standard-input-container">
@@ -41,6 +53,8 @@ const PasswordInput = ({ name, placeholder, value, handleChange, style }) => {
         type={isHidden ? "password" : "text"}
         placeholder={placeholder || "Create Password"}
         name={name || "password"}
+        minLength={minLength}
+        maxLength={maxLength}
         value={value}
         onChange={handleChange}
         required

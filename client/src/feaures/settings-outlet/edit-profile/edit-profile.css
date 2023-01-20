@@ -4,6 +4,7 @@
     width: fit-content;
     line-height: 0;
     position: relative;
+    background-color: #c32aa3;
 }
 .settings-edit-profile > div > input {
     display: none;
@@ -64,7 +65,7 @@
     color: inherit;
 }
 .settings-edit-profile-form > div > input::placeholder, .settings-edit-profile-form > div > textarea::placeholder{
-    opacity: 0.7;
+    opacity: 0.4;
     font-size: 0.85rem;
 }
 .settings-edit-profile-form > div > input:focus, .settings-edit-profile-form > div > textarea:focus {

@@ -12,6 +12,7 @@ const initialState = {
   sidebarNav: false,
   confirmation: { isOpen: false, type: "" },
   pageHeight: "",
+  logOut: false,
 };
 
 export const layoutSlice = createSlice({
@@ -61,6 +62,14 @@ export const layoutSlice = createSlice({
       state.pageHeight = action.payload;
       return state;
     },
+    openLogOut: (state, action) => {
+      state.logOut = true;
+      return state;
+    },
+    closeLogOut: (state, action) => {
+      state.logOut = false;
+      return state;
+    },
   },
 });
 
@@ -72,3 +81,4 @@ export const getPageHeight = (state) => state.layout.pageHeight;
 export const getOpaqueOverlayState = (state) => state.layout.opaqueOverlay;
 export const getTransparentOverlayState = (state) =>
   state.layout.transparentOverlay;
+export const getLogOutState = (state) => state.layout.logOut;

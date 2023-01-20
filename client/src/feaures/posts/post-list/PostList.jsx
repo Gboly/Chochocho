@@ -2,31 +2,47 @@ import "./post-list.css";
 import PostExcerpt from "../post-excerpt/PostExcerpt";
 import PostHidden from "../post-hidden/PostHidden";
 import { useSelector } from "react-redux";
-import { selectRegularPostIds } from "../../../app/api-slices/postsApiSlice";
+import {
+  selectPostsIds,
+  selectRegularPostIds,
+} from "../../../app/api-slices/postsApiSlice";
 import { selectPostIdsByUserId } from "../../../app/api-slices/postsApiSlice";
 import {
   getHiddenPosts,
   getRemovedPosts,
 } from "../post-excerpt/postExcerptSlice";
 import { useParams } from "react-router-dom";
+import { useCallback } from "react";
 
-const PostList = () => {
-  const allPostIds = useSelector(selectRegularPostIds);
+const PostList = ({ postIds, comment }) => {
+  const homePostIds = useSelector(selectRegularPostIds);
   const hiddenPosts = useSelector(getHiddenPosts);
   const removedPosts = useSelector(getRemovedPosts);
 
   const { userId } = useParams();
 
   const userPostIds = useSelector((state) =>
-    selectPostIdsByUserId(state, Number(userId))
+    selectPostIdsByUserId(state, { userId })
   );
 
-  const postList = (userId ? userPostIds : allPostIds)
+  const allPostIds = useSelector(selectPostsIds);
+  const isFetched = useCallback(
+    (postId) => allPostIds.includes(postId),
+    [allPostIds]
+  );
+
+  // The condition is to check if the current page is either the profile page or home page
+  //const postList = (userId ? userPostIds : allPostIds)
+  const postList = (postIds || (userId ? userPostIds : homePostIds))
     .filter((id) => !removedPosts.includes(id))
     .reduce((accum, current) => {
       if (hiddenPosts.includes(current)) {
         accum.push(<PostHidden key={current} postId={current} />);
-      } else accum.push(<PostExcerpt key={current} postId={current} />);
+      } else
+        isFetched(current) &&
+          accum.push(
+            <PostExcerpt key={current} postId={current} comment={comment} />
+          );
 
       return accum;
     }, []);

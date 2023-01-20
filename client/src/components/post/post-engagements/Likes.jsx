@@ -3,6 +3,8 @@ import {
   showPopupOnOpaqueOverlay,
   truncateLikesEngagements,
   prepareUserIdsForQuery,
+  prepareIdsForQuery,
+  getAnArrayOfSpecificKeyPerObjectInArray,
 } from "../../../util/functions";
 import HomeUserAvatar from "../../home-user-avatar/HomeUserAvatar";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,7 +22,7 @@ export default function Likes({ likes }) {
     e && e.stopPropagation && e.stopPropagation();
     showPopupOnOpaqueOverlay(openEngagedUsersList, engagedUsersListType, {
       type: likeType,
-      userIds: likes,
+      userIds: getAnArrayOfSpecificKeyPerObjectInArray(likes, "userId"),
     });
   };
 
@@ -28,7 +30,7 @@ export default function Likes({ likes }) {
     isLoading: UsersThatLikedFetchIsLoading,
     data: usersThatLikedResult,
   } = useGetUsersByIdQuery({
-    userIds: prepareUserIdsForQuery(likes),
+    userIds: prepareIdsForQuery(likes, "userId"),
     start,
     end,
   });

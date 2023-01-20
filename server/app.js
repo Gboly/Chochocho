@@ -41,8 +41,8 @@ runDb();
 app.use("/auth", localAuthRoute);
 app.use("/users", protect, userRoute);
 app.use("/posts", protect, postRoute);
-app.use("/story", protect, storyRoute);
-app.use("/notification", protect, notificationRoute);
+app.use("/stories", protect, storyRoute);
+app.use("/notifications", protect, notificationRoute);
 
 app.listen(PORT, (e) =>
   console.log(e || `Successfully connected to server ${PORT}`)

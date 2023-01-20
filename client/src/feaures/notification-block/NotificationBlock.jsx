@@ -33,12 +33,12 @@ const viewPostRouteTypes = [
   mentionType,
   postType,
 ];
-export default function NotificationBlock({ notificationId }) {
+export default function NotificationBlock({ notificationId, viewed }) {
   const navigate = useNavigate();
 
   const {
     isFollowing,
-    authUser: { notifications },
+    // authUser: { notifications },
   } = useContext(GeneralContext);
 
   const { postId, userId, date, type, snippet } = useSelector((state) =>
@@ -47,9 +47,9 @@ export default function NotificationBlock({ notificationId }) {
 
   const { data: user } = useGetUserByIdQuery(userId);
 
-  const { viewed } = notifications.find(
-    (notification) => notification.notificationId === notificationId
-  );
+  // const { viewed } = notifications.find(
+  //   (notification) => notification.notificationId === notificationId
+  // );
 
   const { text } = description.find((item) => item.type === type);
 
@@ -78,10 +78,11 @@ export default function NotificationBlock({ notificationId }) {
             />
             <div className={viewed ? "viewed-notification" : ""}>
               <p>
-                {`${user.displayName} ${text} ${
+                {`${user.displayName || user.username} ${text} ${
                   mediaSnippet.includes(snippet) ||
                   snippetExcluded.includes(type)
-                    ? `${capitalize(snippet)}`
+                    ? //? `${capitalize(snippet)}`
+                      ""
                     : `Post "${snippet}..."`
                 }`}
               </p>

@@ -12,9 +12,9 @@ export const BlockedUser = ({ userId, date, searchText }) => {
 
   const cameoProp = {
     userId,
-    header: displayName,
+    header: displayName || username,
     sub: username,
-    main: `Blocked ${date}`,
+    main: `Blocked ${new Date(date).toLocaleDateString()}`,
     avatarProp: { size: "3", src: profileImage },
     buttonType: "unblock",
   };

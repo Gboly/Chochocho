@@ -34,7 +34,7 @@ const getNotifications = async (req, res) => {
       .limit(_end);
     myNotifications.length > 0
       ? res.status(200).json(myNotifications)
-      : res.status(404).json({ error: "No post found" });
+      : res.status(204).json(myNotifications);
   } catch (error) {
     console.log(error);
     return res

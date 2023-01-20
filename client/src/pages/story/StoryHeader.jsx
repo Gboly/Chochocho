@@ -214,7 +214,7 @@ const StoryProgress = ({ userStory, value, max }) => {
       key={userStory.storyId}
       min={0}
       max={max}
-      value={userStory.storyId === Number(storyId) ? value : isViewed ? max : 0}
+      value={userStory.storyId === storyId ? value : isViewed ? max : 0}
       className="story-progress"
     />
   );

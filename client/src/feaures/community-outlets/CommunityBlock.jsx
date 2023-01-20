@@ -14,11 +14,13 @@ import {
 } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { useOutletContext } from "react-router-dom";
+import { useContext } from "react";
+import { GeneralContext } from "../../routes/Router";
 
 const iconLink = [faGlobe, faFacebook, faTwitter, faInstagram];
 
 export default function CommunityBlock({ userId }) {
-  const { followers, followings } = useOutletContext();
+  const { isFollowing, isFollower } = useContext(GeneralContext);
 
   const {
     bio,
@@ -33,9 +35,7 @@ export default function CommunityBlock({ userId }) {
 
   const userLinks = [website, facebook, twitter, instagram];
 
-  const following = followings.includes(userId);
-  const followed = followers.includes(userId);
-  const followStatus = following ? "unfollow" : "follow";
+  const followStatus = isFollowing(userId) ? "unfollow" : "follow";
 
   const iconContent = userLinks.reduce((accum, current, index) => {
     if (current) {
@@ -60,16 +60,16 @@ export default function CommunityBlock({ userId }) {
         <HomeUserAvatar userId={userId} size="4.5" src={profileImage} />
         <article>
           <div>
-            <p>{displayName}</p>
+            <p>{displayName || username}</p>
             <span>@{username}</span>
           </div>
           <div>{iconContent}</div>
         </article>
       </div>
-      <p>{bio}</p>
+      {bio ? <p>{bio}</p> : <p style={{ opacity: 0.4 }}>Bio...</p>}
       <div>
         <button className={`outlet-button ${followStatus}-outlet-button1`}>
-          {!followed && !following ? "Ignore" : "Message"}
+          {!isFollower(userId) && !isFollowing(userId) ? "Ignore" : "Message"}
         </button>
         <button className={`outlet-button ${followStatus}-outlet-button2`}>
           {followStatus}

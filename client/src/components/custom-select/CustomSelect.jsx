@@ -15,16 +15,13 @@ export default function CustomSelect({
   isOpen,
   style,
 }) {
-  const [VisibilityFor, setVisibilityFor] = useState(valueId);
-  const dispatch = useDispatch();
-
   return (
     <>
       <div
         className="custom-select"
         // onClick={() => dispatch(showVisibilityOptions())}
       >
-        <span className={style ? style : ""}>{options[VisibilityFor]}</span>
+        <span className={style ? style : ""}>{options[valueId]}</span>
         <i className="custom-select-expand-icon">
           {isOpen ? (
             <ExpandLessIcon style={iconStyle} />
@@ -39,9 +36,8 @@ export default function CustomSelect({
           <FormRadioOptions
             {...{
               options,
-              valueId: VisibilityFor,
+              valueId,
               setValue: (valId) => {
-                setVisibilityFor(valId);
                 getValue && getValue(valId);
               },
             }}

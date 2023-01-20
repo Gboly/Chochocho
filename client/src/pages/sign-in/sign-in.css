@@ -1,6 +1,6 @@
 .signup-form > section{
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     width: 100%;
     margin-top: -1rem;
@@ -11,4 +11,10 @@
 .signup-form > section > a {
     text-decoration: none;
     color: #c32aa3;
+}
+.signup-form > span{
+    color: red;
+    font-size: 0.8rem;
+    /* margin-top: -10rem;
+    margin-bottom: 2rem; */
 }

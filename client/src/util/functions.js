@@ -233,11 +233,22 @@ export const unNormalize = (data) => {
   return JSON.parse(JSON.stringify(values));
 };
 
-const selectQueriesData = (queries, selectedEndPoints) =>
+const argumentMatch = (originalArg, myArg) =>
+  Object.entries(originalArg).every(([key, value]) => {
+    if (key === "skip" || key === "limit") {
+      return true;
+    }
+    return value === myArg[key];
+  });
+
+const selectQueriesData = (queries, selectedEndPoints, originalArgs) =>
   Object.values(queries).reduce((accum, query) => {
-    selectedEndPoints.includes(query.endpointName) &&
+    const isMatch =
+      selectedEndPoints.includes(query.endpointName) &&
       query.status === "fulfilled" &&
-      accum.push(query.data);
+      (originalArgs ? argumentMatch(query.originalArgs, originalArgs) : true);
+
+    isMatch && query.data && accum.push(query.data);
     return accum;
   }, []);
 
@@ -254,11 +265,13 @@ const mergeSelectedQueriesData = (selectedQueriesData, initialState) =>
 export const selectTotalFetchedResult = (
   state,
   selectedEndPoints,
-  initialState
+  initialState,
+  originalArgs
 ) => {
   const selectedQueriesData = selectQueriesData(
     state.api.queries,
-    selectedEndPoints
+    selectedEndPoints,
+    originalArgs
   );
   const mergedSelectedQueriesData = mergeSelectedQueriesData(
     selectedQueriesData,
@@ -272,8 +285,9 @@ export const prepareUserIdsForQuery = (userIds, type) => {
 };
 
 export const prepareIdsForQuery = (documentField, idKey, type) => {
-  const ids = documentField.map((item) => item[idKey]);
-  return prepareUserIdsForQuery(ids, type);
+  const ids = (documentField || []).map((item) => item[idKey]);
+  const noDuplicateIds = [...new Set(ids)];
+  return prepareUserIdsForQuery(noDuplicateIds, type);
 };
 
 export const getUsernameFromLink = (link) => {
@@ -311,7 +325,7 @@ export const getUsersBasedOnLastSeen = (usersList) => {
 };
 
 export const sortByViewedStatus = (authUser) =>
-  authUser?.otherStoryAuthors.reduce(
+  (authUser?.otherStoryAuthors || []).reduce(
     (accum, author) => {
       const isViewed = authUser?.otherStories
         .filter((story) => story.userId === author.userId)
@@ -357,3 +371,56 @@ export const getStoryUserDetails = (authUser, userId) => {
 
 export const findByIdKey = (array, key, id) =>
   array.some((item) => item[key] === id);
+
+// The default identity for each document is denoted by "_id". Now, i want the identity to accessible with "id"
+export const attachIdProperty = (responseData) => {
+  if (Array.isArray(responseData)) {
+    return responseData.map((item) => {
+      item.id = item._id;
+      return item;
+    });
+  } else {
+    responseData.id = responseData._id;
+    return responseData;
+  }
+};
+
+export const getTransformed = (response, adapter) =>
+  response &&
+  (adapter
+    ? adapter.setAll(adapter.getInitialState(), attachIdProperty(response))
+    : attachIdProperty(response));
+
+export const getAnArrayOfSpecificKeyPerObjectInArray = (
+  originalArray,
+  specificKey
+) => {
+  return (originalArray || []).map((item) => item[specificKey]);
+};
+
+export const getFullDate = (date, { time, day, month, year }) => {
+  const fullDate = new Date(date).toLocaleString("en-US", {
+    timeStyle: "short",
+    dateStyle: "medium",
+  });
+  const fullDateArray = fullDate.split(",");
+  const organizedFullDate =
+    !day && !time && month && year
+      ? `${fullDateArray[0].match(/[^1-9]+/)}${fullDateArray[1]}`
+      : `${time ? fullDateArray[2] + " - " : ""}${
+          month && (day ? fullDateArray[0] : fullDateArray[0].match(/[^1-9]+/))
+        },${year ? fullDateArray[1] : ""}`;
+
+  return organizedFullDate;
+};
+
+export const getStoryAuthors = (otherStories) => {
+  const authorIds = getAnArrayOfSpecificKeyPerObjectInArray(
+    otherStories,
+    "userId"
+  );
+  const uniqueAuthorIds = [...new Set(authorIds)];
+  return uniqueAuthorIds.map((userId) => ({ userId }));
+};
+
+//export const removeSessionToken = () => sessionStorage.removeItem("authToken");

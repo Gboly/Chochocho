@@ -23,10 +23,11 @@ const userSchema = new schema({
   website: { type: String, default: "" },
   followers: { type: [subUserSchema], default: [] },
   following: { type: [subUserSchema], default: [] },
-  DOB: { type: Date, default: "" },
+  DOB: { type: String, default: "" },
   joinedDate: { type: Date, default: new Date() },
-  Location: { type: String, default: "" },
+  location: { type: String, default: "" },
   email: { type: String, default: "" },
+  phone: { type: String, default: "" },
   linkedIn: { type: String, default: "" },
   url: { type: String, default: "" },
   notifications: { type: [subUserSchema], default: [] },
@@ -42,7 +43,7 @@ const userSchema = new schema({
   otherStories: { type: [subUserSchema], default: [] },
   // Taking this out and it would be corrected by including the userId to each record in the otherStories field.
   // otherStoryAuthors: { type: [subUserSchema], default: [] },
-  MutedStoryAuthors: { type: [subUserSchema], default: [] },
+  mutedStoryAuthors: { type: [subUserSchema], default: [] },
   storyVisibility: {
     type: { type: String, default: "followers" },
     users: { type: [subUserSchema], default: [] },

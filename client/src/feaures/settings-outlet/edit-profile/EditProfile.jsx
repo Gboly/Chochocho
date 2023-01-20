@@ -7,29 +7,38 @@ import {
 } from "../../../util/functions";
 import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
 import avi2 from "../../../assets/avatar-square.png";
+import defaultProfileImage from "../../../assets/account.png";
 import { iconStyle } from "../../../util/iconDescContent";
 import FileUploadOutlinedIcon from "@mui/icons-material/FileUploadOutlined";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useContext, useMemo } from "react";
 import { socialLinks, profileDetails } from "../../../util/settingsContent";
 import { SettingsHeader } from "../../../pages/settings/Settings";
 import { useState } from "react";
 import { editProfileImageType } from "../../../util/types";
-
-const profileInitialState = profileDetails.reduce((accum, current) => {
-  accum = { ...accum, [current.name]: "" };
-  return accum;
-}, {});
-const socialsInitialState = socialLinks.reduce((accum, current) => {
-  accum = { ...accum, [current.name]: "" };
-  return accum;
-}, {});
+import { GeneralContext } from "../../../routes/Router";
 
 export default function EditProfile() {
   const dispatch = useDispatch();
+  const { authUser } = useContext(GeneralContext);
+  const { profileImage } = authUser;
   const { isOpen: editProfileImageIsOpen } = useSelector(
     getEditProfileImageState
   );
 
+  const [profileInitialState, socialsInitialState] = useMemo(() => {
+    const profileInitialState = profileDetails.reduce((accum, { name }) => {
+      accum = { ...accum, [name]: authUser[name] };
+      return accum;
+    }, {});
+    const socialsInitialState = socialLinks.reduce((accum, { name }) => {
+      accum = { ...accum, [name]: authUser[name] };
+      return accum;
+    }, {});
+
+    return [profileInitialState, socialsInitialState];
+  }, [authUser]);
+
+  const [imageSrc, setImageSrc] = useState(profileImage);
   const [profile, setProfile] = useState(profileInitialState);
   const [socials, setSocials] = useState(socialsInitialState);
 
@@ -125,7 +134,15 @@ export default function EditProfile() {
     <main className="settings-edit-profile">
       <SettingsHeader text={"Edit Profile"} />
       <div>
-        <img src={avi2} alt="" className="edit-profile-avatar" />
+        <img
+          src={imageSrc || ""}
+          onError={() => {
+            imageSrc !== defaultProfileImage &&
+              setImageSrc(defaultProfileImage);
+          }}
+          alt=""
+          className="edit-profile-avatar"
+        />
         <label htmlFor="edit-avatar">
           <i>
             <FileUploadOutlinedIcon style={iconStyle} />

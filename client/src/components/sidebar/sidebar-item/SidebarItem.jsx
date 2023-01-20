@@ -1,29 +1,41 @@
 import "./sidebar-item.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { closeSidebarNav } from "../../../app/actions/layoutActions";
-import { profileBasePathType } from "../../../util/types";
-import { getBasePath, updateScrollCache } from "../../../util/functions";
+import { useSelector } from "react-redux";
+import {
+  closeSidebarNav,
+  openLogOut,
+} from "../../../app/actions/layoutActions";
+import { logOutType, profileBasePathType } from "../../../util/types";
+import {
+  closePopupOnOpaqueOverlay,
+  getBasePath,
+  showPopupOnOpaqueOverlay,
+  updateScrollCache,
+} from "../../../util/functions";
 import NavigateWithScrollCache from "../../../feaures/scroll-cache/NavigateWithScrollCache";
 import { GeneralContext } from "../../../routes/Router";
+import { getOpaqueOverlayState } from "../../../layout/layoutSlice";
 
 export default function SidebarItem({ name, icon, id }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const { type: overlayType } = useSelector(getOpaqueOverlayState);
 
   const [pathName, setPathName] = useState("");
   const [route, setRoute] = useState(false);
 
-  const { setPageRefresh } = useContext(GeneralContext);
+  const {
+    setPageRefresh,
+    authUser: { _id: authUserId },
+  } = useContext(GeneralContext);
 
   useEffect(() => {
     setPathName(getBasePath(location.pathname));
   }, [location]);
 
   // #3
-  const link = `/${id}${id === profileBasePathType ? "/1" : ""}`;
+  const link = `/${id}${id === profileBasePathType ? `/${authUserId}` : ""}`;
 
   const refresh = () => {
     updateScrollCache(location.pathname, 0);
@@ -31,17 +43,25 @@ export default function SidebarItem({ name, icon, id }) {
   };
 
   const handleClick = () => {
-    location.pathname === link ? refresh() : setRoute(true);
+    id === logOutType
+      ? showPopupOnOpaqueOverlay(openLogOut, logOutType)
+      : location.pathname === link
+      ? refresh()
+      : setRoute(true);
   };
   const handleRouting = () => {
     navigate(link);
-    dispatch(closeSidebarNav());
+    closePopupOnOpaqueOverlay(closeSidebarNav);
   };
   const cleanUp = () => setRoute(false);
 
   const currentPage = () => {
     const match =
-      id === profileBasePathType ? location.pathname === link : pathName === id;
+      overlayType === logOutType
+        ? id === logOutType
+        : id === profileBasePathType
+        ? location.pathname === link
+        : pathName === id;
     if (!match) {
       return "";
     }

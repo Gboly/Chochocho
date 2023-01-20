@@ -99,11 +99,11 @@ export const othersPostOptions = [
     action: hidePost,
     dispatch: true,
   },
-  {
-    desc: postNotifcationType,
-    icon: <NotificationsOutlinedIcon style={iconStyle} />,
-    action: "",
-  },
+  // {
+  //   desc: postNotifcationType,
+  //   icon: <NotificationsOutlinedIcon style={iconStyle} />,
+  //   action: "",
+  // },
   {
     desc: reportPostType,
     icon: <ReportOutlinedIcon style={iconStyle} />,

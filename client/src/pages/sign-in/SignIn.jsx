@@ -53,54 +53,31 @@ const initialState = signUpInputData.reduce((accum, current) => {
   return accum;
 }, {});
 
-const getIsChecked = () => localStorage.getItem("rememberMeIsActivated");
-const getLoginDetails = () => localStorage.getItem("loginDetails");
-
 export default function SignIn() {
   const navigate = useNavigate();
   const [login, { isLoading, isSuccess, data, isError, error }] =
     useUserSigninMutation();
 
-  const [signInDetails, setSignUpDetails] = useState(
-    !getLoginDetails() ? initialState : JSON.parse(getLoginDetails())
-  );
-  const [isChecked, setIsChecked] = useState(
-    !getIsChecked() ? false : JSON.parse(getIsChecked())
-  );
+  const [signInDetails, setSignInDetails] = useState(initialState);
+
+  const [incorrectDetail, setIncorrectDetail] = useState(false);
 
   const handleChange = (e) => {
-    setSignUpDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleCheck = (e) => {
-    setIsChecked(!isChecked);
-    localStorage.setItem("rememberMeIsActivated", !isChecked);
+    incorrectDetail && setIncorrectDetail(false);
+    setSignInDetails((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    //This should be done after authentication just so you confirm the details before saving.
-    //Also, you cannot store the raw password in localStorage. You would have to hash and salt it first
-    JSON.parse(getIsChecked())
-      ? localStorage.setItem(
-          "loginDetails",
-          JSON.stringify({
-            email: signInDetails.email,
-            password: signInDetails.password,
-          })
-        )
-      : localStorage.removeItem("loginDetails");
-
     login(signInDetails);
-
-    // This is handling a successfull login
-    isSuccess && data && navigate("/");
-    // Handle the unsuccessful one beneath
   };
+
   useEffect(() => {
     isSuccess && data && navigate("/");
-  }, [isSuccess, data, navigate]);
+    error &&
+      (error.status === 401 || error.originalStatus === 401) &&
+      setIncorrectDetail(true);
+  }, [isSuccess, data, navigate, error]);
 
   const inputContent = signUpInputData.reduce((accum, current, index) => {
     const { type, placeholder, name, icon } = current;
@@ -155,30 +132,16 @@ export default function SignIn() {
             <span>OR</span>
           </div>
           <form action="" onSubmit={handleSubmit} className="signup-form">
+            {incorrectDetail && <span>Email or password is incorrect</span>}
             {inputContent}
             <section>
-              <FormControlLabel
-                label={
-                  <Typography style={{ fontWeight: "700" }}>
-                    Remember me
-                  </Typography>
-                }
-                control={
-                  <Checkbox
-                    sx={sx}
-                    size="small"
-                    checked={isChecked}
-                    onChange={handleCheck}
-                  />
-                }
-              />
               <Link to="/auth/reset-password">Forgot password?</Link>
             </section>
-            <button>Sign In</button>
+            <button>{isLoading ? "Signing in..." : "Sign in"}</button>
           </form>
           <p>
             <span>You don't have an account?</span>
-            <Link to="/auth">{isLoading ? "Signing up" : "Sign Up"}</Link>
+            <Link to="/auth">Sign Up</Link>
           </p>
         </div>
       </section>

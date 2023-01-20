@@ -1,9 +1,11 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { selectTotalFetchedResult } from "../../util/functions";
+import { getTransformed, selectTotalFetchedResult } from "../../util/functions";
 
 import { apiSlice } from "../api";
 
-const usersAdapter = createEntityAdapter();
+const usersAdapter = createEntityAdapter({
+  selectId: (user) => user._id,
+});
 
 const initialState = usersAdapter.getInitialState();
 
@@ -11,7 +13,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserById: builder.query({
       query: (userId) => `/users/${userId}`,
-      transformResponse: (response) => response,
+      transformResponse: (response) => getTransformed(response),
       providesTags: (result, error, id) => [{ type: "Users", id }],
     }),
     getUsersById: builder.query({
@@ -21,8 +23,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         }
         return `/users?id=${userIds}&_start=${start}&_end=${end}`;
       },
-      transformResponse: (response) =>
-        usersAdapter.setAll(initialState, response),
+      transformResponse: (response) => getTransformed(response, usersAdapter),
       providesTags: (result, error, arg) => [
         { type: "Users", id: "List" },
         ...result.ids.map((id) => ({ type: "Users", id })),
@@ -31,8 +32,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
     getUsersByIdExceptions: builder.query({
       query: ({ userIds, start, end }) =>
         `/users?id_ne=${userIds}&_start=${start}&_end=${end}`,
-      transformResponse: (response) =>
-        usersAdapter.setAll(initialState, response),
+      transformResponse: (response) => getTransformed(response, usersAdapter),
       providesTags: (result, error, arg) => [
         { type: "Users", id: "List" },
         ...result.ids.map((id) => ({ type: "Users", id })),
@@ -43,7 +43,12 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         url: "/auth/register",
         method: "POST",
         body: credentials,
+        credentials: "include",
       }),
+      transformResponse: (response) => {
+        sessionStorage.setItem("authToken", response.token);
+        return response;
+      },
       invalidatesTags: [{ type: "Users", id: "List" }],
     }),
     userSignin: builder.mutation({
@@ -56,13 +61,13 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
       }),
       transformResponse: (response) => {
         sessionStorage.setItem("authToken", response.token);
-
         return response;
       },
       invalidatesTags: [{ type: "Users", id: "List" }],
     }),
     getAuthUser: builder.query({
       query: () => "/users/authUser",
+      transformResponse: (response) => getTransformed(response),
       providesTags: (result, error, arg) => [{ type: "Users", id: "auth" }],
     }),
   }),
@@ -85,4 +90,18 @@ export const {
   selectById: selectFetchedUsersById,
 } = usersAdapter.getSelectors((state) =>
   selectTotalFetchedResult(state, selectedEndPoints, initialState)
+);
+
+export const selectUserIdsByArgs = createSelector(
+  (state, originalArgs) => ({ state, originalArgs }),
+  ({ state, originalArgs }) => {
+    const usersData = selectTotalFetchedResult(
+      state,
+      selectedEndPoints,
+      initialState,
+      originalArgs
+    );
+    return usersData?.ids || [];
+  },
+  []
 );

@@ -13,7 +13,7 @@ const postSchema = new schema({
   mediaType: { type: String, default: "", enum: ["", "image", "video"] },
   media: { type: [{ src: String, alt: String }], default: "" },
   likes: { type: [engagementSchema], default: [] },
-  repost: { type: [engagementSchema], default: [] },
+  reposts: { type: [engagementSchema], default: [] },
   visibleFor: {
     type: String,
     enum: ["Public", "Friends", "Only me"],

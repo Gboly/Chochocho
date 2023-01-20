@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   useGetAuthUserQuery,
   useGetUserByIdQuery,
 } from "./app/api-slices/usersApiSlice";
 import { useMemo, useState, useRef, createContext } from "react";
-import { sortByViewedStatus } from "./util/functions";
+import {
+  findByIdKey,
+  getStoryAuthors,
+  sortByViewedStatus,
+} from "./util/functions";
 import { GeneralContext } from "./routes/Router";
 import Spinner from "./components/Spinner/Spinner";
 import PostImageFullscreen from "./feaures/posts/post-img-fullscreen/PostImgFullscreen";
@@ -20,20 +24,35 @@ import {
 } from "./layout/layoutSlice";
 import { useSelector } from "react-redux";
 import { getFullscreenState } from "./feaures/posts/post-excerpt/postExcerptSlice";
+import { useNavigate } from "react-router-dom";
 
 export default function App({ children }) {
+  const navigate = useNavigate();
   // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
   // There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext.
-  // #3
-  // const authUserId = 1;
-  // const { data: authUser } = useGetUserByIdQuery(authUserId);
-  const { data: authUser } = useGetAuthUserQuery();
-  console.log(authUser);
-  const isFollowing = (userId) => (authUser?.following || []).includes(userId);
-  const isFollower = (userId) => (authUser?.followers || []).includes(userId);
-  const isAuth = (userId) => authUser?.id === userId;
+  const { data, isError, error } = useGetAuthUserQuery();
 
-  const groupedUsers = useMemo(() => sortByViewedStatus(authUser), [authUser]);
+  useEffect(() => {
+    // Handle other types of error by creating an error route to be navigated.
+    error && error.status === 401 && navigate("/auth/sign-in");
+  }, [error, navigate]);
+
+  const { authUser, isFollowing, isFollower, isAuth, groupedUsers } =
+    useMemo(() => {
+      const authUser = JSON.parse(JSON.stringify(data || ""));
+      const isFollowing = (userId) =>
+        findByIdKey(authUser?.following, "userId", userId);
+      const isFollower = (userId) =>
+        findByIdKey(authUser?.followers, "userId", userId);
+      const isAuth = (userId) => authUser?.id === userId;
+
+      // The temporary json-server had otherStoryAuthors in the user schema. I worked with this. I Withdrew this from the mongoDB schema, so in order to avoid modifying the codebase, I would simply mutate the authUser to include this property.
+      authUser &&
+        (authUser.otherStoryAuthors = getStoryAuthors(authUser?.otherStories));
+      const groupedUsers = sortByViewedStatus(authUser);
+
+      return { authUser, isFollowing, isFollower, isAuth, groupedUsers };
+    }, [data]);
 
   const pageNodes = useRef();
   const videoPostNode = useRef();
