@@ -22,6 +22,7 @@ import {
 } from "../../../util/functions";
 import { useContext } from "react";
 import { GeneralContext } from "../../../routes/Router";
+import AuthError from "../../../pages/sign-in/AuthError";
 
 export default function PostReaction({
   postId,
@@ -39,7 +40,7 @@ export default function PostReaction({
   const {
     authUser: { id: authUserId },
   } = useContext(GeneralContext);
-  const [react] = useReactToPostMutation();
+  const [react, { error }] = useReactToPostMutation();
 
   const [isLiked, isReposted] = useMemo(() => {
     const isLiked = post.likes.some(({ userId }) => userId === authUserId);
@@ -161,6 +162,7 @@ export default function PostReaction({
           <ShareOutlinedIcon style={{ ...iconStyle, fontSize: "1.4rem" }} />
         </i>
       </span>
+      <AuthError error={error} />
     </div>
   );
 }

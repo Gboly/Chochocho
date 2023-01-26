@@ -23,13 +23,14 @@ import { GeneralContext } from "../../routes/Router";
 import { useGetPostsQuery } from "../../app/api-slices/postsApiSlice";
 import PostList from "../../feaures/posts/post-list/PostList";
 import Spinner from "../../components/Spinner/Spinner";
+import AuthError from "../sign-in/AuthError";
 
 export const HomeContext = createContext();
 
 const initialPage = { skip: 0, limit: 1 };
 export default function Home() {
   const [postRange, setPostRange] = useState(initialPage);
-  const { isLoading } = useGetPostsQuery(postRange);
+  const { isLoading, error } = useGetPostsQuery(postRange);
   const createPostIsActive = useSelector(getCreatePostState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
 
@@ -96,6 +97,8 @@ export default function Home() {
           <RightBar />
         </div>
       </ScrollCache>
+
+      <AuthError error={error} />
     </>
   );
 }

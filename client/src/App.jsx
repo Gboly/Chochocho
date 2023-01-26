@@ -24,18 +24,12 @@ import {
 } from "./layout/layoutSlice";
 import { useSelector } from "react-redux";
 import { getFullscreenState } from "./feaures/posts/post-excerpt/postExcerptSlice";
-import { useNavigate } from "react-router-dom";
+import AuthError from "./pages/sign-in/AuthError";
 
 export default function App({ children }) {
-  const navigate = useNavigate();
   // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
   // There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext.
-  const { data, isError, error } = useGetAuthUserQuery();
-
-  useEffect(() => {
-    // Handle other types of error by creating an error route to be navigated.
-    error && error.status === 401 && navigate("/auth/sign-in");
-  }, [error, navigate]);
+  const { data, error } = useGetAuthUserQuery();
 
   const { authUser, isFollowing, isFollower, isAuth, groupedUsers } =
     useMemo(() => {
@@ -95,6 +89,8 @@ export default function App({ children }) {
 
       {opaqueOverlayIsOpen && <OpaqueOverlay />}
       {TransparentOverlayIsOpen && <TransparentOverlay />}
+
+      <AuthError error={error} />
     </GeneralContext.Provider>
   );
 }
