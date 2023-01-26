@@ -14,6 +14,7 @@ import {
   selectFetchedUsersById,
   useGetUsersByIdQuery,
 } from "../../../app/api-slices/usersApiSlice";
+import { useEffect } from "react";
 
 const start = 0;
 const end = 3;
@@ -35,9 +36,14 @@ export default function Likes({ likes }) {
     end,
   });
 
+  // useEffect(() => {
+  //   console.log(likes, usersThatLikedResult);
+  // }, [likes, usersThatLikedResult]);
+
   const isFetched = (userId) =>
     (usersThatLikedResult || []).ids?.includes(userId) || false;
-  const content = (usersThatLikedResult?.ids || []).map((userId) => {
+
+  const content = likes.map(({ userId }) => {
     return isFetched(userId) && <Liked key={userId} userId={userId} />;
   });
 

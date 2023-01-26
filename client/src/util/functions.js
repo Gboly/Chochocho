@@ -377,7 +377,7 @@ export const attachIdProperty = (responseData, endpoint, args) => {
   const attach = (item) => {
     item.id = item._id;
     args && (item.fetchArgs = args);
-    endpoint && (item.fetchEndpoint = endpoint);
+    endpoint && (item.fetchEndPoint = endpoint);
   };
   if (Array.isArray(responseData)) {
     return responseData.map((item) => {
