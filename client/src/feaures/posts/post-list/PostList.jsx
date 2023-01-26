@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import {
   selectPostsIds,
   selectRegularPostIds,
+  selectRegularPosts,
 } from "../../../app/api-slices/postsApiSlice";
 import { selectPostIdsByUserId } from "../../../app/api-slices/postsApiSlice";
 import {
@@ -15,7 +16,7 @@ import { useParams } from "react-router-dom";
 import { useCallback } from "react";
 
 const PostList = ({ postIds, comment }) => {
-  const homePostIds = useSelector(selectRegularPostIds);
+  const homePosts = useSelector(selectRegularPosts);
   const hiddenPosts = useSelector(getHiddenPosts);
   const removedPosts = useSelector(getRemovedPosts);
 
@@ -33,7 +34,7 @@ const PostList = ({ postIds, comment }) => {
 
   // The condition is to check if the current page is either the profile page or home page
   //const postList = (userId ? userPostIds : allPostIds)
-  const postList = (postIds || (userId ? userPostIds : homePostIds))
+  const postList = (postIds || (userId ? userPostIds : homePosts?.ids || []))
     .filter((id) => !removedPosts.includes(id))
     .reduce((accum, current) => {
       if (hiddenPosts.includes(current)) {

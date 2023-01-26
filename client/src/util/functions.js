@@ -228,7 +228,7 @@ export const getBasePath = (pathName) => {
 };
 
 export const unNormalize = (data) => {
-  const values = Object.values(data.entities);
+  const values = Object.values(data?.entities || {});
   // Object.defineProperties related methods is usually read-only. This line creates a deep clone to ensure it is read&write again
   return JSON.parse(JSON.stringify(values));
 };
@@ -373,22 +373,30 @@ export const findByIdKey = (array, key, id) =>
   array.some((item) => item[key] === id);
 
 // The default identity for each document is denoted by "_id". Now, i want the identity to accessible with "id"
-export const attachIdProperty = (responseData) => {
+export const attachIdProperty = (responseData, endpoint, args) => {
+  const attach = (item) => {
+    item.id = item._id;
+    args && (item.fetchArgs = args);
+    endpoint && (item.fetchEndpoint = endpoint);
+  };
   if (Array.isArray(responseData)) {
     return responseData.map((item) => {
-      item.id = item._id;
+      attach(item);
       return item;
     });
   } else {
-    responseData.id = responseData._id;
+    attach(responseData);
     return responseData;
   }
 };
 
-export const getTransformed = (response, adapter) =>
+export const getTransformed = (response, adapter, endpoint, args) =>
   response &&
   (adapter
-    ? adapter.setAll(adapter.getInitialState(), attachIdProperty(response))
+    ? adapter.setAll(
+        adapter.getInitialState(),
+        attachIdProperty(response, endpoint, args)
+      )
     : attachIdProperty(response));
 
 export const getAnArrayOfSpecificKeyPerObjectInArray = (
@@ -421,6 +429,10 @@ export const getStoryAuthors = (otherStories) => {
   );
   const uniqueAuthorIds = [...new Set(authorIds)];
   return uniqueAuthorIds.map((userId) => ({ userId }));
+};
+
+export const removeFromAnArray = (array, key, value) => {
+  return array.filter((item) => item[key] !== value);
 };
 
 //export const removeSessionToken = () => sessionStorage.removeItem("authToken");

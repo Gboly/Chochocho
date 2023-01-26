@@ -1,6 +1,11 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "../api";
-import { getTransformed, selectTotalFetchedResult } from "../../util/functions";
+import {
+  getTransformed,
+  removeFromAnArray,
+  selectTotalFetchedResult,
+  unNormalize,
+} from "../../util/functions";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post._id,
@@ -15,7 +20,10 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       query: ({ skip, limit }) =>
         `/posts?type=post&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
-      transformResponse: (response) => getTransformed(response, postsAdapter),
+      transformResponse: (response, meta, args) => {
+        // The args are attached to each post data to allow for easy access when making optimistic update
+        return getTransformed(response, postsAdapter, "getPosts", args);
+      },
       providesTags: (result, error, arg) =>
         result && [
           { type: "Posts", id: "List" },
@@ -26,7 +34,8 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       query: ({ userId, skip, limit }) =>
         `/posts?userId=${userId}&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
-      transformResponse: (response) => getTransformed(response, postsAdapter),
+      transformResponse: (response, _, args) =>
+        getTransformed(response, postsAdapter, "getPostsByUserId", args),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Posts", id: "User" },
@@ -37,12 +46,37 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       query: ({ ids, skip, limit }) =>
         `/posts?id=${ids}&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
-      transformResponse: (response) => getTransformed(response, postsAdapter),
+      transformResponse: (response, _, args) =>
+        getTransformed(response, postsAdapter, "getPostComments", args),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Comments", id: "List" },
           ...result.ids.map((id) => ({ type: "Comments", id })),
         ],
+    }),
+    reactToPost: builder.mutation({
+      query: ({ postId, type }) => ({
+        url: `/posts/${postId}/react`,
+        method: "PUT",
+        body: { type },
+        credentials: "include",
+      }),
+      async onQueryStarted(
+        { postId, type, fetchType: { name, args }, update },
+        { dispatch, queryFulfilled }
+      ) {
+        const patchResult = dispatch(
+          extendedPostsApiSlice.util.updateQueryData(name, args, (draft) => {
+            const post = draft.entities[postId];
+            post && (post[type] = update());
+          })
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          patchResult.undo();
+        }
+      },
     }),
   }),
 });
@@ -51,6 +85,7 @@ export const {
   useGetPostsQuery,
   useGetPostCommentsQuery,
   useGetPostsByUserIdQuery,
+  useReactToPostMutation,
 } = extendedPostsApiSlice;
 
 const selectedEndPoints = ["getPosts", "getPostComments", "getPostsByUserId"];
@@ -72,7 +107,7 @@ export const {
 //   }, [])
 // );
 const regularPostsEndPoint = ["getPosts"];
-export const selectRegularPostIds = createSelector(
+export const selectRegularPosts = createSelector(
   (state) => state,
   (state) => {
     const regularPostData = selectTotalFetchedResult(
@@ -80,7 +115,7 @@ export const selectRegularPostIds = createSelector(
       regularPostsEndPoint,
       initialState
     );
-    return regularPostData?.ids || [];
+    return regularPostData || [];
   },
   []
 );

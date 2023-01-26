@@ -10,7 +10,7 @@ import { GeneralContext } from "../../../../routes/Router";
 
 export default function CreatePostIdle({ placeholder }) {
   const {
-    authUser: { profileImage },
+    authUser: { id, profileImage },
   } = useContext(GeneralContext);
   return (
     <div className="create-container">
@@ -18,7 +18,7 @@ export default function CreatePostIdle({ placeholder }) {
         <div className="create-middle-text">
           <HomeUserAvatar
             //#3
-            userId={1}
+            userId={id}
             src={profileImage}
             size="2.2"
             style={{ marginRight: "1rem" }}

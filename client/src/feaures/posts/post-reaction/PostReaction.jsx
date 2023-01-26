@@ -3,17 +3,25 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { openPostShare } from "../../../app/actions/homeActions";
 import { iconStyle } from "../../../util/iconDescContent";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShareFromSquare } from "@fortawesome/free-regular-svg-icons";
 import { faCommentDots } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as regularHeart } from "@fortawesome/free-regular-svg-icons";
 import { faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
-import { selectPostById } from "../../../app/api-slices/postsApiSlice";
+import {
+  selectPostById,
+  useReactToPostMutation,
+} from "../../../app/api-slices/postsApiSlice";
 import { selectPostTotalComments } from "../../comments/commentsApiSlice";
 import { postShareType } from "../../../util/types";
-import { showPopupOnTransparentOverlay } from "../../../util/functions";
+import {
+  removeFromAnArray,
+  showPopupOnTransparentOverlay,
+} from "../../../util/functions";
+import { useContext } from "react";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function PostReaction({
   postId,
@@ -21,7 +29,6 @@ export default function PostReaction({
   visibleFor,
   comment,
 }) {
-  const dispatch = useDispatch();
   const post = useSelector((state) => selectPostById(state, postId));
   const likesTotal = (post?.likes || []).length;
   const repostsTotal = (post?.reposts || []).length;
@@ -29,13 +36,34 @@ export default function PostReaction({
     selectPostTotalComments(state, postId)
   );
 
-  const [{ like: isLiked, repost: isReposted }, setIsChecked] = useState({
-    like: false,
-    repost: false,
-  });
+  const {
+    authUser: { id: authUserId },
+  } = useContext(GeneralContext);
+  const [react] = useReactToPostMutation();
+
+  const [isLiked, isReposted] = useMemo(() => {
+    const isLiked = post.likes.some(({ userId }) => userId === authUserId);
+    const isReposted = post.reposts.some(({ userId }) => userId === authUserId);
+    return [isLiked, isReposted];
+  }, [post, authUserId]);
 
   const handleChange = (e) => {
-    setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
+    const type = `${e.target.name}s`;
+
+    const addReaction = () => [...post[type], { userId: authUserId }];
+    const removeReaction = () =>
+      removeFromAnArray(post[type], "userId", authUserId);
+
+    const checked = { likes: isLiked, reposts: isReposted };
+    const update = checked[type] ? removeReaction : addReaction;
+    const args = {
+      postId: post.id,
+      type,
+      fetchType: { name: post.fetchEndPoint, args: post.fetchArgs },
+      update,
+    };
+
+    react(args);
   };
   const handleClick = (e, action) => {
     e && e.stopPropagation && e.stopPropagation();

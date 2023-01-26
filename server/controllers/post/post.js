@@ -149,7 +149,6 @@ const updatePost = async (req, res) => {
 const reactToPost = async (req, res) => {
   const { type } = req.body;
   const { id: userId } = req.user;
-
   // check if the likes or repost already contain the authUser as one of its userId. If, it does, make it undo the reaction.(e.g; like and dislike)
   try {
     const post = await Post.findById({
@@ -173,8 +172,9 @@ const reactToPost = async (req, res) => {
       await sendNotification({
         userId,
         postId: post.id,
-        snippet: deriveSnippet(content, mediaType),
-        type,
+        snippet: deriveSnippet(post.content, post.mediaType),
+        //type comes in plural form i.e with the s. This s needs to removed.
+        type: type.slice(0, type.length - 1),
         recipient: post.userId,
       });
     }
