@@ -86,11 +86,14 @@ const getPosts = async (req, res) => {
         ],
       };
   try {
-    const posts = await Post.find(query).skip(_start).limit(_end);
+    const posts = await Post.find(query)
+      .sort({ date: -1 })
+      .skip(_start)
+      .limit(_end);
 
     posts.length > 0
       ? res.status(200).json(posts)
-      : res.status(404).json({ error: "No post found" });
+      : res.status(204).json({ error: "No post found" });
   } catch (error) {
     console.log(error);
     return res

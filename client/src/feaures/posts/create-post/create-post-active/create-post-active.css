@@ -8,6 +8,9 @@
     overflow-x: hidden;
     max-height: calc(100vh - 7.5rem);
 }
+.create-container-transparent{
+    opacity: 0;
+}
 .create-container-focus::-webkit-scrollbar{
     width: 0.25rem;     
 }

@@ -252,15 +252,39 @@ const selectQueriesData = (queries, selectedEndPoints, originalArgs) =>
     return accum;
   }, []);
 
-const mergeSelectedQueriesData = (selectedQueriesData, initialState) =>
-  selectedQueriesData.reduce((accum, current) => {
+// const mergeSelectedQueriesData = (selectedQueriesData, initialState) => {
+
+//   return selectedQueriesData.reduce((accum, current) => {
+//     accum = {
+//       // Removing duplicates from ids(if any)
+//       ids: [...new Set([...accum.ids, ...current.ids])],
+//       entities: { ...accum.entities, ...current.entities },
+//     };
+//     return accum;
+//   }, initialState);
+// };
+const mergeSelectedQueriesData = (selectedQueriesData, initialState) => {
+  // Merging entities like this deals with duplicates easily.
+  const accumEntities = selectedQueriesData.reduce((accum, current) => {
+    accum = { ...accum, ...current.entities };
+    return accum;
+  }, {});
+
+  const sortedUniqueEntities = Object.values(accumEntities).sort((a, b) =>
+    // some data does not have date as in their schema so this takes care of it
+    b?.date ? b.date.localeCompare(a.date) : 0
+  );
+
+  const sortedUniqueData = sortedUniqueEntities.reduce((accum, current) => {
     accum = {
-      // Removing duplicates from ids(if any)
-      ids: [...new Set([...accum.ids, ...current.ids])],
-      entities: { ...accum.entities, ...current.entities },
+      ids: [...accum.ids, current.id],
+      entities: { ...accum.entities, [current.id]: current },
     };
     return accum;
   }, initialState);
+
+  return sortedUniqueData;
+};
 
 export const selectTotalFetchedResult = (
   state,

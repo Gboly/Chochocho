@@ -24,7 +24,7 @@ const postSchema = new schema({
   // While for "comment", only the parents field would be populated by passing its value with the req.
   parents: { type: [engagementSchema], default: [] },
   comments: { type: [engagementSchema], default: [] },
-  date: { type: Date, default: new Date() },
+  date: { type: Date, default: new Date().toISOString() },
 });
 
 const Post = mongoose.model("post", postSchema);

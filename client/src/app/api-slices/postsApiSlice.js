@@ -78,6 +78,29 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    addPost: builder.mutation({
+      query: (body) => ({
+        url: "/posts",
+        method: "POST",
+        body,
+        credentials: "include",
+      }),
+      // invalidatesTags: (result, error, { type }) =>
+      //   type === "comment"
+      //     ? [{ type: "Comments", id: "List" }]
+      //     : [{ type: "Posts", id: "List" }],
+    }),
+    // addComment: builder.mutation({
+    //   query: (body) => ({
+    //     url: "/posts",
+    //     method: "POST",
+    //     body,
+    //     credentials: "include",
+    //   }),
+    //   invalidatesTags: (result, error, arg) => [
+    //     { type: "Comments", id: "List" },
+    //   ],
+    // }),
   }),
 });
 
@@ -86,6 +109,8 @@ export const {
   useGetPostCommentsQuery,
   useGetPostsByUserIdQuery,
   useReactToPostMutation,
+  useAddPostMutation,
+  useAddCommentMutation,
 } = extendedPostsApiSlice;
 
 const selectedEndPoints = ["getPosts", "getPostComments", "getPostsByUserId"];

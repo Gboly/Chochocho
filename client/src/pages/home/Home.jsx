@@ -27,10 +27,15 @@ import AuthError from "../sign-in/AuthError";
 
 export const HomeContext = createContext();
 
-const initialPage = { skip: 0, limit: 1 };
+// Limit of 1 & 2 works inconsistently.
+const initialPage = { skip: 0, limit: 3 };
 export default function Home() {
   const [postRange, setPostRange] = useState(initialPage);
-  const { isLoading, error } = useGetPostsQuery(postRange);
+  const {
+    isLoading,
+    error,
+    refetch: refetchPosts,
+  } = useGetPostsQuery(postRange);
   const createPostIsActive = useSelector(getCreatePostState);
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
 
@@ -49,14 +54,21 @@ export default function Home() {
   useEffect(() => {
     const timeout = setTimeout(
       () =>
-        setPostRange(({ limit }) => ({
-          skip: limit,
-          limit: limit + initialPage.limit,
+        setPostRange(({ skip, limit }) => ({
+          skip: limit !== initialPage.limit ? limit : skip + limit,
+          limit: initialPage.limit,
         })),
       10000
     );
     return () => clearTimeout(timeout);
   }, []);
+
+  // Whenever a new post is added by the authorized user, the home page is refreshed so that the new post is viewed easily by the user
+  // This function sets the post range to the initial page
+  const refresh = () => {
+    setPostRange(({ skip, limit }) => ({ skip: 0, limit: skip + limit }));
+    refetchPosts();
+  };
 
   return (
     <>
@@ -84,7 +96,11 @@ export default function Home() {
                 createPostIsActive ? "home-create-post-container-active" : ""
               }`}
             >
-              <CreatePost placeholder={homeCreatePostPlaceholder} />
+              <CreatePost
+                placeholder={homeCreatePostPlaceholder}
+                type={"post"}
+                invalidatePostList={refresh}
+              />
             </section>
 
             <section>

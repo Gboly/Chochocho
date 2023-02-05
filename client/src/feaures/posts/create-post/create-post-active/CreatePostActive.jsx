@@ -7,7 +7,7 @@ import { visibilityOptions } from "../../../../util/formRadioOptions";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { iconStyle } from "../../../../util/iconDescContent";
 import { useDispatch, useSelector } from "react-redux";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import {
   closeCreatePost,
   hideVisibiltyOptions,
@@ -21,6 +21,7 @@ import {
   getVisibilityOptionsState,
   getUploadedMedia,
   getPostText,
+  getNewPostDetails,
 } from "../createPostSlice";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import {
@@ -28,8 +29,15 @@ import {
   showPopupOnOpaqueOverlay,
 } from "../../../../util/functions";
 import { GeneralContext } from "../../../../routes/Router";
+import { useAddPostMutation } from "../../../../app/api-slices/postsApiSlice";
+import AuthError from "../../../../pages/sign-in/AuthError";
 
-export default function CreatePostActive({ placeholder }) {
+export default function CreatePostActive({
+  placeholder,
+  type,
+  parents,
+  invalidatePostList,
+}) {
   const {
     authUser: { profileImage },
   } = useContext(GeneralContext);
@@ -40,16 +48,27 @@ export default function CreatePostActive({ placeholder }) {
   const { type: fileType, src, reading } = useSelector(getUploadedMedia);
   const postText = useSelector(getPostText);
 
+  const [addPost, { isSuccess, isLoading, error }] = useAddPostMutation();
+  const newPost = useSelector(getNewPostDetails);
+
   const addNewPost = (e) => {
     e && e.preventDefault();
-    console.log({
-      type: "post",
-      content: postText,
-      mediaType: fileType && fileType.split("/")[0],
-      media: src,
-      visibleFor: visibilityOptions[valueId],
-    });
+    const args = {
+      ...newPost,
+      type,
+      parents: parents || [],
+      date: new Date().toISOString(),
+    };
+
+    (postText || src) && addPost(args);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      invalidatePostList();
+      closePopupOnOpaqueOverlay(closeCreatePost);
+    }
+  }, [isSuccess, invalidatePostList]);
 
   const mediasection = reading ? (
     <Spinner sxx={"media-load-spinner"} />
@@ -89,7 +108,10 @@ export default function CreatePostActive({ placeholder }) {
 
   return (
     <div
-      className="create-container create-container-focus"
+      className={`create-container create-container-focus ${
+        // Closing this component immediately the request is sent affects the access to the isSuccess and isLoading result. This is some sort of work-around to make this component transparent till the request is succesful and at this point, its okay to close the component.
+        isLoading ? "create-container-transparent" : ""
+      }`}
       onClick={() =>
         visibilityOptionsIsOpen && dispatch(hideVisibiltyOptions())
       }
@@ -156,6 +178,7 @@ export default function CreatePostActive({ placeholder }) {
           </div>
         </div>
       </form>
+      <AuthError error={error} />
     </div>
   );
 }

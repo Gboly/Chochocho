@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { visibilityOptions } from "../../../util/formRadioOptions";
 
 const initialState = {
   createPost: false,
   editPost: { isOpen: false, id: "" },
   visibiltyOptionsState: { isOpen: false, valueId: 0 },
   postText: "",
+  // Make provision for more than one picture
   uploadedMedia: { type: "", src: "", reading: false },
   writeAlt: { isOpen: false, value: "", type: "" },
 };
@@ -108,5 +110,20 @@ export const getPostText = (state) => state.createPost.postText;
 export const getUploadedMedia = (state) => state.createPost.uploadedMedia;
 
 export const getWriteAltState = (state) => state.createPost.writeAlt;
+
+export const getNewPostDetails = ({ createPost }) => {
+  const {
+    postText,
+    uploadedMedia: { type, src },
+    writeAlt: { value },
+    visibiltyOptionsState: { valueId },
+  } = createPost;
+  const content = postText;
+  const mediaType = type ? type.split("/")[0] : "";
+  const media = [{ src, alt: value }];
+  const visibleFor = visibilityOptions[valueId];
+
+  return { content, mediaType, media, visibleFor };
+};
 
 // export const getPostByCurrent

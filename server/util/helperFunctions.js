@@ -60,7 +60,7 @@ const deriveStoryQueryIds = (authUser, visibilityPerStory) => {
 
 const extractMentionedUsers = (content) => {
   const matches = content.match(/\s@\w+/g);
-  return matches.map((item) => item.slice(2));
+  return (matches || []).map((item) => item.slice(2));
 };
 
 export {

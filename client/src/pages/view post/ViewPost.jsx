@@ -27,6 +27,7 @@ import useOffsetTop from "../../util/useCallbackRef";
 import { useCallback } from "react";
 import { GeneralContext } from "../../routes/Router";
 import PostList from "../../feaures/posts/post-list/PostList";
+import AuthError from "../sign-in/AuthError";
 
 export const ViewPostContext = createContext();
 
@@ -48,10 +49,11 @@ export default function ViewPost() {
   const [parents, setParents] = useState([]);
   const [parentsSearchQuery, setParentsSearchQuery] = useState("");
 
-  const { isLoading: commentIsLoading } = useGetPostCommentsQuery({
-    ids: commentsSearchQuery,
-    ...postRange,
-  });
+  const { isLoading: commentIsLoading, error: commentsFetchError } =
+    useGetPostCommentsQuery({
+      ids: commentsSearchQuery,
+      ...postRange,
+    });
 
   useEffect(() => {
     const timeout = setTimeout(
@@ -68,13 +70,15 @@ export default function ViewPost() {
   // This particular post would have been loaded as a comment or regular post(for direct post) already by the parent.
   // The issue now is when the page link is loaded directly on the browser, the comment is yet to be loaded then.
   // So, this is making sure it is loaded even in such scenario.
-  const { isLoading: viewPostExcerptIsLaoding } = useGetPostCommentsQuery({
-    ids: postId,
-  });
+  const { isLoading: viewPostExcerptIsLaoding, error: postFetchError } =
+    useGetPostCommentsQuery({
+      ids: postId,
+    });
 
-  const { isSuccess: parentsLoadIsSuccessful } = useGetPostCommentsQuery({
-    ids: parentsSearchQuery,
-  });
+  const { isSuccess: parentsLoadIsSuccessful, error: parentsFetchError } =
+    useGetPostCommentsQuery({
+      ids: parentsSearchQuery,
+    });
 
   useEffect(() => {
     setComments(post?.comments || []);
@@ -166,6 +170,9 @@ export default function ViewPost() {
           <RightBar />
         </div>
       </ScrollCache>
+      <AuthError
+        error={postFetchError || commentsFetchError || parentsFetchError}
+      />
     </>
   );
 }
