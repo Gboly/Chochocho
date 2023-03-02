@@ -5,9 +5,12 @@ import Story from "../../feaures/right-bar/story/Story";
 
 import PostListLoader from "../../feaures/posts/post-list/postListLoader";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getCreatePostState } from "../../feaures/posts/create-post/createPostSlice";
-import { getPostOptionState } from "../../feaures/posts/post-excerpt/postExcerptSlice";
+import {
+  getPostOptionState,
+  getRefreshPostsState,
+} from "../../feaures/posts/post-excerpt/postExcerptSlice";
 
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
 import {
@@ -17,6 +20,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
 } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { GeneralContext } from "../../routes/Router";
@@ -24,16 +28,20 @@ import { useGetPostsQuery } from "../../app/api-slices/postsApiSlice";
 import PostList from "../../feaures/posts/post-list/PostList";
 import Spinner from "../../components/Spinner/Spinner";
 import AuthError from "../sign-in/AuthError";
+import { newRange } from "../../util/functions";
+import { deactivateRefresh } from "../../app/actions/homeActions";
 
 export const HomeContext = createContext();
 
 // Limit of 1 & 2 works inconsistently.
 const initialPage = { skip: 0, limit: 3 };
 export default function Home() {
+  const dispatch = useDispatch();
   const [postRange, setPostRange] = useState(initialPage);
   const {
     isLoading,
     error,
+    isSuccess,
     refetch: refetchPosts,
   } = useGetPostsQuery(postRange);
   const createPostIsActive = useSelector(getCreatePostState);
@@ -54,10 +62,7 @@ export default function Home() {
   useEffect(() => {
     const timeout = setTimeout(
       () =>
-        setPostRange(({ skip, limit }) => ({
-          skip: limit !== initialPage.limit ? limit : skip + limit,
-          limit: initialPage.limit,
-        })),
+        setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
       10000
     );
     return () => clearTimeout(timeout);
@@ -65,10 +70,10 @@ export default function Home() {
 
   // Whenever a new post is added by the authorized user, the home page is refreshed so that the new post is viewed easily by the user
   // This function sets the post range to the initial page
-  const refresh = () => {
+  const refresh = useCallback(() => {
     setPostRange(({ skip, limit }) => ({ skip: 0, limit: skip + limit }));
     refetchPosts();
-  };
+  }, [refetchPosts]);
 
   return (
     <>

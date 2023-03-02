@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { startOfWeek } from "date-fns";
 
 const initialState = {
   postOptionsState: { isOpen: false, postId: "", optionType: "" },
@@ -14,6 +15,7 @@ const initialState = {
   customVideoPlaybackSpeed: { isOpen: false, rateId: 3, id: "" },
   // #11
   engagedUsersListState: { isOpen: false, type: "", userIds: [] },
+  refreshPosts: false,
 };
 
 export const postExcerptSlice = createSlice({
@@ -140,6 +142,14 @@ export const postExcerptSlice = createSlice({
       state.customVideoPlaybackSpeed.rateId = action.payload;
       return state;
     },
+    activateRefresh: (state, action) => ({
+      ...state,
+      refreshPosts: true,
+    }),
+    deactivateRefresh: (state, action) => ({
+      ...state,
+      refreshPosts: false,
+    }),
   },
 });
 
@@ -173,3 +183,5 @@ export const getPlaybackRateState = (state) =>
 // #11
 export const getEngagedUsersListState = (state) =>
   state.postExcerpt.engagedUsersListState;
+
+export const getRefreshPostsState = (state) => state.postExcerpt.refreshPosts;

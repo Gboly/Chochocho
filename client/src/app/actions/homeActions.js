@@ -43,4 +43,6 @@ export const {
   setPlaybackRate,
   openEngagedUsersList,
   closeEngagedUsersList,
+  activateRefresh,
+  deactivateRefresh,
 } = postExcerptSlice.actions;

@@ -91,9 +91,34 @@ const getPosts = async (req, res) => {
       .skip(_start)
       .limit(_end);
 
-    posts.length > 0
-      ? res.status(200).json(posts)
-      : res.status(204).json({ error: "No post found" });
+    res.status(200).json(posts);
+
+    // posts.length > 0
+    //   ? res.status(200).json(posts)
+    //   : res.status(204).json({ error: "No post found" });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
+const getPostCommentsOrParents = async (req, res) => {
+  const { id, postRel } = req.params;
+  const { _start, _end } = req.query;
+  try {
+    const post = await Post.findById(id);
+    const ids = getAnArrayOfSpecificKeyPerObjectInArray(
+      post[postRel],
+      "postId"
+    );
+    const postCommentsOrParents = await Post.find({ _id: ids })
+      .sort({ date: -1 })
+      .skip(_start)
+      .limit(_end);
+
+    res.status(200).json(postCommentsOrParents);
   } catch (error) {
     console.log(error);
     return res
@@ -206,6 +231,7 @@ const deletePost = async (req, res) => {
 export {
   addNewPost,
   getPosts,
+  getPostCommentsOrParents,
   getPostById,
   updatePost,
   deletePost,

@@ -3,6 +3,7 @@ import {
   addNewPost,
   deletePost,
   getPostById,
+  getPostCommentsOrParents,
   getPosts,
   getPostsByAuthUser,
   reactToPost,
@@ -13,6 +14,7 @@ const router = Router();
 
 router.route("/").post(addNewPost).get(getPosts);
 router.route("/:id").get(getPostById).patch(updatePost).delete(deletePost);
+router.get("/:id/:postRel", getPostCommentsOrParents);
 router.put("/:id/react", reactToPost);
 router.get("/authUser", getPostsByAuthUser);
 

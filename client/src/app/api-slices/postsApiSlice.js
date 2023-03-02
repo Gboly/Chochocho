@@ -8,7 +8,7 @@ import {
 } from "../../util/functions";
 
 const postsAdapter = createEntityAdapter({
-  selectId: (post) => post._id,
+  selectId: (post) => post?._id || post?.id,
   sortComparer: (a, b) => b.date.localeCompare(a.date),
 });
 
@@ -42,12 +42,28 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
           ...result.ids.map((id) => ({ type: "Posts", id })),
         ],
     }),
-    getPostComments: builder.query({
-      query: ({ ids, skip, limit }) =>
-        `/posts?id=${ids}&_start=${skip || ""}&_end=${limit || ""}`,
+    getPostById: builder.query({
+      query: ({ id, skip, limit }) => `/posts?id=${id}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
         getTransformed(response, postsAdapter, "getPostComments", args),
+      providesTags: (result, error, arg) =>
+        result && [
+          { type: "Comments", id: "List" },
+          ...result.ids.map((id) => ({ type: "Comments", id })),
+        ],
+    }),
+    getPostCommentsOrParents: builder.query({
+      query: ({ id, type, skip, limit }) =>
+        `/posts/${id}/${type}?_start=${skip || ""}&_end=${limit || ""}`,
+      keepUnusedDataFor: 60 * 60 * 24 * 10,
+      transformResponse: (response, _, args) =>
+        getTransformed(
+          response,
+          postsAdapter,
+          "getPostCommentsOrParents",
+          args
+        ),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Comments", id: "List" },
@@ -85,35 +101,34 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         body,
         credentials: "include",
       }),
-      // invalidatesTags: (result, error, { type }) =>
-      //   type === "comment"
-      //     ? [{ type: "Comments", id: "List" }]
-      //     : [{ type: "Posts", id: "List" }],
     }),
-    // addComment: builder.mutation({
-    //   query: (body) => ({
-    //     url: "/posts",
-    //     method: "POST",
-    //     body,
-    //     credentials: "include",
-    //   }),
-    //   invalidatesTags: (result, error, arg) => [
-    //     { type: "Comments", id: "List" },
-    //   ],
-    // }),
+    deletePost: builder.mutation({
+      query: (id) => ({
+        url: `/posts/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
 export const {
   useGetPostsQuery,
-  useGetPostCommentsQuery,
+  useGetPostCommentsOrParentsQuery,
   useGetPostsByUserIdQuery,
+  useGetPostByIdQuery,
   useReactToPostMutation,
   useAddPostMutation,
   useAddCommentMutation,
+  useDeletePostMutation,
 } = extendedPostsApiSlice;
 
-const selectedEndPoints = ["getPosts", "getPostComments", "getPostsByUserId"];
+const selectedEndPoints = [
+  "getPosts",
+  "getPostCommentsOrParents",
+  "getPostsByUserId",
+  "getPostById",
+];
 
 // This provides both regular posts and comments
 export const {
@@ -156,6 +171,21 @@ export const selectPostIdsByUserId = createSelector(
       originalArgs
     );
     return userPostsData?.ids || [];
+  },
+  []
+);
+
+const commentsOrParentsEndpoint = ["getPostCommentsOrParents"];
+export const selectPostCommentsOrParentsIds = createSelector(
+  (state, originalArgs) => ({ state, originalArgs }),
+  ({ state, originalArgs }) => {
+    const data = selectTotalFetchedResult(
+      state,
+      commentsOrParentsEndpoint,
+      initialState,
+      originalArgs
+    );
+    return data?.ids || [];
   },
   []
 );

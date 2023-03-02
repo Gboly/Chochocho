@@ -326,8 +326,12 @@ const usersLastSeenToISO = (usersList) =>
     return user;
   });
 
-const getSortedUsers = (usersList) =>
-  usersList.sort((a, b) => b.lastSeen.localeCompare(a.lastSeen));
+export const sortByDate = (usersList, condition) => {
+  const sortBy = condition || "date";
+  return (usersList ? [...usersList] : []).sort((a, b) =>
+    b[sortBy].localeCompare(a[sortBy])
+  );
+};
 
 const getUsersBasedOnStatus = (users, online) =>
   users.filter(
@@ -340,7 +344,7 @@ const getUsersWithoutActiveStatus = (usersList) =>
 
 export const getUsersBasedOnLastSeen = (usersList) => {
   const updatedUsersList = usersLastSeenToISO(usersList);
-  const sortedUsers = getSortedUsers(updatedUsersList);
+  const sortedUsers = sortByDate(updatedUsersList, "lastSeen");
   const online = getUsersBasedOnStatus(sortedUsers, true);
   const offline = getUsersBasedOnStatus(sortedUsers, false);
   const offActiveStatus = getUsersWithoutActiveStatus(sortedUsers);
@@ -458,5 +462,10 @@ export const getStoryAuthors = (otherStories) => {
 export const removeFromAnArray = (array, key, value) => {
   return array.filter((item) => item[key] !== value);
 };
+
+export const newRange = (skip, limit, initialPage) => ({
+  skip: limit !== initialPage.limit ? limit : skip + limit,
+  limit: initialPage.limit,
+});
 
 //export const removeSessionToken = () => sessionStorage.removeItem("authToken");

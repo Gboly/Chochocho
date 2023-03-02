@@ -5,7 +5,12 @@ import CreatePostActive from "./create-post-active/CreatePostActive";
 import { useSelector } from "react-redux";
 import { getCreatePostState } from "./createPostSlice";
 
-export default function CreatePost({ placeholder, type, invalidatePostList }) {
+export default function CreatePost({
+  placeholder,
+  type,
+  parents,
+  invalidatePostList,
+}) {
   const active = useSelector(getCreatePostState);
 
   return (
@@ -14,6 +19,7 @@ export default function CreatePost({ placeholder, type, invalidatePostList }) {
         <CreatePostActive
           placeholder={placeholder}
           type={type}
+          parents={parents}
           invalidatePostList={invalidatePostList}
         />
       ) : (

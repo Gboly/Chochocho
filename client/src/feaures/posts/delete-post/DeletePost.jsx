@@ -1,14 +1,31 @@
 import "../follow-unfollow-poster/follow-unfollow-poster.css";
 import { useSelector, useDispatch } from "react-redux";
 import { selectUserById } from "../../../app/api-slices/usersApiSlice";
-import { selectPostById } from "../../../app/api-slices/postsApiSlice";
-import { closeDeletePost } from "../../../app/actions/homeActions";
+import {
+  selectPostById,
+  useDeletePostMutation,
+} from "../../../app/api-slices/postsApiSlice";
+import {
+  activateRefresh,
+  closeDeletePost,
+  removePost,
+} from "../../../app/actions/homeActions";
 import { getDeletePostState } from "../post-excerpt/postExcerptSlice";
 import { closePopupOnOpaqueOverlay } from "../../../util/functions";
+import { useEffect } from "react";
 
 export default function DeletePost() {
-  // const { id: deletePostId } = useSelector(getDeletePostState);
+  const dispatch = useDispatch();
+  const { id: postId } = useSelector(getDeletePostState);
   // const post = useSelector((state) => selectPostById(state, deletePostId));
+  const [deletePostById, { error, isSuccess }] = useDeletePostMutation();
+
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(removePost(postId));
+      closePopupOnOpaqueOverlay(closeDeletePost);
+    }
+  }, [isSuccess, dispatch, postId]);
 
   return (
     <div className="ffPost-container">
@@ -26,7 +43,12 @@ export default function DeletePost() {
           >
             Cancel
           </button>
-          <button className="ffPost-button ffPost-submit">Delete</button>
+          <button
+            className="ffPost-button ffPost-submit"
+            onClick={() => deletePostById(postId)}
+          >
+            Delete
+          </button>
         </footer>
       </div>
     </div>
