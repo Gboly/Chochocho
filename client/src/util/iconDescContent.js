@@ -159,10 +159,12 @@ export const storyOptions = [
 
 export const notificationOptions = [
   {
+    id: "readAll",
     desc: "Mark all as read",
     icon: <DoneAllIcon style={iconStyle} />,
   },
   {
+    id: "filter",
     desc: "Filter notifications",
     icon: <FilterAltOutlinedIcon style={iconStyle} />,
   },

@@ -43,7 +43,7 @@ export const TransparentOverlay = () => {
     positionY: "-100vh",
   });
   // X makes it start from where its clicked when this click position should be just some px before its end
-  // subtracting does hard coded values is a personalized design
+  // subtracting those hard coded values is a personalized design
   const getWidth = useCallback(
     (e) =>
       e &&

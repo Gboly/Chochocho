@@ -3,8 +3,6 @@ import RightBar from "../../feaures/right-bar/RightBar";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { iconStyle } from "../../util/iconDescContent";
 import NotificationBlock from "../../feaures/notification-block/NotificationBlock";
-import { notificationOptions } from "../../util/iconDescContent";
-import NotificationOptions from "../../feaures/notification-block/NotificationOptions";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getNotificationOptionsState } from "./notificationSlice";
@@ -12,7 +10,6 @@ import { openNotificationOptions } from "../../app/actions/notificationActions";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { useRef, useContext, useImperativeHandle } from "react";
 import {
-  notificationIdType,
   notificationOptionsType,
   notificationsBasePathType,
 } from "../../util/types";
@@ -20,11 +17,7 @@ import {
   selectNotificationsIds,
   useGetNotificationsQuery,
 } from "../../app/api-slices/notificationsApiSlice";
-import { initialState } from "../../app/api-slices/notificationsApiSlice";
-import {
-  prepareIdsForQuery,
-  showPopupOnTransparentOverlay,
-} from "../../util/functions";
+import { showPopupOnTransparentOverlay } from "../../util/functions";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 
