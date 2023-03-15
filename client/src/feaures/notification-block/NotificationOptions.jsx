@@ -5,9 +5,12 @@ import { notificationOptions } from "../../util/iconDescContent";
 import { useState } from "react";
 import { closePopupOnTransparentOverlay } from "../../util/functions";
 import NavigateWithScrollCache from "../scroll-cache/NavigateWithScrollCache";
+import { useMarkAllAsReadMutation } from "../../app/api-slices/notificationsApiSlice";
 
 export default function NotificationOptions() {
   const navigate = useNavigate();
+
+  const [readAll] = useMarkAllAsReadMutation();
 
   const [route, setRoute] = useState(false);
 
@@ -20,7 +23,6 @@ export default function NotificationOptions() {
   const cleanUp = () => setRoute(false);
 
   const filter = () => setRoute(true);
-  const readAll = () => {};
 
   const action = { filter, readAll };
 

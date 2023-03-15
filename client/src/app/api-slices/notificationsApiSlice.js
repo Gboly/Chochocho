@@ -1,10 +1,11 @@
 import { apiSlice } from "../api";
 import { createEntityAdapter } from "@reduxjs/toolkit";
 import {
+  findByIdKey,
   getTransformed,
   selectTotalFetchedResult,
-  unNormalize,
 } from "../../util/functions";
+import { extendedUsersApiSlice } from "./usersApiSlice";
 
 const notificationsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
@@ -13,19 +14,10 @@ const notificationsAdapter = createEntityAdapter({
 
 export const initialState = notificationsAdapter.getInitialState();
 
-const refineNotification = (response) =>
-  response.map((item) => {
-    item.date = new Date(item.date).toISOString();
-    return item;
-  });
-
 const extendedNotificationsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getNotifications: builder.query({
-      // When using proper backend, the searchQuery is not need because req.user would settle it
       query: ({ skip, limit }) => `/notifications?_start=${skip}&_end=${limit}`,
-      // Normally, i should use this queryState instead of initialState together with upsertMany but it just doesn't produce the right result
-      // I'm combining the prvious result together with the new just so the skip-limit process is better
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, meta, arg) =>
         getTransformed(response, notificationsAdapter, "getNotifications"),
@@ -36,10 +28,67 @@ const extendedNotificationsApiSlice = apiSlice.injectEndpoints({
         ];
       },
     }),
+    viewNotification: builder.mutation({
+      query: ({ notificationId }) => ({
+        url: `/notifications/${notificationId}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+      async onQueryStarted({ notificationId }, { dispatch, queryFulfilled }) {
+        const viewNotn = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              draft.notifications = draft.notifications.map((notification) => {
+                notification.notificationId === notificationId &&
+                  (notification.viewed = true);
+                return notification;
+              });
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          viewNotn.undo();
+        }
+      },
+    }),
+    markAllAsRead: builder.mutation({
+      query: () => ({
+        url: `/notifications/readAll`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        const viewNotn = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              draft.notifications = draft.notifications.map((notification) => {
+                notification.viewed = true;
+                return notification;
+              });
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          viewNotn.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetNotificationsQuery } = extendedNotificationsApiSlice;
+export const {
+  useGetNotificationsQuery,
+  useViewNotificationMutation,
+  useMarkAllAsReadMutation,
+} = extendedNotificationsApiSlice;
 
 const selectedEndPoints = ["getNotifications"];
 export const {

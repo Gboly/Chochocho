@@ -17,7 +17,10 @@ import {
   postType,
   videoType,
 } from "../../util/types";
-import { selectNotificationById } from "../../app/api-slices/notificationsApiSlice";
+import {
+  selectNotificationById,
+  useViewNotificationMutation,
+} from "../../app/api-slices/notificationsApiSlice";
 import { useContext, useState } from "react";
 import { convertToUserFriendlyTime } from "../../util/functions";
 import { useNavigate } from "react-router-dom";
@@ -37,13 +40,18 @@ const viewPostRouteTypes = [
 export default function NotificationBlock({ notificationId, viewed }) {
   const navigate = useNavigate();
 
-  const { isFollowing } = useContext(GeneralContext);
+  const {
+    authUser: { id: authUserId },
+    isFollowing,
+  } = useContext(GeneralContext);
 
   const { postId, userId, date, type, snippet } = useSelector((state) =>
     selectNotificationById(state, notificationId)
   );
 
   const { data: user } = useGetUserByIdQuery(userId);
+
+  const [viewNotification] = useViewNotificationMutation();
 
   const { text } = description.find((item) => item.type === type);
 
@@ -61,6 +69,7 @@ export default function NotificationBlock({ notificationId, viewed }) {
 
   const handleClick = (e) => {
     e && e.stopPropagation && e.stopPropagation();
+    !viewed && viewNotification({ notificationId });
     setRoute(true);
   };
 

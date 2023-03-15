@@ -65,6 +65,23 @@ const updateNotificationViewStatus = async (req, res) => {
   }
 };
 
+const markAllASRead = async (req, res) => {
+  const { id: authUserId } = req.user;
+  try {
+    const updatedUser = await User.updateOne(
+      { _id: authUserId },
+      { "notifications.$[].viewed": true }
+    );
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
 const sendNotification = async ({
   type,
   snippet,
@@ -103,4 +120,5 @@ export {
   addNotification,
   sendNotification,
   updateNotificationViewStatus,
+  markAllASRead,
 };
