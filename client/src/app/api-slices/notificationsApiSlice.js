@@ -1,10 +1,14 @@
 import { apiSlice } from "../api";
 import { createEntityAdapter } from "@reduxjs/toolkit";
-import { selectTotalFetchedResult, unNormalize } from "../../util/functions";
+import {
+  getTransformed,
+  selectTotalFetchedResult,
+  unNormalize,
+} from "../../util/functions";
 
 const notificationsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
-  selectId: (notification) => notification._id,
+  selectId: (notification) => notification?._id,
 });
 
 export const initialState = notificationsAdapter.getInitialState();
@@ -22,13 +26,9 @@ const extendedNotificationsApiSlice = apiSlice.injectEndpoints({
       query: ({ skip, limit }) => `/notifications?_start=${skip}&_end=${limit}`,
       // Normally, i should use this queryState instead of initialState together with upsertMany but it just doesn't produce the right result
       // I'm combining the prvious result together with the new just so the skip-limit process is better
-      transformResponse: (response, meta, { queryState }) => {
-        // const refinedNotification = refineNotification(response);
-        // const presentState = unNormalize(queryState);
-        // const newState = [...presentState, ...refinedNotification];
-        // return notificationsAdapter.setAll(initialState, newState);
-        return notificationsAdapter.setAll(initialState, response);
-      },
+      keepUnusedDataFor: 60 * 60 * 24 * 10,
+      transformResponse: (response, meta, arg) =>
+        getTransformed(response, notificationsAdapter, "getNotifications"),
       providesTags: (result) => {
         return [
           { type: "Notifications", id: "List" },

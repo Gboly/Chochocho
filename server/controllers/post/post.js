@@ -7,6 +7,7 @@ import {
   getMutuals,
   getAnArrayOfSpecificKeyPerObjectInArray,
   extractMentionedUsers,
+  removeFromArray,
 } from "../../util/helperFunctions.js";
 
 const addNewPost = async (req, res) => {
@@ -14,7 +15,7 @@ const addNewPost = async (req, res) => {
   // and then attaching an object of its postId and userId after.
   // This way i can easily pick the last item in the array as the post being commented on.
   const { type, parents, content, mediaType } = req.body;
-  const { id: userId, followers, following } = req.user;
+  const { id: userId, followers, following, username } = req.user;
   try {
     const post = new Post({ userId, ...req.body });
     await post.save();
@@ -45,7 +46,11 @@ const addNewPost = async (req, res) => {
       recipient:
         type === "post"
           ? getMutuals(followers, following)
-          : getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
+          : // You shouldn't get notified when you comment on YOUR own post
+            removeFromArray(
+              getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
+              userId
+            ),
     });
 
     // Treat mention notification.
@@ -56,7 +61,8 @@ const addNewPost = async (req, res) => {
         snippet: deriveSnippet(content, mediaType),
         userId,
         postId: post.id,
-        recipient: mentionedUsers,
+        // You shouldn't get notified when you mention your self
+        recipient: removeFromArray(mentionedUsers, username),
         username: true,
       });
     }
@@ -194,15 +200,23 @@ const reactToPost = async (req, res) => {
         : { $push: { [type]: { userId } } }
     );
 
+    //type comes in plural form i.e with the s. This s needs to removed.
+    const notificationType = type.slice(0, type.length - 1);
+    const notificationRecord = await Notification.find({
+      type: notificationType,
+      postId: post.id,
+    });
+
     // notification
-    // nots should only be sent when the action is a like or repost and not when reversing thes action(i.e dislike, "un-repost")
-    if (!reactionRecord) {
+    //Ensure no duplicate notification. context: You like, unlike, like again. The notification is only sent for first time.
+    // nots should only be sent when the action is a like or repost and not when reversing these action(i.e dislike, "un-repost")
+    // Also, you shouldn't notified when you react to your own post
+    if (notificationRecord.length < 1 && !post.userId.equals(userId)) {
       await sendNotification({
         userId,
         postId: post.id,
         snippet: deriveSnippet(post.content, post.mediaType),
-        //type comes in plural form i.e with the s. This s needs to removed.
-        type: type.slice(0, type.length - 1),
+        type: notificationType,
         recipient: post.userId,
       });
     }

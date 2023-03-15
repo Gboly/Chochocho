@@ -63,6 +63,9 @@ const extractMentionedUsers = (content) => {
   return (matches || []).map((item) => item.slice(2));
 };
 
+const removeFromArray = (array, itemToRemove) =>
+  array.filter((item) => item !== itemToRemove);
+
 export {
   getMutuals,
   deriveSnippet,
@@ -71,4 +74,5 @@ export {
   customExemptUsersFromStory,
   deriveStoryQueryIds,
   extractMentionedUsers,
+  removeFromArray,
 };

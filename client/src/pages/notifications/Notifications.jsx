@@ -17,12 +17,16 @@ import {
   selectNotificationsIds,
   useGetNotificationsQuery,
 } from "../../app/api-slices/notificationsApiSlice";
-import { showPopupOnTransparentOverlay } from "../../util/functions";
+import {
+  newRange,
+  showPopupOnTransparentOverlay,
+  sortByDate,
+} from "../../util/functions";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 
 // Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
-const initialPage = { skip: 0, limit: 1 };
+const initialPage = { skip: 0, limit: 3 };
 export default function Notifications() {
   const dispatch = useDispatch();
   const { isOpen: notificationOptionsIsOpen } = useSelector(
@@ -43,25 +47,19 @@ export default function Notifications() {
     [notificationsNode]
   );
 
-  const [pageRange, setPageRange] = useState({
-    // queryState: initialState,
-    ...initialPage,
-  });
-
-  const { isLoading: notificationsIsLoading } =
-    useGetNotificationsQuery(pageRange);
+  const [pageRange, setPageRange] = useState(initialPage);
 
   useEffect(() => {
     const timeout = setTimeout(
       () =>
-        setPageRange(({ limit }) => ({
-          skip: limit,
-          limit: limit + initialPage.limit,
-        })),
+        setPageRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
       10000
     );
     return () => clearTimeout(timeout);
   }, []);
+
+  const { isLoading: notificationsIsLoading } =
+    useGetNotificationsQuery(pageRange);
 
   const notificationIds = useSelector(selectNotificationsIds);
   const isFetched = useCallback(
@@ -71,7 +69,7 @@ export default function Notifications() {
     [notificationIds]
   );
 
-  const content = notifications.map(
+  const content = sortByDate(notifications).map(
     ({ notificationId, viewed }) =>
       isFetched(notificationId) && (
         <NotificationBlock

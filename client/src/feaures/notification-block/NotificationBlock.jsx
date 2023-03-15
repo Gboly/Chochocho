@@ -18,10 +18,11 @@ import {
   videoType,
 } from "../../util/types";
 import { selectNotificationById } from "../../app/api-slices/notificationsApiSlice";
-import { useContext } from "react";
-import { convertToUserFriendlyTime, capitalize } from "../../util/functions";
+import { useContext, useState } from "react";
+import { convertToUserFriendlyTime } from "../../util/functions";
 import { useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../routes/Router";
+import NavigateWithScrollCache from "../scroll-cache/NavigateWithScrollCache";
 
 const mediaSnippet = [photoType, videoType];
 const snippetExcluded = [mentionType, followType];
@@ -36,10 +37,7 @@ const viewPostRouteTypes = [
 export default function NotificationBlock({ notificationId, viewed }) {
   const navigate = useNavigate();
 
-  const {
-    isFollowing,
-    // authUser: { notifications },
-  } = useContext(GeneralContext);
+  const { isFollowing } = useContext(GeneralContext);
 
   const { postId, userId, date, type, snippet } = useSelector((state) =>
     selectNotificationById(state, notificationId)
@@ -47,14 +45,10 @@ export default function NotificationBlock({ notificationId, viewed }) {
 
   const { data: user } = useGetUserByIdQuery(userId);
 
-  // const { viewed } = notifications.find(
-  //   (notification) => notification.notificationId === notificationId
-  // );
-
   const { text } = description.find((item) => item.type === type);
 
-  const handleClick = (e) => {
-    e && e.stopPropagation && e.stopPropagation();
+  // Ensure the scroll height is cached when leaving page just so it is maintained on return.
+  const handleRouting = () =>
     navigate(
       profileRouteTypes.includes(type)
         ? `/profile/${userId}`
@@ -62,10 +56,23 @@ export default function NotificationBlock({ notificationId, viewed }) {
         ? `/${user?.username}/post/${postId}`
         : "/"
     );
+
+  const [route, setRoute] = useState(false);
+
+  const handleClick = (e) => {
+    e && e.stopPropagation && e.stopPropagation();
+    setRoute(true);
   };
+
+  const cleanUp = () => setRoute(false);
 
   return (
     <>
+      <NavigateWithScrollCache
+        clicked={route}
+        handleRouting={handleRouting}
+        cleanUp={cleanUp}
+      />
       {user && (
         <div className="notification-block-container" onClick={handleClick}>
           <div>

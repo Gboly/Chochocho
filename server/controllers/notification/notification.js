@@ -30,6 +30,7 @@ const getNotifications = async (req, res) => {
       };
   try {
     const myNotifications = await Notification.find(query)
+      .sort({ date: -1 })
       .skip(_start)
       .limit(_end);
     myNotifications.length > 0
@@ -77,6 +78,7 @@ const sendNotification = async ({
     postId,
     type,
     snippet,
+    date: new Date().toISOString(),
   });
   await notification.save();
 
@@ -86,7 +88,11 @@ const sendNotification = async ({
 
   const updatedUser = await User.updateMany(query, {
     $push: {
-      notifications: { notificationId: notification.id, viewed: false },
+      notifications: {
+        notificationId: notification.id,
+        viewed: false,
+        date: new Date().toISOString(),
+      },
     },
   });
   console.log(updatedUser);
