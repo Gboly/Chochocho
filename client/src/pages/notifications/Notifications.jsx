@@ -2,7 +2,9 @@ import "./notifications.css";
 import RightBar from "../../feaures/right-bar/RightBar";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { iconStyle } from "../../util/iconDescContent";
-import NotificationBlock from "../../feaures/notification-block/NotificationBlock";
+import NotificationBlock, {
+  NotificationSkeleton,
+} from "../../feaures/notification-block/NotificationBlock";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { openNotificationOptions } from "../../app/actions/notificationActions";
@@ -19,10 +21,12 @@ import {
 import {
   newRange,
   showPopupOnTransparentOverlay,
+  showSkeleton,
   sortByDate,
 } from "../../util/functions";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
+import { Skeleton } from "@mui/material";
 
 const initialPage = { skip: 0, limit: 3 };
 export default function Notifications() {
@@ -64,14 +68,18 @@ export default function Notifications() {
   );
 
   const content = sortByDate(notifications).map(
-    ({ notificationId, viewed }) =>
-      isFetched(notificationId) && (
+    ({ notificationId, viewed }, index) =>
+      // Check if the current id notification is has been fetched or being fetched. skip+limit
+      index < pageRange.skip + pageRange.limit &&
+      (isFetched(notificationId) ? (
         <NotificationBlock
           key={notificationId}
           notificationId={notificationId}
           viewed={viewed}
         />
-      )
+      ) : (
+        notificationsIsLoading && <NotificationSkeleton key={notificationId} />
+      ))
   );
 
   const showOptions = (e) => {
@@ -99,7 +107,8 @@ export default function Notifications() {
               </i>
             </header>
             {content}
-            {notificationsIsLoading && <Spinner />}
+            {/* {notificationsIsLoading &&
+              showSkeleton(<NotificationSkeleton />, pageRange.limit)} */}
             <div className="nots-void"></div>
           </div>
         </div>

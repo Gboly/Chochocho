@@ -4,6 +4,7 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid rgba(121, 121, 121, 0.2);
+    min-height: 4.5rem;
     height: fit-content;
     cursor: pointer;
     background-color: #fff;
@@ -75,4 +76,23 @@
 .notification-block-container > i {
     color: #c32aa3;
     font-size: 0.65rem;
+}
+.notification-block-container-skeleton{
+    padding: 1rem;
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    border-bottom: 1px solid rgba(121, 121, 121, 0.2);
+    min-height: 4.5rem;
+    height: fit-content;
+    cursor: pointer;
+    background-color: #fff;
+    position: relative;
+}
+.notification-block-container-skeleton > div {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    width: 82%;
+    height: 2.5rem;
 }

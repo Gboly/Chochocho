@@ -26,6 +26,7 @@ import { convertToUserFriendlyTime } from "../../util/functions";
 import { useNavigate } from "react-router-dom";
 import { GeneralContext } from "../../routes/Router";
 import NavigateWithScrollCache from "../scroll-cache/NavigateWithScrollCache";
+import { Skeleton } from "@mui/material";
 
 const mediaSnippet = [photoType, videoType];
 const snippetExcluded = [mentionType, followType];
@@ -37,6 +38,25 @@ const viewPostRouteTypes = [
   mentionType,
   postType,
 ];
+
+export const NotificationSkeleton = () => {
+  return (
+    <div className="notification-block-container-skeleton">
+      <Skeleton variant="circular" width={20} height={20} />
+      <Skeleton
+        variant="circular"
+        width={40}
+        height={40}
+        sx={{ marginRight: "0.6rem", marginLeft: "1rem" }}
+      />
+      <div>
+        <Skeleton variant="rounded" height={18} sx={{ width: "inherit" }} />
+        <Skeleton variant="rounded" width={14} height={9} />
+      </div>
+    </div>
+  );
+};
+
 export default function NotificationBlock({ notificationId, viewed }) {
   const navigate = useNavigate();
 
@@ -82,7 +102,7 @@ export default function NotificationBlock({ notificationId, viewed }) {
         handleRouting={handleRouting}
         cleanUp={cleanUp}
       />
-      {user && (
+      {user ? (
         <div className="notification-block-container" onClick={handleClick}>
           <div>
             <IconGradient type={type} />
@@ -119,7 +139,33 @@ export default function NotificationBlock({ notificationId, viewed }) {
             ""
           )}
         </div>
+      ) : (
+        <NotificationSkeleton />
       )}
     </>
   );
 }
+
+// {/* <article
+//           className="notification-block-container-skeleton"
+//           // ref={(e) =>
+//           //   e && e.parentNode.classList.remove("notification-block-container")
+//           // }
+//         >
+//         </article> */}
+
+// export default function NotificationBlock(props) {
+//   const { fetchStatus } = props;
+
+//   return (
+//     fetchStatus && (
+//       <>
+//         {fetchStatus === "fetched" ? (
+//           <Block {...props} />
+//         ) : (
+//           <NotificationSkeleton />
+//         )}
+//       </>
+//     )
+//   );
+// }
