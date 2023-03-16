@@ -4,8 +4,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { iconStyle } from "../../util/iconDescContent";
 import NotificationBlock from "../../feaures/notification-block/NotificationBlock";
 import { useCallback, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { getNotificationOptionsState } from "./notificationSlice";
+import { useSelector } from "react-redux";
 import { openNotificationOptions } from "../../app/actions/notificationActions";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { useRef, useContext, useImperativeHandle } from "react";
@@ -25,13 +24,8 @@ import {
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 
-// Notifications is a collection/Model on its own. It should have its own apiSlice and should be fetched using the infinite scroll technique.
-const initialPage = { skip: 0, limit: 0 };
+const initialPage = { skip: 0, limit: 3 };
 export default function Notifications() {
-  const dispatch = useDispatch();
-  const { isOpen: notificationOptionsIsOpen } = useSelector(
-    getNotificationOptionsState
-  );
   const notificationsNode = useRef();
   const {
     pageNodes,
@@ -49,14 +43,14 @@ export default function Notifications() {
 
   const [pageRange, setPageRange] = useState(initialPage);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(
-  //     () =>
-  //       setPageRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
-  //     10000
-  //   );
-  //   return () => clearTimeout(timeout);
-  // }, []);
+  useEffect(() => {
+    const timeout = setTimeout(
+      () =>
+        setPageRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
+      10000
+    );
+    return () => clearTimeout(timeout);
+  }, []);
 
   const { isLoading: notificationsIsLoading } =
     useGetNotificationsQuery(pageRange);
@@ -103,9 +97,6 @@ export default function Notifications() {
               <i onClick={showOptions}>
                 <SettingsOutlinedIcon style={iconStyle} />
               </i>
-              {/* {notificationOptionsIsOpen && (
-                <NotificationOptions options={notificationOptions} />
-              )} */}
             </header>
             {content}
             {notificationsIsLoading && <Spinner />}

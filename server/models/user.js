@@ -9,6 +9,23 @@ const subUserSchema = new schema({
   date: { type: Date, default: new Date() },
 });
 
+const notificationTypesSchema = new schema({
+  like: { type: Boolean, default: true },
+  repost: { type: Boolean, default: true },
+  comment: { type: Boolean, default: true },
+  mention: { type: Boolean, default: true },
+  follow: { type: Boolean, default: true },
+  post: { type: Boolean, default: true },
+});
+const defaultNotificationTypes = {
+  like: true,
+  repost: true,
+  comment: true,
+  mention: true,
+  follow: true,
+  post: true,
+};
+
 const userSchema = new schema({
   username: { type: String, default: "", required: true, unique: true },
   password: { type: String, default: "", required: true, minlength: 6 },
@@ -31,6 +48,10 @@ const userSchema = new schema({
   linkedIn: { type: String, default: "" },
   url: { type: String, default: "" },
   notifications: { type: [subUserSchema], default: [] },
+  allowedNotificationTypes: {
+    type: notificationTypesSchema,
+    default: defaultNotificationTypes,
+  },
   blocked: { type: [subUserSchema], default: [] },
   //socket.io should keep track of online and offline status and should be reflected here based on time
   online: { type: Boolean, default: true },

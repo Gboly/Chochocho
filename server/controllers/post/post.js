@@ -55,7 +55,7 @@ const addNewPost = async (req, res) => {
 
     // Treat mention notification.
     const mentionedUsers = extractMentionedUsers(content);
-    if (mentionedUsers) {
+    if (mentionedUsers.length > 1) {
       await sendNotification({
         type: "mention",
         snippet: deriveSnippet(content, mediaType),

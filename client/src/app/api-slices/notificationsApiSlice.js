@@ -81,6 +81,30 @@ const extendedNotificationsApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    filterNotifications: builder.mutation({
+      query: (type) => ({
+        url: `/notifications/filter/${type}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+      async onQueryStarted(type, { dispatch, queryFulfilled }) {
+        const filterNotifications = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              const types = draft.allowedNotificationTypes;
+              types[type] = !types[type];
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          filterNotifications.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -88,6 +112,7 @@ export const {
   useGetNotificationsQuery,
   useViewNotificationMutation,
   useMarkAllAsReadMutation,
+  useFilterNotificationsMutation,
 } = extendedNotificationsApiSlice;
 
 const selectedEndPoints = ["getNotifications"];

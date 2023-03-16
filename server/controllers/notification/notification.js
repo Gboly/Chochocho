@@ -38,9 +38,7 @@ const getNotifications = async (req, res) => {
       : res.status(204).json(myNotifications);
   } catch (error) {
     console.log(error);
-    return res
-      .status(400)
-      .json({ error: "An error was encountered. Incorrect details." });
+    return res.status(400).json({ error: "An error was encountered." });
   }
 };
 
@@ -59,9 +57,7 @@ const updateNotificationViewStatus = async (req, res) => {
     res.status(200).json(updatedUser);
   } catch (error) {
     console.log(error);
-    return res
-      .status(400)
-      .json({ error: "An error was encountered. Incorrect details." });
+    return res.status(400).json({ error: "An error was encountered." });
   }
 };
 
@@ -76,9 +72,23 @@ const markAllASRead = async (req, res) => {
     res.status(200).json(updatedUser);
   } catch (error) {
     console.log(error);
-    return res
-      .status(400)
-      .json({ error: "An error was encountered. Incorrect details." });
+    return res.status(400).json({ error: "An error was encountered." });
+  }
+};
+
+const filterNotifications = async (req, res) => {
+  const { type } = req.params;
+  const { _id: authUserId, allowedNotificationTypes: ant } = req.user;
+  const filterType = `allowedNotificationTypes.${type}`;
+  try {
+    const updatedUser = await User.updateOne(
+      { _id: authUserId },
+      { [filterType]: !ant[type] }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({ error: "An error was encountered." });
   }
 };
 
@@ -87,32 +97,39 @@ const sendNotification = async ({
   snippet,
   userId,
   postId,
-  recipient,
+  recipient: _id,
   username,
 }) => {
-  const notification = new Notification({
-    userId,
-    postId,
-    type,
-    snippet,
-    date: new Date().toISOString(),
-  });
-  await notification.save();
-
-  const _id = Array.isArray(recipient) ? recipient : [recipient];
-
   const query = username ? { username: _id } : { _id };
+  const filterType = `allowedNotificationTypes.${type}`;
 
-  const updatedUser = await User.updateMany(query, {
-    $push: {
-      notifications: {
-        notificationId: notification.id,
-        viewed: false,
-        date: new Date().toISOString(),
-      },
-    },
-  });
-  console.log(updatedUser);
+  // Check if the recipients wants to recieve notifications of this type
+  const user = await User.find({ ...query, [filterType]: true });
+
+  if (user.length >= 1) {
+    const notification = new Notification({
+      userId,
+      postId,
+      type,
+      snippet,
+      date: new Date().toISOString(),
+    });
+    await notification.save();
+
+    const updatedUser = await User.updateMany(
+      { _id: getAnArrayOfSpecificKeyPerObjectInArray(user, "_id") },
+      {
+        $push: {
+          notifications: {
+            notificationId: notification.id,
+            viewed: false,
+            date: new Date().toISOString(),
+          },
+        },
+      }
+    );
+    console.log(updatedUser);
+  }
 };
 
 export {
@@ -121,4 +138,5 @@ export {
   sendNotification,
   updateNotificationViewStatus,
   markAllASRead,
+  filterNotifications,
 };

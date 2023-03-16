@@ -2,8 +2,10 @@ import "./notification.css";
 import CustomSwitch from "../../../components/custom-switch/CustomSwitch";
 import IconGradient from "../../../components/icon-gradient/IconGradient";
 import { description } from "../../../util/notificationTypes";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SettingsHeader } from "../../../pages/settings/Settings";
+import { GeneralContext } from "../../../routes/Router";
+import { useFilterNotificationsMutation } from "../../../app/api-slices/notificationsApiSlice";
 
 //THis initialState should be fetched from the backend. So the saved setting would appear as initialState
 const initialState = description.reduce((accum, current) => {
@@ -12,10 +14,14 @@ const initialState = description.reduce((accum, current) => {
 }, {});
 
 export default function Notification() {
-  const [isChecked, setIsChecked] = useState(initialState);
+  const {
+    authUser: { allowedNotificationTypes },
+  } = useContext(GeneralContext);
+
+  const [filterNotifications] = useFilterNotificationsMutation();
 
   const handleChange = (e) => {
-    setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
+    filterNotifications(e.target.name);
   };
 
   return (
@@ -33,7 +39,7 @@ export default function Notification() {
                   label: type,
                   style: { width: "11.5rem" },
                   type,
-                  isChecked: isChecked[type],
+                  isChecked: allowedNotificationTypes[type],
                   handleChange,
                 }}
               />
