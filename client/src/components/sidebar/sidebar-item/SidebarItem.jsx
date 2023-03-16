@@ -9,6 +9,7 @@ import {
 import { logOutType, profileBasePathType } from "../../../util/types";
 import {
   closePopupOnOpaqueOverlay,
+  findByIdKey,
   getBasePath,
   showPopupOnOpaqueOverlay,
   updateScrollCache,
@@ -27,7 +28,7 @@ export default function SidebarItem({ name, icon, id }) {
 
   const {
     setPageRefresh,
-    authUser: { _id: authUserId },
+    authUser: { _id: authUserId, notifications },
   } = useContext(GeneralContext);
 
   useEffect(() => {
@@ -90,9 +91,11 @@ export default function SidebarItem({ name, icon, id }) {
       >
         <i>{icon}</i>
         <span>{name}</span>
-        {name === "Notification" && (
-          <div className="sidebar-notification-count" />
-        )}
+        {name === "Notification" &&
+          notifications &&
+          findByIdKey(notifications, "viewed", false) && (
+            <div className="sidebar-notification-count" />
+          )}
       </div>
     </>
   );
