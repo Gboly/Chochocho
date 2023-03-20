@@ -223,8 +223,8 @@ export const updateScrollCache = (key, value) => {
   setSessionStorageItem(scrollCacheType, { ...scrollCache, [key]: value });
 };
 
-export const getBasePath = (pathName) => {
-  return pathName.split("/")[1] || "";
+export const getBasePath = (pathName, index) => {
+  return pathName.split("/")[index || 1] || "";
 };
 
 export const unNormalize = (data) => {
@@ -401,11 +401,9 @@ export const findByIdKey = (array, key, id) =>
   array.some((item) => item[key] === id);
 
 // The default identity for each document is denoted by "_id". Now, i want the identity to accessible with "id"
-export const attachIdProperty = (responseData, endpoint, args) => {
+export const attachIdProperty = (responseData) => {
   const attach = (item) => {
     item.id = item._id;
-    args && (item.fetchArgs = args);
-    endpoint && (item.fetchEndPoint = endpoint);
   };
   if (Array.isArray(responseData)) {
     return responseData.map((item) => {
@@ -418,13 +416,10 @@ export const attachIdProperty = (responseData, endpoint, args) => {
   }
 };
 
-export const getTransformed = (response, adapter, endpoint, args) =>
+export const getTransformed = (response, adapter) =>
   response &&
   (adapter
-    ? adapter.setAll(
-        adapter.getInitialState(),
-        attachIdProperty(response, endpoint, args)
-      )
+    ? adapter.setAll(adapter.getInitialState(), attachIdProperty(response))
     : attachIdProperty(response));
 
 export const getAnArrayOfSpecificKeyPerObjectInArray = (

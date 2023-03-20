@@ -9,6 +9,8 @@ const engagementSchema = new schema({
 
 const postSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
+  originalUserId: { type: schema.Types.ObjectId, default: "" },
+  originalPostId: { type: schema.Types.ObjectId, default: "" },
   content: { type: String, default: "" },
   mediaType: { type: String, default: "", enum: ["", "image", "video"] },
   media: { type: [{ src: String, alt: String }], default: "" },
@@ -19,7 +21,7 @@ const postSchema = new schema({
     enum: ["Public", "Friends", "Only me"],
     default: "Public",
   },
-  type: { type: String, enum: ["post", "comment"], default: "" },
+  type: { type: String, enum: ["post", "comment", "repost"], default: "" },
   // For a post type of "post", parents and comments would be left out from frontend req.
   // While for "comment", only the parents field would be populated by passing its value with the req.
   parents: { type: [engagementSchema], default: [] },

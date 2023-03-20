@@ -24,6 +24,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
 }
 .create-top-styled{
     position: sticky;
@@ -66,9 +68,9 @@
     width: calc(100% - 3.2rem);
     padding: 0;
 }
-/* .create-middle-focus{
-    min-height: 7rem; 
-} */
+.create-middle-focus{
+    margin-top: 1.5rem;
+}
 /* .create-middle-text-focus{
     margin-bottom: 2rem;
 } */

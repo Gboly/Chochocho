@@ -23,9 +23,12 @@ const Story = () => {
   } = useContext(GeneralContext);
 
   const { data: storyAuthors, isLoading: storyAuthorsIsLoading } =
-    useGetUsersByIdQuery({
-      userIds: prepareIdsForQuery(otherStoryAuthors, userIdType),
-    });
+    useGetUsersByIdQuery(
+      {
+        userIds: prepareIdsForQuery(otherStoryAuthors, userIdType),
+      },
+      { skip: otherStoryAuthors.length < 1 }
+    );
 
   const isFetched = (id) => {
     return (storyAuthors?.ids || []).includes(id);

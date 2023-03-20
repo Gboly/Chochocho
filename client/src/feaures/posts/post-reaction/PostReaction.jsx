@@ -1,7 +1,7 @@
 import "./post-reaction.css";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import { useDispatch, useSelector } from "react-redux";
-import { openPostShare } from "../../../app/actions/homeActions";
+import { openPostShare, removePost } from "../../../app/actions/homeActions";
 import { iconStyle } from "../../../util/iconDescContent";
 import { useEffect, useMemo, useState } from "react";
 
@@ -15,21 +15,27 @@ import {
   useReactToPostMutation,
 } from "../../../app/api-slices/postsApiSlice";
 import { selectPostTotalComments } from "../../comments/commentsApiSlice";
-import { postShareType } from "../../../util/types";
+import { postShareType, profileBasePathType } from "../../../util/types";
 import {
+  getBasePath,
   removeFromAnArray,
   showPopupOnTransparentOverlay,
 } from "../../../util/functions";
 import { useContext } from "react";
 import { GeneralContext } from "../../../routes/Router";
 import AuthError from "../../../pages/sign-in/AuthError";
+import { useLocation, useParams } from "react-router-dom";
+import { getCurrentPageState } from "../../../routes/routerSlice";
 
 export default function PostReaction({
   postId,
   username,
   visibleFor,
   comment,
+  rePostId,
 }) {
+  const dispatch = useDispatch();
+  const { isProfilePage, isCommentsPage } = useSelector(getCurrentPageState);
   const post = useSelector((state) => selectPostById(state, postId));
   const likesTotal = (post?.likes || []).length;
   const repostsTotal = (post?.reposts || []).length;
@@ -48,24 +54,32 @@ export default function PostReaction({
     return [isLiked, isReposted];
   }, [post, authUserId]);
 
+  const { userId } = useParams();
+  const isAuthProfilePage = useMemo(() => {
+    return isProfilePage && userId === authUserId;
+  }, [isProfilePage, userId, authUserId]);
+
   const handleChange = (e) => {
     const type = `${e.target.name}s`;
 
     const addReaction = () => [...post[type], { userId: authUserId }];
-    const removeReaction = () =>
-      removeFromAnArray(post[type], "userId", authUserId);
+    const removeReaction = () => {
+      // For Reposts within the auth user's profile page, when they "un-repost", this reposted post should leave the page immediately Since it's no more their post.
+      type === "reposts" && isAuthProfilePage && dispatch(removePost(rePostId));
+      return removeFromAnArray(post[type], "userId", authUserId);
+    };
 
     const checked = { likes: isLiked, reposts: isReposted };
     const update = checked[type] ? removeReaction : addReaction;
     const args = {
       postId: post.id,
       type,
-      fetchType: { name: post.fetchEndPoint, args: post.fetchArgs },
       update,
+      //tagType: isCommentsPage ? "Comments" : "Posts",
     };
-
     react(args);
   };
+
   const handleClick = (e, action) => {
     e && e.stopPropagation && e.stopPropagation();
     // Not all clicks here have actual click actions. Just making sure to stopPropagation
@@ -136,7 +150,7 @@ export default function PostReaction({
         <label
           className={`pi-icon reposts ${
             isReposted ? "reposted" : "not-reposted"
-          } ${visibleFor === "Public" ? "" : "disabled"}`}
+          }`}
           htmlFor={`repost${postId}`}
         >
           <div>
@@ -153,7 +167,7 @@ export default function PostReaction({
           name="repost"
           id={`repost${postId}`}
           style={{ display: "none" }}
-          disabled={visibleFor === "Public" ? false : true}
+          // disabled={visibleFor === "Public" ? false : true}
         />
       </span>
 

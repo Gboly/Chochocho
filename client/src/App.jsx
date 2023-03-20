@@ -22,14 +22,22 @@ import {
   getOpaqueOverlayState,
   getTransparentOverlayState,
 } from "./layout/layoutSlice";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getFullscreenState } from "./feaures/posts/post-excerpt/postExcerptSlice";
 import AuthError from "./pages/sign-in/AuthError";
+import { useLocation } from "react-router-dom";
+import { setCurrentPage } from "./app/actions/routerActions";
 
 export default function App({ children }) {
   // I realized here that the context i had created within the Layout component would not be accessible to the story page. I failed to put this into consideration at the time.
   // There are components that needs to be used in the story component and this component makes use of a value from the LayoutContext.
   const { data, error } = useGetAuthUserQuery();
+
+  const dispatch = useDispatch();
+  const location = useLocation();
+  useEffect(() => {
+    dispatch(setCurrentPage(location.pathname));
+  }, [location, dispatch]);
 
   const { authUser, isFollowing, isFollower, isAuth, groupedUsers } =
     useMemo(() => {

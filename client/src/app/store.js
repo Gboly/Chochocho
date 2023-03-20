@@ -8,6 +8,7 @@ import { notificationReducer } from "../pages/notifications/notificationSlice";
 import { communityReducer } from "../pages/community/communitySlice";
 import { rightbarReducer } from "../feaures/right-bar/righbarSlice";
 import { storyReducer } from "../pages/story/storySlice";
+import { routerReducer } from "../routes/routerSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,6 +21,7 @@ export const store = configureStore({
     community: communityReducer,
     rightbar: rightbarReducer,
     story: storyReducer,
+    router: routerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

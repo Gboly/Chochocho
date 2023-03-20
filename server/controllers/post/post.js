@@ -82,14 +82,21 @@ const getPosts = async (req, res) => {
   // Whenever a request is sent to this endpoint without passing ids as query,
   // then, post from those authUser follows should be supplied.
   // if a userId param is passed, fetch posts from a particular user
+  const homeOrProfileFeed = userId || [
+    ...getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
+    req.user.id,
+  ];
   const query = id
     ? { ...req.query, _id: id }
     : {
         ...req.query,
-        userId: userId || [
-          ...getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
-          req.user.id,
-        ],
+        // The or is not needed because i dont want to see a post made by a user i follow appear on my TL again because of a user i don't follow.
+        // This means that the i want to see on my TL, posts of those i don't follow if one i follow reposts it. A way of sharing
+        userId: homeOrProfileFeed,
+        // $or: [
+        //   { userId: homeOrProfileFeed },
+        //   { originalUserId: homeOrProfileFeed },
+        // ],
       };
   try {
     const posts = await Post.find(query)
@@ -193,12 +200,43 @@ const reactToPost = async (req, res) => {
       reaction.userId.equals(userId)
     );
 
-    const updatePost = await Post.updateOne(
-      { _id: req.params.id },
-      reactionRecord
-        ? { $pull: { [type]: reactionRecord } }
-        : { $push: { [type]: { userId } } }
-    );
+    const update = [
+      {
+        updateOne: {
+          filter: { _id: req.params.id },
+          update: reactionRecord
+            ? { $pull: { [type]: reactionRecord } }
+            : { $push: { [type]: { userId } } },
+        },
+      },
+      ...(type === "reposts"
+        ? [
+            reactionRecord
+              ? {
+                  deleteOne: {
+                    filter: {
+                      originalPostId: post.id,
+                      originalUserId: post.userId,
+                    },
+                  },
+                }
+              : {
+                  insertOne: {
+                    document: {
+                      userId,
+                      type: "repost",
+                      date: new Date().toISOString(),
+                      originalPostId: post.id,
+                      originalUserId: post.userId,
+                    },
+                  },
+                },
+          ]
+        : []),
+    ];
+
+    const updatedUser = await Post.bulkWrite(update);
+    console.log(updatedUser);
 
     //type comes in plural form i.e with the s. This s needs to removed.
     const notificationType = type.slice(0, type.length - 1);
@@ -231,8 +269,12 @@ const reactToPost = async (req, res) => {
 };
 
 const deletePost = async (req, res) => {
+  const _id = req.params.id;
   try {
-    const deletedPost = await Post.deleteOne({ _id: req.params.id });
+    // Delete the post and also all clone that was made out of it from a repost
+    const deletedPost = await Post.deleteMany({
+      $or: { _id, originalPostId: _id },
+    });
     res.status(200).json(deletedPost);
   } catch (error) {
     console.log(error);

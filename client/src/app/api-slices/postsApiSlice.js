@@ -18,11 +18,11 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query({
       query: ({ skip, limit }) =>
-        `/posts?type=post&_start=${skip || ""}&_end=${limit || ""}`,
+        `/posts?type=post&type=repost&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, meta, args) => {
         // The args are attached to each post data to allow for easy access when making optimistic update
-        return getTransformed(response, postsAdapter, "getPosts", args);
+        return getTransformed(response, postsAdapter);
       },
       providesTags: (result, error, arg) =>
         result && [
@@ -35,7 +35,7 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         `/posts?userId=${userId}&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        getTransformed(response, postsAdapter, "getPostsByUserId", args),
+        getTransformed(response, postsAdapter),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Posts", id: "User" },
@@ -46,11 +46,13 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       query: ({ id, skip, limit }) => `/posts?id=${id}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        getTransformed(response, postsAdapter, "getPostComments", args),
+        response && getTransformed(response, postsAdapter),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Comments", id: "List" },
+          { type: "Posts", id: "List" },
           ...result.ids.map((id) => ({ type: "Comments", id })),
+          ...result.ids.map((id) => ({ type: "Posts", id })),
         ],
     }),
     getPostCommentsOrParents: builder.query({
@@ -58,17 +60,15 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         `/posts/${id}/${type}?_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        getTransformed(
-          response,
-          postsAdapter,
-          "getPostCommentsOrParents",
-          args
-        ),
-      providesTags: (result, error, arg) =>
-        result && [
-          { type: "Comments", id: "List" },
-          ...result.ids.map((id) => ({ type: "Comments", id })),
-        ],
+        getTransformed(response, postsAdapter),
+      providesTags: (result, error, arg) => {
+        return (
+          result && [
+            { type: "Comments", id: "List" },
+            ...result.ids.map((id) => ({ type: "Comments", id })),
+          ]
+        );
+      },
     }),
     reactToPost: builder.mutation({
       query: ({ postId, type }) => ({
@@ -78,19 +78,37 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
       async onQueryStarted(
-        { postId, type, fetchType: { name, args }, update },
-        { dispatch, queryFulfilled }
+        { postId, type, update, tagType },
+        { dispatch, queryFulfilled, getState }
       ) {
-        const patchResult = dispatch(
-          extendedPostsApiSlice.util.updateQueryData(name, args, (draft) => {
-            const post = draft.entities[postId];
-            post && (post[type] = update());
-          })
-        );
-        try {
-          await queryFulfilled;
-        } catch (error) {
-          patchResult.undo();
+        //const tagTypes = [{ type: tagType, id: postId }];
+        const tagTypes = [
+          { type: "Posts", id: postId },
+          { type: "Comments", id: postId },
+        ];
+        let updateResult = update();
+        for (const {
+          endpointName,
+          originalArgs,
+        } of extendedPostsApiSlice.util.selectInvalidatedBy(
+          getState(),
+          tagTypes
+        )) {
+          const patchResult = dispatch(
+            extendedPostsApiSlice.util.updateQueryData(
+              endpointName,
+              originalArgs,
+              (draft) => {
+                const post = draft.entities[postId];
+                post && (post[type] = updateResult);
+              }
+            )
+          );
+          try {
+            await queryFulfilled;
+          } catch (error) {
+            patchResult.undo();
+          }
         }
       },
     }),

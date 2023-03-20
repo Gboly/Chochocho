@@ -6,16 +6,20 @@ import Others from "../../../components/post/post-engagements/Others";
 import PostReaction from "../post-reaction/PostReaction";
 import PostShare from "../post-share/PostShare";
 import { useSelector, useDispatch } from "react-redux";
-import { selectPostById } from "../../../app/api-slices/postsApiSlice";
+import {
+  selectPostById,
+  useGetPostByIdQuery,
+} from "../../../app/api-slices/postsApiSlice";
 import { openPostOption } from "../../../app/actions/homeActions";
 import { getPostOptionState, getPostShareState } from "./postExcerptSlice";
 import { closePostOption } from "../../../app/actions/homeActions";
 import { getEditPostState } from "../create-post/createPostSlice";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { iconStyle } from "../../../util/iconDescContent";
 import UserCameo from "../../../components/user-cameo/UserCameo";
 import {
   convertToUserFriendlyTime,
+  findByIdKey,
   showPopupOnTransparentOverlay,
 } from "../../../util/functions";
 import { useNavigate } from "react-router-dom";
@@ -30,27 +34,36 @@ import {
 import { GeneralContext } from "../../../routes/Router";
 
 export default function PostExcerpt({ postId, viewPost, comment }) {
-  const { userId } = useSelector((state) => selectPostById(state, postId));
+  const { userId, type, originalPostId, originalUserId } = useSelector(
+    (state) => selectPostById(state, postId)
+  );
+
+  // Original posts from reposts may have not been fetched, this ensures that they are.
+  const { data: originalPost, isLoading: originalPostIsLoading } =
+    useGetPostByIdQuery({ id: originalPostId }, { skip: !originalPostId });
+
+  const isRepost = type === "repost";
 
   const {
     data: user,
     isLoading: userFetchIsLoading,
     isSuccess: userFetchIsSuccesfull,
-  } = useGetUserByIdQuery(userId);
+  } = useGetUserByIdQuery(isRepost ? originalUserId : userId);
 
   return (
     <>
-      {userFetchIsLoading && (
+      {(userFetchIsLoading || (isRepost ? originalPostIsLoading : false)) && (
         // This should be skeleton
         <Spinner />
       )}
-      {userFetchIsSuccesfull && user && (
+      {(isRepost ? originalPost : true) && userFetchIsSuccesfull && user && (
         <Excerpt
           {...{
-            postId,
+            postId: isRepost ? originalPostId : postId,
             viewPost,
             comment,
             user,
+            ...(isRepost ? { rePostId: postId } : {}),
           }}
         />
       )}
@@ -58,8 +71,11 @@ export default function PostExcerpt({ postId, viewPost, comment }) {
   );
 }
 
-const Excerpt = ({ postId, viewPost, comment, user }) => {
-  const { isAuth } = useContext(GeneralContext);
+const Excerpt = ({ postId, viewPost, comment, user, rePostId }) => {
+  const {
+    isAuth,
+    authUser: { _id: authUserId },
+  } = useContext(GeneralContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post = useSelector((state) => selectPostById(state, postId));
@@ -126,6 +142,21 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
   const handleRouting = () => navigate(`/${username}/post/${postId}`);
   const cleanUp = () => setRoute(false);
 
+  //Get user who made the repost
+  const { data: repostUser } = useGetUserByIdQuery(userId);
+  const showReposter = useMemo(
+    () =>
+      // check if its a repost and also if the reposter is actually still reposting it at the point
+      rePostId &&
+      repostUser &&
+      findByIdKey(reposts, "userId", userId) && (
+        <div className="reposted-by">
+          {userId === authUserId ? "You" : repostUser.username} reposted
+        </div>
+      ),
+    [rePostId, userId, reposts, authUserId, repostUser]
+  );
+
   return (
     <>
       <NavigateWithScrollCache
@@ -141,6 +172,7 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
         onClick={(e) => handleClick(e)}
       >
         <div className="post-wrapper" onClick={(e) => handleClick(e)}>
+          {showReposter}
           <div className="post-top">
             <UserCameo
               {...{
@@ -178,8 +210,9 @@ const Excerpt = ({ postId, viewPost, comment, user }) => {
           <PostReaction
             postId={postId}
             username={username}
-            visibleFor={visibleFor}
+            // visibleFor={visibleFor}
             comment={comment}
+            rePostId={rePostId}
           />
         </div>
       </main>
