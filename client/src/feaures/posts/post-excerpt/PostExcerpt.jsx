@@ -34,15 +34,20 @@ import {
 import { GeneralContext } from "../../../routes/Router";
 
 export default function PostExcerpt({ postId, viewPost, comment }) {
-  const { userId, type, originalPostId, originalUserId } = useSelector(
-    (state) => selectPostById(state, postId)
-  );
-
-  // Original posts from reposts may have not been fetched, this ensures that they are.
-  const { data: originalPost, isLoading: originalPostIsLoading } =
-    useGetPostByIdQuery({ id: originalPostId }, { skip: !originalPostId });
+  const { userId, type, originalPostId, originalUserId, cachedId } =
+    useSelector((state) => selectPostById(state, postId));
 
   const isRepost = type === "repost";
+
+  const originalPostIsFetched = useSelector((state) =>
+    selectPostById(state, originalPostId)
+  );
+  // Original posts from reposts may have not been fetched, this ensures that they are.
+  const { data: originalPost, isLoading: originalPostIsLoading } =
+    useGetPostByIdQuery(
+      { id: originalPostId },
+      { skip: !originalPostId || originalPostIsFetched }
+    );
 
   const {
     data: user,
@@ -56,17 +61,21 @@ export default function PostExcerpt({ postId, viewPost, comment }) {
         // This should be skeleton
         <Spinner />
       )}
-      {(isRepost ? originalPost : true) && userFetchIsSuccesfull && user && (
-        <Excerpt
-          {...{
-            postId: isRepost ? originalPostId : postId,
-            viewPost,
-            comment,
-            user,
-            ...(isRepost ? { rePostId: postId } : {}),
-          }}
-        />
-      )}
+      {/* The originalPost would be null when this post is not a repost or the post has already been fetched, So this condition provides an immediate truthy response for the question "Has the post been fetched?" */}
+      {(isRepost && !originalPostIsFetched ? originalPost : true) &&
+        userFetchIsSuccesfull &&
+        user && (
+          <Excerpt
+            {...{
+              // The cachedId represents the actual Id of a particular post which have been pre-fetched (cached) already and there's no need to populate the cached state with it
+              postId: originalPostId || cachedId || postId,
+              viewPost,
+              comment,
+              user,
+              ...(isRepost ? { rePostId: postId } : {}),
+            }}
+          />
+        )}
     </>
   );
 }

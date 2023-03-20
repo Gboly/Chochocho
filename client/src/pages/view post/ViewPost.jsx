@@ -75,9 +75,12 @@ export default function ViewPost() {
   // The issue now is when the page link is loaded directly on the browser, the comment is yet to be loaded then.
   // So, this is making sure it is loaded even in such scenario.
   const { isLoading: viewPostExcerptIsLaoding, error: postFetchError } =
-    useGetPostByIdQuery({
-      id: postId,
-    });
+    useGetPostByIdQuery(
+      {
+        id: postId,
+      },
+      { skip: post }
+    );
 
   const { isSuccess: parentsLoadIsSuccessful, error: parentsFetchError } =
     useGetPostCommentsOrParentsQuery({

@@ -18,6 +18,11 @@ import {
   onlineType,
   offlineType,
 } from "./types";
+import {
+  postSliceInitialState,
+  postsQueryEndPoints,
+} from "../app/api-slices/postsApiSlice";
+import uniqid from "uniqid";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -420,6 +425,32 @@ export const getTransformed = (response, adapter) =>
   response &&
   (adapter
     ? adapter.setAll(adapter.getInitialState(), attachIdProperty(response))
+    : attachIdProperty(response));
+
+export const modifyExistingPost = (response) => {
+  const existingPostIds = selectTotalFetchedResult(
+    store.getState(),
+    postsQueryEndPoints,
+    postSliceInitialState
+  )?.ids;
+  const attachIds = (item) => {
+    item.id = item._id;
+    if (existingPostIds.includes(item.id)) {
+      item.cachedId = item._id;
+      item._id = uniqid();
+      item.id = uniqid();
+    }
+    return item;
+  };
+  return Array.isArray(response)
+    ? response.map((item) => attachIds(item))
+    : attachIds(response);
+};
+
+export const getPostTransformed = (response, adapter) =>
+  response &&
+  (adapter
+    ? adapter.setAll(adapter.getInitialState(), modifyExistingPost(response))
     : attachIdProperty(response));
 
 export const getAnArrayOfSpecificKeyPerObjectInArray = (

@@ -1,6 +1,7 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { apiSlice } from "../api";
 import {
+  getPostTransformed,
   getTransformed,
   removeFromAnArray,
   selectTotalFetchedResult,
@@ -12,7 +13,7 @@ const postsAdapter = createEntityAdapter({
   sortComparer: (a, b) => b.date.localeCompare(a.date),
 });
 
-const initialState = postsAdapter.getInitialState();
+export const postSliceInitialState = postsAdapter.getInitialState();
 
 export const extendedPostsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,7 +23,7 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, meta, args) => {
         // The args are attached to each post data to allow for easy access when making optimistic update
-        return getTransformed(response, postsAdapter);
+        return getPostTransformed(response, postsAdapter);
       },
       providesTags: (result, error, arg) =>
         result && [
@@ -35,7 +36,7 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         `/posts?userId=${userId}&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        getTransformed(response, postsAdapter),
+        getPostTransformed(response, postsAdapter),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Posts", id: "User" },
@@ -46,7 +47,7 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       query: ({ id, skip, limit }) => `/posts?id=${id}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        response && getTransformed(response, postsAdapter),
+        response && getPostTransformed(response, postsAdapter),
       providesTags: (result, error, arg) =>
         result && [
           { type: "Comments", id: "List" },
@@ -60,7 +61,7 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         `/posts/${id}/${type}?_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
-        getTransformed(response, postsAdapter),
+        getPostTransformed(response, postsAdapter),
       providesTags: (result, error, arg) => {
         return (
           result && [
@@ -141,7 +142,7 @@ export const {
   useDeletePostMutation,
 } = extendedPostsApiSlice;
 
-const selectedEndPoints = [
+export const postsQueryEndPoints = [
   "getPosts",
   "getPostCommentsOrParents",
   "getPostsByUserId",
@@ -154,7 +155,7 @@ export const {
   selectIds: selectPostsIds,
   selectById: selectPostById,
 } = postsAdapter.getSelectors((state) =>
-  selectTotalFetchedResult(state, selectedEndPoints, initialState)
+  selectTotalFetchedResult(state, postsQueryEndPoints, postSliceInitialState)
 );
 
 // This provides all regular postIds (no comments)
@@ -171,7 +172,7 @@ export const selectRegularPosts = createSelector(
     const regularPostData = selectTotalFetchedResult(
       state,
       regularPostsEndPoint,
-      initialState
+      postSliceInitialState
     );
     return regularPostData || [];
   },
@@ -185,7 +186,7 @@ export const selectPostIdsByUserId = createSelector(
     const userPostsData = selectTotalFetchedResult(
       state,
       postByUserIdEndPoint,
-      initialState,
+      postSliceInitialState,
       originalArgs
     );
     return userPostsData?.ids || [];
@@ -200,7 +201,7 @@ export const selectPostCommentsOrParentsIds = createSelector(
     const data = selectTotalFetchedResult(
       state,
       commentsOrParentsEndpoint,
-      initialState,
+      postSliceInitialState,
       originalArgs
     );
     return data?.ids || [];
