@@ -4,7 +4,6 @@ import PostHidden from "../post-hidden/PostHidden";
 import { useSelector } from "react-redux";
 import {
   selectPostsIds,
-  selectRegularPostIds,
   selectRegularPosts,
 } from "../../../app/api-slices/postsApiSlice";
 import { selectPostIdsByUserId } from "../../../app/api-slices/postsApiSlice";
@@ -15,7 +14,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useCallback } from "react";
 
-const PostList = ({ postIds, comment }) => {
+const PostList = ({ postIds, comment, loadComponent }) => {
   const homePosts = useSelector(selectRegularPosts);
   const hiddenPosts = useSelector(getHiddenPosts);
   const removedPosts = useSelector(getRemovedPosts);
@@ -42,7 +41,12 @@ const PostList = ({ postIds, comment }) => {
       } else
         isFetched(current) &&
           accum.push(
-            <PostExcerpt key={current} postId={current} comment={comment} />
+            <PostExcerpt
+              key={current}
+              postId={current}
+              comment={comment}
+              loadComponent={loadComponent}
+            />
           );
 
       return accum;

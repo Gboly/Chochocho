@@ -49,3 +49,35 @@
     /* margin-left: 4rem; */
     font-weight: 400;
 }
+.post-skeleton{
+    min-height: 13.5rem;
+    height: 100%;
+    width: inherit;
+    border-radius: 1rem;
+    background-color: rgba(220,220,220,0.5);
+    margin-top: 0.5rem;
+    animation: pulse 1200ms ease-in-out 0.5s infinite ;
+    padding: 1rem 1rem 0.5rem;
+    box-sizing: border-box;
+}
+.post-skeleton:first-of-type{
+    margin-top: 0;
+}
+.post-skeleton > div{
+    display: flex;
+    flex-flow: row nowrap;
+    gap: 0.5rem;
+    /* align-items: center; */
+    height: fit-content;
+}
+.post-skeleton > div > div{
+    display: flex;
+    flex-flow: column nowrap;
+    /* gap: 0.5rem; */
+    height: inherit;
+}
+
+@keyframes pulse {
+    from{background-color: rgba(220,220,220,0.3);}
+    to{background-color: rgba(220,220,220,0.5);}
+}

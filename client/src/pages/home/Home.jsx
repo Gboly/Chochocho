@@ -2,16 +2,9 @@ import "./home.css";
 import CreatePost from "../../feaures/posts/create-post/CreatePost";
 import RightBar from "../../feaures/right-bar/RightBar";
 import Story from "../../feaures/right-bar/story/Story";
-
-import PostListLoader from "../../feaures/posts/post-list/postListLoader";
-
 import { useDispatch, useSelector } from "react-redux";
 import { getCreatePostState } from "../../feaures/posts/create-post/createPostSlice";
-import {
-  getPostOptionState,
-  getRefreshPostsState,
-} from "../../feaures/posts/post-excerpt/postExcerptSlice";
-
+import { getPostOptionState } from "../../feaures/posts/post-excerpt/postExcerptSlice";
 import { homeCreatePostPlaceholder, homePageType } from "../../util/types";
 import {
   createContext,
@@ -26,22 +19,19 @@ import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { GeneralContext } from "../../routes/Router";
 import { useGetPostsQuery } from "../../app/api-slices/postsApiSlice";
 import PostList from "../../feaures/posts/post-list/PostList";
-import Spinner from "../../components/Spinner/Spinner";
 import AuthError from "../sign-in/AuthError";
 import { newRange } from "../../util/functions";
-import { deactivateRefresh } from "../../app/actions/homeActions";
+import { postSkeletons } from "../../feaures/posts/post-excerpt/PostExcerpt";
 
 export const HomeContext = createContext();
 
 // Limit of 1 & 2 works inconsistently.
 const initialPage = { skip: 0, limit: 3 };
 export default function Home() {
-  const dispatch = useDispatch();
   const [postRange, setPostRange] = useState(initialPage);
   const {
     isLoading,
     error,
-    isSuccess,
     refetch: refetchPosts,
   } = useGetPostsQuery(postRange);
   const createPostIsActive = useSelector(getCreatePostState);
@@ -110,7 +100,7 @@ export default function Home() {
 
             <section>
               <PostList />
-              {isLoading && <Spinner />}
+              {isLoading && postSkeletons(postRange)}
             </section>
           </div>
         </div>

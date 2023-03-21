@@ -9,7 +9,6 @@ import { openEditProfile } from "../../app/actions/profileActions";
 import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
-import PostListLoader from "../../feaures/posts/post-list/postListLoader";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { showPopupOnOpaqueOverlay } from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
@@ -20,14 +19,29 @@ import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 import PostList from "../../feaures/posts/post-list/PostList";
 import { useGetPostsByUserIdQuery } from "../../app/api-slices/postsApiSlice";
+import { postSkeletons } from "../../feaures/posts/post-excerpt/PostExcerpt";
 
 export const ProfileContext = createContext();
 const initialPage = { skip: 0, limit: 1 };
 export const Profile = () => {
   const { userId } = useParams();
-  const [postRange, setPostRange] = useState(initialPage);
-
   const { isLoading: userIsLoading, data: user } = useGetUserByIdQuery(userId);
+
+  return (
+    <>
+      {user && <ProfileComponent {...{ user, userId }} />}
+      {userIsLoading && <Spinner />}
+    </>
+  );
+};
+
+function ProfileComponent({ user, userId }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const profileNode = useRef();
+  const { pageNodes, isFollowing, isAuth } = useContext(GeneralContext);
+
+  const [postRange, setPostRange] = useState(initialPage);
   const { isLoading: userPostsIsLoading } = useGetPostsByUserIdQuery({
     userId,
     ...postRange,
@@ -44,20 +58,6 @@ export const Profile = () => {
     );
     return () => clearTimeout(timeout);
   }, []);
-
-  return (
-    <>
-      {user && <ProfileComponent {...{ user, userId }} />}
-      {userIsLoading && <Spinner />}
-    </>
-  );
-};
-
-function ProfileComponent({ user, userId }) {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const profileNode = useRef();
-  const { pageNodes, isFollowing, isAuth } = useContext(GeneralContext);
 
   // #16, #17
   useImperativeHandle(
@@ -161,7 +161,8 @@ function ProfileComponent({ user, userId }) {
                 )}
               </div>
               <div>
-                <PostList />
+                <PostList loadComponent={<Spinner />} />
+                {userPostsIsLoading && <Spinner />}
               </div>
             </div>
           </div>

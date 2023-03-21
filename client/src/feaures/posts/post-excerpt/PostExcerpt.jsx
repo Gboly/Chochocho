@@ -32,8 +32,14 @@ import {
   postOptionsType,
 } from "../../../util/types";
 import { GeneralContext } from "../../../routes/Router";
+import { Skeleton } from "@mui/material";
 
-export default function PostExcerpt({ postId, viewPost, comment }) {
+export default function PostExcerpt({
+  postId,
+  viewPost,
+  comment,
+  loadComponent,
+}) {
   const { userId, type, originalPostId, originalUserId, cachedId } =
     useSelector((state) => selectPostById(state, postId));
 
@@ -57,10 +63,8 @@ export default function PostExcerpt({ postId, viewPost, comment }) {
 
   return (
     <>
-      {(userFetchIsLoading || (isRepost ? originalPostIsLoading : false)) && (
-        // This should be skeleton
-        <Spinner />
-      )}
+      {(userFetchIsLoading || (isRepost ? originalPostIsLoading : false)) &&
+        (loadComponent || <PostSkeleton />)}
       {/* The originalPost would be null when this post is not a repost or the post has already been fetched, So this condition provides an immediate truthy response for the question "Has the post been fetched?" */}
       {(isRepost && !originalPostIsFetched ? originalPost : true) &&
         userFetchIsSuccesfull &&
@@ -79,6 +83,29 @@ export default function PostExcerpt({ postId, viewPost, comment }) {
     </>
   );
 }
+
+export const PostSkeleton = () => {
+  return (
+    <div className="post-skeleton">
+      <div>
+        <Skeleton variant="circular" width={"3rem"} height={"3rem"} />
+        <div>
+          <Skeleton variant="text" width={"10rem"} sx={{ fontSize: "1rem" }} />
+          <Skeleton variant="text" width={"7rem"} sx={{ fontSize: "1rem" }} />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+//Show skeletons for the number of posts being fetched
+export const postSkeletons = (postRange) => {
+  const skeletons = [];
+  for (let i = 0; i < postRange.limit; i++) {
+    skeletons.push(<PostSkeleton key={i} />);
+  }
+  return skeletons;
+};
 
 const Excerpt = ({ postId, viewPost, comment, user, rePostId }) => {
   const {
