@@ -9,8 +9,8 @@ const engagementSchema = new schema({
 
 const postSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
-  originalUserId: { type: schema.Types.ObjectId, default: "" },
-  originalPostId: { type: schema.Types.ObjectId, default: "" },
+  originalUserId: { type: schema.Types.ObjectId },
+  originalPostId: { type: schema.Types.ObjectId },
   content: { type: String, default: "" },
   mediaType: { type: String, default: "", enum: ["", "image", "video"] },
   media: { type: [{ src: String, alt: String }], default: "" },
