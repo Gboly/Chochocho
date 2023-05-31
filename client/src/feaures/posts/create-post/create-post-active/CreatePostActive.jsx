@@ -37,6 +37,7 @@ export default function CreatePostActive({
   type,
   parents,
   invalidatePostList,
+  style,
 }) {
   const {
     authUser: { profileImage },
@@ -115,6 +116,7 @@ export default function CreatePostActive({
       onClick={() =>
         visibilityOptionsIsOpen && dispatch(hideVisibiltyOptions())
       }
+      style={style || {}}
     >
       <form
         className="create-wrapper create-wrapper-focus"

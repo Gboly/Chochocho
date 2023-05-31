@@ -8,4 +8,5 @@
 }
 .postWithComments{
     min-height: calc(100vh - 116px);
+    width: 100%;
 }

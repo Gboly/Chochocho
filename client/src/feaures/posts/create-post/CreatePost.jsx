@@ -10,6 +10,7 @@ export default function CreatePost({
   type,
   parents,
   invalidatePostList,
+  style,
 }) {
   const active = useSelector(getCreatePostState);
 
@@ -21,6 +22,7 @@ export default function CreatePost({
           type={type}
           parents={parents}
           invalidatePostList={invalidatePostList}
+          style={style}
         />
       ) : (
         <CreatePostIdle placeholder={placeholder} type={type} />
