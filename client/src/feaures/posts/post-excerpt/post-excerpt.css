@@ -14,9 +14,9 @@
 .post-container-Wpopup:hover{
     background-color: rgba(195, 42, 163, 0.05)
 }
-.post-container:last-of-type{
+/* .post-container:last-of-type{
     margin-bottom: 1rem;
-}
+} */
 .post-wrapper{
     margin: 1rem 1rem 0.5rem;
 }
