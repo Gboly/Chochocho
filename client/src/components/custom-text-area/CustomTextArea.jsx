@@ -9,33 +9,30 @@ export default function CustomTextArea({
   content,
 }) {
   const [textContent, setTextContent] = useState(content ? content : "");
+  const [rows, setRows] = useState(1);
 
-  const textAreaNode = useRef();
   useEffect(() => {
-    textAreaNode.current.textContent = textContent;
     handleInput(textContent);
   }, [textContent, handleInput]);
 
-  useEffect(() => {
-    textAreaNode.current.focus();
-  }, []);
+  const expand = (e) => {
+    const newLines = e.target.value.match(/\n/gi)?.length || false;
+    setRows(newLines ? newLines + 1 : 1);
+  };
 
-  const { ph, ta } = sxx;
+  const { ta } = sxx;
   return (
     <>
-      {!textContent && (
-        <span className={`custom-placeholder ${ph ? ph : ""}`}>
-          {placeholder}
-        </span>
-      )}
-
-      <div
-        ref={textAreaNode}
+      <textarea
         className={`custom-textarea ${ta ? ta : ""}`}
-        onInput={(e) => {
-          setTextContent(e.target.textContent);
+        onChange={(e) => {
+          expand(e);
+          setTextContent(e.target.value);
         }}
-        contentEditable
+        value={textContent}
+        placeholder={placeholder}
+        autoFocus
+        rows={rows}
       />
     </>
   );
