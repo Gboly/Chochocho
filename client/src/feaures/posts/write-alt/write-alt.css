@@ -81,13 +81,16 @@
     top: 1rem;
 }
 .alt-custom-textarea{
-    border-bottom: 2px solid rgba(128,128,128,0.5);
+    /* Border is set to none at the custom text area since that's the general standard. This is a different design. Hence, !important */
+    border-bottom: 2px solid rgba(128,128,128,0.5) !important;
     border-radius: 0.1rem;
     max-height: 6.1rem;
     overflow-y:scroll;
+    width: 100%;
+    box-sizing: border-box;
 }
 .alt-custom-textarea:focus{
-    border-bottom: 2px solid #c32aa3;
+    border-bottom: 2px solid #c32aa3 !important;
 }
 .alt-character-limit-indicator{
     display: flex;
