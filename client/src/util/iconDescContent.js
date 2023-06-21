@@ -86,10 +86,10 @@ export const iconDescContent = [
     desc: "Tag",
     icon: <LocalOfferOutlinedIcon style={iconStyle} />,
   },
-  {
-    desc: "Feeling",
-    icon: <SentimentSatisfiedOutlinedIcon style={iconStyle} />,
-  },
+  // {
+  //   desc: "Feeling",
+  //   icon: <SentimentSatisfiedOutlinedIcon style={iconStyle} />,
+  // },
 ];
 
 export const othersPostOptions = [
