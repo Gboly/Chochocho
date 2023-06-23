@@ -5,7 +5,7 @@
     transform: translateX(-50%);
     z-index: 99999999999; */
     background-color: #fff;
-    width: 30%;
+    width: 35%;
     height: calc(100vh - 4rem);
     border-radius: 1rem;
     padding-bottom: 1rem;
@@ -81,8 +81,7 @@
     top: 1rem;
 }
 .alt-custom-textarea{
-    /* Border is set to none at the custom text area since that's the general standard. This is a different design. Hence, !important */
-    border-bottom: 2px solid rgba(128,128,128,0.5) !important;
+    border-bottom: 2px solid rgba(128,128,128,0.5);
     border-radius: 0.1rem;
     max-height: 6.1rem;
     overflow-y:scroll;
@@ -90,7 +89,7 @@
     box-sizing: border-box;
 }
 .alt-custom-textarea:focus{
-    border-bottom: 2px solid #c32aa3 !important;
+    border-bottom: 2px solid #c32aa3;
 }
 .alt-character-limit-indicator{
     display: flex;
@@ -104,6 +103,7 @@
 @media screen and (min-width: 750px) {
     .write-alt-container{
         height: calc(100vh - 6.5rem);
+        width: 50%;
         top: 0;
     }
 }

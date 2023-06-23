@@ -6,11 +6,14 @@
 .custom-textarea{
     /* border: none; */
     font-weight: 500;
+    position: relative;
     font-size: 1.05rem;
     color: inherit;
-    resize: none;
+    white-space: pre-line;
+    display: inline-block;
+    /* resize: none;
     border: none;
-    line-height: 1.2rem;
+    line-height: 1.2rem; */
 }
 .custom-textarea:focus{
     outline: none;

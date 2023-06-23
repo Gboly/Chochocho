@@ -127,6 +127,7 @@
         /* left: 50%;
         top: 0;
         transform: translateX(-50%);         */
+        top: -12rem;
         max-height: calc(100vh - 6.5rem);
     }
 }
