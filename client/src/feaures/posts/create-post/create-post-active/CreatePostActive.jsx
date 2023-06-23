@@ -43,9 +43,7 @@ export default function CreatePostActive({
     authUser: { profileImage },
   } = useContext(GeneralContext);
   const dispatch = useDispatch();
-  const { isOpen: visibilityOptionsIsOpen, valueId } = useSelector(
-    getVisibilityOptionsState
-  );
+
   const { type: fileType, src, reading } = useSelector(getUploadedMedia);
   const postText = useSelector(getPostText);
 
@@ -113,9 +111,7 @@ export default function CreatePostActive({
         // Closing this component immediately the request is sent affects the access to the isSuccess and isLoading result. This is some sort of work-around to make this component transparent till the request is succesful and at this point, its okay to close the component.
         isLoading ? "create-container-transparent" : ""
       }`}
-      onClick={() =>
-        visibilityOptionsIsOpen && dispatch(hideVisibiltyOptions())
-      }
+      onKeyDown={(e) => e.ctrlKey && e.key === "Enter" && addNewPost()}
       style={style || {}}
     >
       <form
