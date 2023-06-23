@@ -70,3 +70,6 @@
 .cbr-button:focus{
     outline: none;
 }
+.cbr-button-disabled{
+    opacity: 50%;
+}

@@ -38,7 +38,9 @@ export default function CreatePostIdle({ placeholder }) {
             <IconDescription />
           </div>
           <div type="submit" className="create-bottom-right">
-            <button className="cbr-button">Post</button>
+            <button disabled className="cbr-button">
+              Post
+            </button>
           </div>
         </div>
       </form>

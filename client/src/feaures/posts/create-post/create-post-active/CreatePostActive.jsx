@@ -125,21 +125,6 @@ export default function CreatePostActive({
         <div className="create-top-styled">
           <div className="create-top">
             <span className="create-top-description">Create a post</span>
-            {/* <div className="create-select-section">
-              <label htmlFor="visibleFor" className="create-top-instruction">
-                Visible for
-              </label>
-              <div onClick={() => dispatch(showVisibilityOptions())}>
-                <CustomSelect
-                  {...{
-                    options: visibilityOptions,
-                    valueId,
-                    getValue: (valId) => dispatch(setVisibilityValue(valId)),
-                    isOpen: visibilityOptionsIsOpen,
-                  }}
-                />
-              </div>
-            </div> */}
             <i
               id="create-close-icon"
               className="create-close-icon"
@@ -175,7 +160,13 @@ export default function CreatePostActive({
               <IconDescription />
             </div>
             <div type="submit" className="create-bottom-right">
-              <button className="cbr-button">Post</button>
+              <button
+                className={`cbr-button ${
+                  postText || src ? "" : "cbr-button-disabled"
+                }`}
+              >
+                Post
+              </button>
             </div>
           </div>
         </div>

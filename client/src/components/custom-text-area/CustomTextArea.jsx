@@ -9,6 +9,7 @@ export default function CustomTextArea({
   content,
 }) {
   const [textContent, setTextContent] = useState(content ? content : "");
+  const [showPlaceholder, setShowPlaceholder] = useState(true);
 
   const textAreaNode = useRef();
 
@@ -18,6 +19,7 @@ export default function CustomTextArea({
     const openDiv = new RegExp("<div>", "g");
     const closeDiv = new RegExp("</div>", "g");
     const lineBreak = new RegExp("<br>", "g");
+    const blank = /[^&nbsp;\s\n]/;
 
     // Some browsers such as chrome creates a new div for every new line content while others just use a <br>. Hence, the condition.
     const isChrome = openDiv.test(innerHTML);
@@ -29,13 +31,15 @@ export default function CustomTextArea({
       .replace(lineBreak, "");
     const nonChromeReplace = innerHTML.replace(lineBreak, "\n");
 
-    const result = innerHTML
-      ? isChrome
-        ? chromeReplace
-        : nonChromeReplace
-      : "";
-    setTextContent(result);
-    handleInput(result);
+    const modified = isChrome ? chromeReplace : nonChromeReplace;
+    // Sometimes the browser decides to treat the first line as a new line.
+    setShowPlaceholder(modified === "\n" || !modified ? true : false);
+
+    //This ensures that user cannot make a post without having at least an actual character.
+    const containsActualCharacter = blank.test(modified);
+    const text = containsActualCharacter ? modified : "";
+    setTextContent(text);
+    handleInput(text);
   };
 
   useEffect(() => {
@@ -46,7 +50,7 @@ export default function CustomTextArea({
 
   return (
     <>
-      {!textContent && (
+      {showPlaceholder && (
         <span className={`custom-placeholder ${ph ? ph : ""}`}>
           {placeholder}
         </span>
