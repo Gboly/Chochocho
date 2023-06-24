@@ -3,7 +3,6 @@
     box-shadow: 0 0 10px rgba(128,128,128,0.5);
     width: inherit;
     position: absolute;
-    top: 0rem;
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: calc(100vh - 7.5rem);
@@ -127,7 +126,13 @@
         /* left: 50%;
         top: 0;
         transform: translateX(-50%);         */
-        top: -12rem;
+        /* top: -12rem; */
         max-height: calc(100vh - 6.5rem);
     }
+}
+
+@media screen and (max-width: 1240px) {
+    .create-container-focus{ 
+        top: -12rem;
+     }
 }

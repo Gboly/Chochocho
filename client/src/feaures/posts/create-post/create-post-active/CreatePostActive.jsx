@@ -1,24 +1,18 @@
 import "./create-post-active.css";
-import CustomSelect from "../../../../components/custom-select/CustomSelect";
 import CustomTextArea from "../../../../components/custom-text-area/CustomTextArea";
 import IconDescription from "../../../../components/icon-description/IconDescription";
 import Spinner from "../../../../components/Spinner/Spinner";
-import { visibilityOptions } from "../../../../util/formRadioOptions";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { iconStyle } from "../../../../util/iconDescContent";
 import { useDispatch, useSelector } from "react-redux";
 import { useContext, useEffect } from "react";
 import {
   closeCreatePost,
-  hideVisibiltyOptions,
   removeMedia,
   openWriteAlt,
   writePost,
-  setVisibilityValue,
-  showVisibilityOptions,
 } from "../../../../app/actions/homeActions";
 import {
-  getVisibilityOptionsState,
   getUploadedMedia,
   getPostText,
   getNewPostDetails,
@@ -45,7 +39,6 @@ export default function CreatePostActive({
   const dispatch = useDispatch();
 
   const { type: fileType, src, reading } = useSelector(getUploadedMedia);
-  const postText = useSelector(getPostText);
 
   const [addPost, { isSuccess, isLoading, error }] = useAddPostMutation();
   const newPost = useSelector(getNewPostDetails);
@@ -59,8 +52,12 @@ export default function CreatePostActive({
       date: new Date().toISOString(),
     };
 
-    (postText || src) && addPost(args);
+    (newPost.content || src) && addPost(args);
   };
+
+  useEffect(() => {
+    console.log(newPost.content);
+  }, [newPost]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -146,7 +143,7 @@ export default function CreatePostActive({
                 placeholder: placeholder,
                 sxx: { ph: "create-custom-placeholder", ta: "create-textarea" },
                 handleInput: (textContent) => dispatch(writePost(textContent)),
-                text: postText,
+                text: newPost.content,
               }}
             />
           </div>
@@ -158,7 +155,7 @@ export default function CreatePostActive({
             <div type="submit" className="create-bottom-right">
               <button
                 className={`cbr-button ${
-                  postText || src ? "" : "cbr-button-disabled"
+                  newPost.content || src ? "" : "cbr-button-disabled"
                 }`}
               >
                 Post

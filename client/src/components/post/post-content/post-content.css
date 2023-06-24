@@ -1,5 +1,6 @@
 .post-text{
     font-size: 0.9rem;
+    white-space: pre-wrap;
 }
 .post-media-container{
     width:100%;
