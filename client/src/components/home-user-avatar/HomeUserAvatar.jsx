@@ -44,7 +44,7 @@ const HomeUserAvatar = ({ userId, src, size, style, noLink, action }) => {
         action={action}
       />
       <img
-        src={fetchedSrc || ""}
+        src={fetchedSrc || defaultProfileImage}
         onError={() => {
           src !== defaultProfileImage && setSrc(defaultProfileImage);
         }}
