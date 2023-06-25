@@ -1,14 +1,13 @@
 //import "../follow-unfollow-poster/follow-unfollow-poster.css";
 import { closePopupOnOpaqueOverlay } from "../../util/functions";
 import { closeLogOut } from "../../app/actions/layoutActions";
-import { useNavigate } from "react-router-dom";
 
 export default function LogOut() {
-  const navigate = useNavigate();
   const logOut = () => {
     sessionStorage.removeItem("authToken");
     closePopupOnOpaqueOverlay(closeLogOut);
-    navigate("/auth/sign-in");
+    // I need a page refresh for everytime is logged out just so data does not remain cached. Hence, the use of the native js navigation instead of the useNavigate.
+    window.location.href = "/auth/sign-in";
   };
 
   return (

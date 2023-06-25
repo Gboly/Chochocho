@@ -1,14 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export default function AuthError({ error }) {
-  const navigate = useNavigate();
-
   useEffect(() => {
     error &&
       (error.status === 401 || error.originalStatus === 401) &&
-      navigate("/auth/sign-in");
-  }, [error, navigate]);
+      // I need a page refresh for everytime is logged out just so data does not remain cached. Hence, the use of the native js navigation instead of the useNavigate.
+      (window.location.href = "/auth/sign-in");
+  }, [error]);
 
   return <></>;
 }
