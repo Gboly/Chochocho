@@ -264,9 +264,5 @@ export const FullDate = ({ date, visibleFor }) => {
   const fullDateArray = fullDate.split(",");
   const organizedFullDate = `${fullDateArray[2]} - ${fullDateArray[0]},${fullDateArray[1]}`;
 
-  return (
-    <div className="full-date">
-      {organizedFullDate} {visibleFor ? `- ${visibleFor}` : ""}
-    </div>
-  );
+  return <div className="full-date">{organizedFullDate}</div>;
 };

@@ -41,7 +41,9 @@
 }
 .full-date{
     margin-top: 1rem;
-    width: 100%; 
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: normal;
 }
 .reposted-by{
     opacity: 0.7;

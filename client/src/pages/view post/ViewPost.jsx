@@ -147,7 +147,7 @@ export default function ViewPost() {
                         date: new Date().toISOString(),
                       },
                     ]}
-                    style={{ top: "12rem" }}
+                    style={{ top: "1rem" }}
                   />
                   <PostList
                     postIds={commentsIds}
