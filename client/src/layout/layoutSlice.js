@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  opaqueOverlay: { isOpen: false, type: "" },
+  opaqueOverlay: { isOpen: false, type: "", hidden: false },
   transparentOverlay: {
     isOpen: false,
     type: "",
@@ -20,11 +20,19 @@ export const layoutSlice = createSlice({
   initialState,
   reducers: {
     openOpaqueOverlay: (state, action) => {
-      state.opaqueOverlay = { isOpen: true, type: action.payload || "" };
+      state.opaqueOverlay = {
+        isOpen: true,
+        type: action.payload || "",
+        hidden: false,
+      };
+      return state;
+    },
+    hideOpaqueOverlay: (state, action) => {
+      state.opaqueOverlay.hidden = true;
       return state;
     },
     closeOpaqueOverlay: (state) => {
-      state.opaqueOverlay = { isOpen: false, type: "" };
+      state.opaqueOverlay = { isOpen: false, type: "", hidden: false };
       return state;
     },
     openTransparentOverlay: (state, action) => {

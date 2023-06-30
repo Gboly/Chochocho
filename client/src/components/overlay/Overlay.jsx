@@ -97,7 +97,7 @@ export const TransparentOverlay = () => {
 };
 
 export const OpaqueOverlay = () => {
-  const { type: currentType } = useSelector(getOpaqueOverlayState);
+  const { type: currentType, hidden } = useSelector(getOpaqueOverlayState);
 
   // consider placing this animate presence within the sidebar component itself and you could pass the currentType as rop to it to be used as key
   const opaqueOverlayLibrary = useMemo(() => {
@@ -133,7 +133,7 @@ export const OpaqueOverlay = () => {
         <div
           key={index}
           id="opaque-overlay"
-          className="opaque-overlay"
+          className={`opaque-overlay ${hidden && "bg-overlay"}`}
           onClick={(e) => handleClick(e, closeAction)}
         >
           {component}

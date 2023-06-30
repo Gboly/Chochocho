@@ -25,6 +25,7 @@ import {
 import { GeneralContext } from "../../../../routes/Router";
 import { useAddPostMutation } from "../../../../app/api-slices/postsApiSlice";
 import AuthError from "../../../../pages/sign-in/AuthError";
+import { hideOpaqueOverlay } from "../../../../app/actions/layoutActions";
 
 const mediaInitialState = { fileType: "", src: "", reading: false };
 export default function CreatePostActive({
@@ -73,6 +74,9 @@ export default function CreatePostActive({
     (newPost.content || src) && addPost(args);
   };
 
+  useEffect(() => {
+    isLoading && dispatch(hideOpaqueOverlay());
+  }, [isLoading, dispatch]);
   useEffect(() => {
     if (isSuccess) {
       invalidatePostList();

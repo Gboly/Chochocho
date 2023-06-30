@@ -6,6 +6,9 @@
     border-radius: 0.8rem;   
     /* margin-top: 0; */
 }
+.transparent-container{
+    opacity: 60%;
+}
 .create-wrapper{
     margin: 0.6rem 1rem;
 }

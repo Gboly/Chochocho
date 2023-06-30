@@ -12,4 +12,5 @@ export const {
   closeTransparentOverlay,
   openLogOut,
   closeLogOut,
+  hideOpaqueOverlay,
 } = layoutSlice.actions;

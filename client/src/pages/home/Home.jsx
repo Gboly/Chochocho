@@ -22,6 +22,7 @@ import PostList from "../../feaures/posts/post-list/PostList";
 import AuthError from "../sign-in/AuthError";
 import { newRange } from "../../util/functions";
 import { postSkeletons } from "../../feaures/posts/post-excerpt/PostExcerpt";
+import { getOpaqueOverlayState } from "../../layout/layoutSlice";
 
 export const HomeContext = createContext();
 
@@ -38,7 +39,9 @@ export default function Home() {
   const { isOpen: postOptionsIsOpen } = useSelector(getPostOptionState);
 
   const homeNode = useRef();
-  const { pageNodes, opaqueOverlayIsOpen } = useContext(GeneralContext);
+  const { pageNodes } = useContext(GeneralContext);
+  const { isOpen: opaqueOverlayIsOpen, hidden: opaqueOverlayIsHidden } =
+    useSelector(getOpaqueOverlayState);
 
   // #16, #17
   useImperativeHandle(
@@ -71,7 +74,9 @@ export default function Home() {
         <div
           ref={homeNode}
           className={`home-wrapper ${
-            opaqueOverlayIsOpen ? "outlet-no-scroll" : ""
+            opaqueOverlayIsOpen && !opaqueOverlayIsHidden
+              ? "outlet-no-scroll"
+              : ""
           }`}
           id={homePageType}
         >

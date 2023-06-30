@@ -8,12 +8,15 @@ import { showPopupOnOpaqueOverlay } from "../../../../util/functions";
 import { useContext } from "react";
 import { GeneralContext } from "../../../../routes/Router";
 
-export default function CreatePostIdle({ placeholder }) {
+export default function CreatePostIdle({ placeholder, active }) {
   const {
     authUser: { id, profileImage },
   } = useContext(GeneralContext);
+
   return (
-    <div className="create-container">
+    <div
+      className={`create-container ${active ? "transparent-container" : ""}`}
+    >
       <form className="create-wrapper">
         <div className="create-middle-text">
           <HomeUserAvatar
@@ -31,6 +34,7 @@ export default function CreatePostIdle({ placeholder }) {
             onFocus={() =>
               showPopupOnOpaqueOverlay(openCreatePost, "create post")
             }
+            disabled={active ? true : false}
           />
         </div>
         <div className="create-bottom">

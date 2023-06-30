@@ -16,7 +16,7 @@ export default function CreatePost({
 
   return (
     <>
-      {active ? (
+      {active && (
         <CreatePostActive
           placeholder={placeholder}
           type={type}
@@ -24,9 +24,8 @@ export default function CreatePost({
           invalidatePostList={invalidatePostList}
           style={style}
         />
-      ) : (
-        <CreatePostIdle placeholder={placeholder} type={type} />
       )}
+      {<CreatePostIdle placeholder={placeholder} active={active} type={type} />}
     </>
   );
 }
