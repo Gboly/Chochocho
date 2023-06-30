@@ -19,7 +19,7 @@ export default function PostContent({ content, mediaType, media, postId }) {
         onClick={(e) => e && e.stopPropagation && e.stopPropagation()}
       >
         {mediaType.startsWith("video") && (
-          <CustomVideo src={media} postId={postId} />
+          <CustomVideo src={media[0].src} postId={postId} />
         )}
         {mediaType.startsWith("image") &&
           media &&

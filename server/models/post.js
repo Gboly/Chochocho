@@ -13,7 +13,10 @@ const postSchema = new schema({
   originalPostId: { type: schema.Types.ObjectId },
   content: { type: String, default: "" },
   mediaType: { type: String, default: "", enum: ["", "image", "video"] },
-  media: { type: [{ src: String, alt: String }], default: "" },
+  media: {
+    type: [{ src: String, alt: String, publicId: String }],
+    default: "",
+  },
   likes: { type: [engagementSchema], default: [] },
   reposts: { type: [engagementSchema], default: [] },
   visibleFor: {

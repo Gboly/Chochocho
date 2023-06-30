@@ -73,17 +73,17 @@ export const handleMediaUpload = (e, action) => {
   const fileObject = e.target.files[0];
   const { type, size } = fileObject;
 
-  if (size > 152 * 1024 * 1024) {
+  if (size > 10 * 1024 * 1024) {
     return alert("File is too large");
   }
 
   const reader = new FileReader();
   reader.addEventListener("loadstart", (e) => {
-    store.dispatch(action({ reading: true }));
+    action({ reading: true });
   });
   reader.addEventListener("load", (e) => {
     const src = e.target.result;
-    store.dispatch(action({ type, src }));
+    action({ type, src });
   });
   reader.readAsDataURL(fileObject);
 };
@@ -92,7 +92,7 @@ export const handleprofileImageUpload = (e, payload) => {
   const fileObject = e.target.files[0];
   const { size } = fileObject;
 
-  if (size > 152 * 1024 * 1024) {
+  if (size > 5 * 1024 * 1024) {
     return alert("File is too large");
   }
 
@@ -435,11 +435,11 @@ export const modifyExistingPost = (response) => {
   )?.ids;
   const attachIds = (item) => {
     item.id = item._id;
-    if (existingPostIds.includes(item.id)) {
-      item.cachedId = item._id;
-      item._id = uniqid();
-      item.id = uniqid();
-    }
+    // if (existingPostIds.includes(item.id)) {
+    //   item.cachedId = item._id;
+    //   item._id = uniqid();
+    //   item.id = uniqid();
+    // }
     return item;
   };
   return Array.isArray(response)

@@ -2,10 +2,7 @@ import "./icon-description.css";
 import { iconDescContent } from "../../util/iconDescContent";
 
 import { useSelector } from "react-redux";
-import {
-  readUploadedMedia,
-  openCreatePost,
-} from "../../app/actions/homeActions";
+import { openCreatePost } from "../../app/actions/homeActions";
 import { getCreatePostState } from "../../feaures/posts/create-post/createPostSlice";
 import {
   handleMediaUpload,
@@ -13,7 +10,7 @@ import {
 } from "../../util/functions";
 import { createPostType } from "../../util/types";
 
-export default function IconDescription() {
+export default function IconDescription({ readUploadedMedia }) {
   const { isOpen: createPostIsActive } = useSelector(getCreatePostState);
 
   const MainContent = ({ icon, desc }) => (

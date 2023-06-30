@@ -9,15 +9,40 @@ import {
   extractMentionedUsers,
   removeFromArray,
 } from "../../util/helperFunctions.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const addNewPost = async (req, res) => {
   // For comments, The parents array should already be updated in the frontend by spreading the parents of the post being commented on
   // and then attaching an object of its postId and userId after.
   // This way i can easily pick the last item in the array as the post being commented on.
-  const { type, parents, content, mediaType } = req.body;
+  const {
+    type,
+    parents,
+    content,
+    mediaType,
+    media: [{ src, alt }],
+  } = req.body;
   const { id: userId, followers, following, username } = req.user;
   try {
-    const post = new Post({ userId, ...req.body });
+    let cloudinaryMedia;
+    if (mediaType && src) {
+      cloudinaryMedia = await cloudinary.uploader.upload(src, {
+        folder: "post",
+        resource_type: mediaType,
+      });
+    }
+
+    const post = new Post({
+      userId,
+      ...req.body,
+      media: [
+        {
+          src: cloudinaryMedia?.secure_url || "",
+          publicId: cloudinaryMedia?.public_id || "",
+          alt,
+        },
+      ],
+    });
     await post.save();
 
     if (type === "comment") {

@@ -7,7 +7,7 @@ const initialState = {
   visibiltyOptionsState: { isOpen: false, valueId: 0 },
   postText: "",
   // Make provision for more than one picture
-  uploadedMedia: { type: "", src: "", reading: false },
+  // uploadedMedia: { type: "", src: "", reading: false },
   writeAlt: { isOpen: false, value: "", type: "" },
 };
 
@@ -46,20 +46,20 @@ export const createPostSlice = createSlice({
       state.postText = action.payload;
       return state;
     },
-    readUploadedMedia: (state, action) => {
-      const { type, src, reading } = action.payload;
-      if (reading === true) {
-        state.uploadedMedia.reading = true;
-      } else {
-        state.uploadedMedia = { type, src, reading: false };
-      }
-      return state;
-    },
-    removeMedia: (state) => {
-      state.uploadedMedia = { type: "", src: "", reading: false };
-      state.writeAlt.value = "";
-      return state;
-    },
+    // readUploadedMedia: (state, action) => {
+    //   const { type, src, reading } = action.payload;
+    //   if (reading === true) {
+    //     state.uploadedMedia.reading = true;
+    //   } else {
+    //     state.uploadedMedia = { type, src, reading: false };
+    //   }
+    //   return state;
+    // },
+    // removeMedia: (state) => {
+    //   state.uploadedMedia = { type: "", src: "", reading: false };
+    //   state.writeAlt.value = "";
+    //   return state;
+    // },
     openWriteAlt: (state, action) => {
       state.writeAlt = {
         isOpen: true,
@@ -114,16 +114,16 @@ export const getWriteAltState = (state) => state.createPost.writeAlt;
 export const getNewPostDetails = ({ createPost }) => {
   const {
     postText,
-    uploadedMedia: { type, src },
-    writeAlt: { value },
+    // uploadedMedia: { type, src },
+    //writeAlt: { value },
     visibiltyOptionsState: { valueId },
   } = createPost;
   const content = postText;
-  const mediaType = type ? type.split("/")[0] : "";
-  const media = [{ src, alt: value }];
+  // const mediaType = type ? type.split("/")[0] : "";
+  // const media = [{ src, alt: value }];
   const visibleFor = visibilityOptions[valueId];
 
-  return { content, mediaType, media, visibleFor };
+  return { content, visibleFor };
 };
 
 // export const getPostByCurrent

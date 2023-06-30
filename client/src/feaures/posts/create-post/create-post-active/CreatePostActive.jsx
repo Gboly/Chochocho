@@ -5,17 +5,17 @@ import Spinner from "../../../../components/Spinner/Spinner";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { iconStyle } from "../../../../util/iconDescContent";
 import { useDispatch, useSelector } from "react-redux";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   closeCreatePost,
-  removeMedia,
   openWriteAlt,
   writePost,
+  setAltValue,
 } from "../../../../app/actions/homeActions";
 import {
   getUploadedMedia,
-  getPostText,
   getNewPostDetails,
+  getWriteAltState,
 } from "../createPostSlice";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import {
@@ -26,6 +26,7 @@ import { GeneralContext } from "../../../../routes/Router";
 import { useAddPostMutation } from "../../../../app/api-slices/postsApiSlice";
 import AuthError from "../../../../pages/sign-in/AuthError";
 
+const mediaInitialState = { fileType: "", src: "", reading: false };
 export default function CreatePostActive({
   placeholder,
   type,
@@ -38,15 +39,32 @@ export default function CreatePostActive({
   } = useContext(GeneralContext);
   const dispatch = useDispatch();
 
-  const { type: fileType, src, reading } = useSelector(getUploadedMedia);
+  //const { type: fileType, src, reading } = useSelector(getUploadedMedia);
+  const [{ fileType, src, reading }, setUploadedMedia] =
+    useState(mediaInitialState);
 
   const [addPost, { isSuccess, isLoading, error }] = useAddPostMutation();
+  const { value: alt } = useSelector(getWriteAltState);
   const newPost = useSelector(getNewPostDetails);
+
+  const readUploadedMedia = ({ type, src, reading }) => {
+    setUploadedMedia((pastValue) => {
+      if (reading) return { ...pastValue, reading: true };
+      if (type && src)
+        return { fileType: type.split("/")[0], src, reading: false };
+    });
+  };
+  const removeMedia = () => {
+    setUploadedMedia(mediaInitialState);
+    dispatch(setAltValue(""));
+  };
 
   const addNewPost = (e) => {
     e && e.preventDefault();
     const args = {
       ...newPost,
+      mediaType: fileType,
+      media: [{ src, alt }],
       type,
       parents: parents || [],
       date: new Date().toISOString(),
@@ -54,10 +72,6 @@ export default function CreatePostActive({
 
     (newPost.content || src) && addPost(args);
   };
-
-  useEffect(() => {
-    console.log(newPost.content);
-  }, [newPost]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -73,7 +87,7 @@ export default function CreatePostActive({
       <video src={src} alt="post" className="create-middle-media" controls />
       <div
         className="media-option-custom-icon remove-video-icon"
-        onClick={() => dispatch(removeMedia())}
+        onClick={removeMedia}
       >
         ✖
       </div>
@@ -83,7 +97,7 @@ export default function CreatePostActive({
       <div className="media-container-options">
         <div
           className="media-option-custom-icon remove-picture-icon"
-          onClick={() => dispatch(removeMedia())}
+          onClick={removeMedia}
         >
           ✖
         </div>
@@ -150,7 +164,7 @@ export default function CreatePostActive({
           <div className="create-middle-media-container">{mediasection}</div>
           <div className="create-bottom">
             <div className="create-bottom-left">
-              <IconDescription />
+              <IconDescription readUploadedMedia={readUploadedMedia} />
             </div>
             <div type="submit" className="create-bottom-right">
               <button

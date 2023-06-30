@@ -72,7 +72,7 @@ export default function CustomVideo({ src, postId }) {
         )}
         <video
           ref={videoNode}
-          src={video}
+          src={src}
           className={`cvc-video ${initialPlay && "cvc-video-playing"}`}
           onClick={handlePlayPause}
         ></video>
