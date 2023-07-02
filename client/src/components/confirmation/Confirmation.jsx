@@ -1,9 +1,45 @@
+import { useDispatch } from "react-redux";
 import "./confirmation.css";
+import { useEffect } from "react";
+import { closeConfirmation } from "../../app/actions/layoutActions";
+import { LinearProgress } from "@mui/material";
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 
-const types = { copy: "Successfully copied link to post" };
+const successTypes = {
+  copy: "Successfully copied link to post",
+  post: "successfully created post",
+};
+const progressTypes = { post: "Creating post" };
 
-export default function Confirmation({ type }) {
-  return (
-    <div className="confirmation-container quote">{types[type] || ""}</div>
-  );
+export default function Confirmation({ type, progress }) {
+  const dispatch = useDispatch();
+
+  const Successful = () => {
+    useEffect(() => {
+      const timeout = setTimeout(() => dispatch(closeConfirmation()), 3000);
+      return () => clearTimeout(timeout);
+    }, []);
+
+    return (
+      <div className="quote confirmation-success">
+        {successTypes[type] || ""}
+        <span className="success-check">
+          <TaskAltIcon color="inherit" />
+        </span>
+      </div>
+    );
+  };
+
+  const Progress = () => {
+    return (
+      <div className="quote confirmation-progress">
+        {progressTypes[type] || ""}
+        <div className="progress-wrapper">
+          <LinearProgress color="inherit" />
+        </div>
+      </div>
+    );
+  };
+
+  return progress < 100 ? <Progress /> : <Successful />;
 }

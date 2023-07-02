@@ -10,7 +10,7 @@ const initialState = {
     isBottom: false,
   },
   sidebarNav: false,
-  confirmation: { isOpen: false, type: "" },
+  confirmation: { isOpen: false, type: "", progress: 0 },
   pageHeight: "",
   logOut: false,
 };
@@ -59,11 +59,20 @@ export const layoutSlice = createSlice({
       return state;
     },
     showConfirmation: (state, action) => {
-      state.confirmation = { isOpen: true, type: action.payload };
+      const { type, progress } = action.payload;
+      state.confirmation = {
+        isOpen: true,
+        type,
+        progress: progress || state.confirmation.progress,
+      };
+      return state;
+    },
+    updateProgress: (state, action) => {
+      state.confirmation.progress = action.payload;
       return state;
     },
     closeConfirmation: (state) => {
-      state.confirmation = { isOpen: false, type: "" };
+      state.confirmation = initialState.confirmation;
       return state;
     },
     setPageHeight: (state, action) => {

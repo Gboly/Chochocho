@@ -4,6 +4,7 @@ export const {
   openSidebarNav,
   closeSidebarNav,
   showConfirmation,
+  updateProgress,
   closeConfirmation,
   setPageHeight,
   openOpaqueOverlay,

@@ -65,8 +65,11 @@ export default function App({ children }) {
     getTransparentOverlayState
   );
   const { isOpen: fullscreenIsOpen } = useSelector(getFullscreenState);
-  const { isOpen: confirmationIsOpen, type: confirmationType } =
-    useSelector(getConfirmationState);
+  const {
+    isOpen: confirmationIsOpen,
+    type: confirmationType,
+    progress,
+  } = useSelector(getConfirmationState);
 
   return (
     <GeneralContext.Provider
@@ -93,7 +96,9 @@ export default function App({ children }) {
       )}
       {/* #2 */}
       {fullscreenIsOpen && <PostImageFullscreen />}
-      {confirmationIsOpen && <Confirmation type={confirmationType} />}
+      {confirmationIsOpen && (
+        <Confirmation type={confirmationType} progress={progress} />
+      )}
 
       {opaqueOverlayIsOpen && <OpaqueOverlay />}
       {TransparentOverlayIsOpen && <TransparentOverlay />}

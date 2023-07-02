@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
 import {} from "../../../app/api-slices/usersApiSlice";
 import { getPostShareState } from "../post-excerpt/postExcerptSlice";
+import { showConfirmation } from "../../../app/actions/layoutActions";
 
 export default function PostShare() {
   const dispatch = useDispatch();
@@ -25,7 +26,9 @@ export default function PostShare() {
       `${window.location.origin}/${username}/post/${postId}`
     );
     result.then((data) =>
-      data ? displayConfirmation("copy") : alert("failed to copy link to post.")
+      data
+        ? dispatch(showConfirmation({ type: "copy", progress: 100 }))
+        : alert("failed to copy link to post.")
     );
   };
 
