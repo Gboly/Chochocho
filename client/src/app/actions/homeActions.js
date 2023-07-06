@@ -4,6 +4,8 @@ import { postExcerptSlice } from "../../feaures/posts/post-excerpt/postExcerptSl
 export const {
   openCreatePost,
   closeCreatePost,
+  setIsCreatingPost,
+  setHasCreatedPost,
   openEditPost,
   closeEditPost,
   showVisibilityOptions,

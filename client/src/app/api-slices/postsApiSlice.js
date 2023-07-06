@@ -7,6 +7,9 @@ import {
   selectTotalFetchedResult,
   unNormalize,
 } from "../../util/functions";
+import axios from "axios";
+import { setHasCreatedPost, setIsCreatingPost } from "../actions/homeActions";
+import { updateProgress } from "../actions/layoutActions";
 
 const postsAdapter = createEntityAdapter({
   selectId: (post) => post?._id || post?.id,
@@ -114,12 +117,40 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
       },
     }),
     addPost: builder.mutation({
-      query: (body) => ({
-        url: "/posts",
-        method: "POST",
-        body,
-        credentials: "include",
-      }),
+      // query: (body) => ({
+      //   url: "/posts",
+      //   method: "POST",
+      //   body,
+      //   credentials: "include",
+      // }),
+      queryFn: async (body, api) => {
+        try {
+          api.dispatch(setIsCreatingPost());
+          const result = await axios.post("http://localhost:3100/posts", body, {
+            headers: {
+              // Using sessionStorage to keep auth token is not a good practice. This would be corrected later.
+              "auth-token": sessionStorage.getItem("authToken"),
+            },
+            onUploadProgress: (upload) => {
+              let progress = Math.round((100 * upload.loaded) / upload.total);
+              // This is just a UI trick.
+              api.dispatch(updateProgress(progress === 100 ? 95 : progress));
+            },
+          });
+
+          api.dispatch(setHasCreatedPost());
+          api.dispatch(updateProgress(100));
+          return { data: result.data };
+        } catch (axiosError) {
+          let err = axiosError;
+          return {
+            error: {
+              status: err.response?.status,
+              data: err.response?.data || err.message,
+            },
+          };
+        }
+      },
     }),
     deletePost: builder.mutation({
       query: (id) => ({

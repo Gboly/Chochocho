@@ -3,6 +3,7 @@ import { visibilityOptions } from "../../../util/formRadioOptions";
 
 const initialState = {
   createPost: false,
+  addPostMutation: { isLoading: false, isSuccess: false },
   editPost: { isOpen: false, id: "" },
   visibiltyOptionsState: { isOpen: false, valueId: 0 },
   postText: "",
@@ -18,9 +19,18 @@ export const createPostSlice = createSlice({
     openCreatePost: (state) => (state = { ...state, createPost: true }),
     closeCreatePost: (state) => {
       state.createPost = false;
+      state.addPostMutation.isSuccess = false;
       if (state.writeAlt.isOpen) {
         state.writeAlt.isOpen = false;
       }
+    },
+    setIsCreatingPost: (state) => {
+      state.addPostMutation.isLoading = true;
+      return state;
+    },
+    setHasCreatedPost: (state) => {
+      state.addPostMutation = { isLoading: false, isSuccess: true };
+      return state;
     },
     openEditPost: (state, action) => {
       state.editPost = { isOpen: true, id: action.payload };
@@ -99,6 +109,9 @@ export const createPostSlice = createSlice({
 export const createPostReducer = createPostSlice.reducer;
 
 export const getCreatePostState = (state) => state.createPost.createPost;
+
+export const getAddNewPostMutation = (state) =>
+  state.createPost.addPostMutation;
 
 export const getEditPostState = (state) => state.createPost.editPost;
 

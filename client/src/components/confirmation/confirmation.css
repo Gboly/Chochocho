@@ -23,6 +23,7 @@
 }
 .confirmation-progress{
     min-width: 20rem;
+    animation: none ;
 }
 .progress-wrapper{
     margin-top: 1rem;

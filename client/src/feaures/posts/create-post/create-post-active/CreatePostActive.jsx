@@ -16,6 +16,7 @@ import {
   getUploadedMedia,
   getNewPostDetails,
   getWriteAltState,
+  getAddNewPostMutation,
 } from "../createPostSlice";
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import {
@@ -25,7 +26,10 @@ import {
 import { GeneralContext } from "../../../../routes/Router";
 import { useAddPostMutation } from "../../../../app/api-slices/postsApiSlice";
 import AuthError from "../../../../pages/sign-in/AuthError";
-import { hideOpaqueOverlay } from "../../../../app/actions/layoutActions";
+import {
+  hideOpaqueOverlay,
+  showConfirmation,
+} from "../../../../app/actions/layoutActions";
 
 const mediaInitialState = { fileType: "", src: "", reading: false };
 export default function CreatePostActive({
@@ -44,7 +48,8 @@ export default function CreatePostActive({
   const [{ fileType, src, reading }, setUploadedMedia] =
     useState(mediaInitialState);
 
-  const [addPost, { isSuccess, isLoading, error }] = useAddPostMutation();
+  const [addPost, { error }] = useAddPostMutation();
+  const { isLoading, isSuccess } = useSelector(getAddNewPostMutation);
   const { value: alt } = useSelector(getWriteAltState);
   const newPost = useSelector(getNewPostDetails);
 
@@ -75,7 +80,9 @@ export default function CreatePostActive({
   };
 
   useEffect(() => {
-    isLoading && dispatch(hideOpaqueOverlay());
+    isLoading &&
+      dispatch(hideOpaqueOverlay()) &&
+      dispatch(showConfirmation({ type: "post" }));
   }, [isLoading, dispatch]);
   useEffect(() => {
     if (isSuccess) {
