@@ -298,7 +298,7 @@ const deletePost = async (req, res) => {
   try {
     // Delete the post and also all clone that was made out of it from a repost
     const deletedPost = await Post.deleteMany({
-      $or: { _id, originalPostId: _id },
+      $or: [{ _id }, { originalPostId: _id }],
     });
     res.status(200).json(deletedPost);
   } catch (error) {
