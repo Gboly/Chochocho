@@ -39,9 +39,10 @@ export default function PostReaction({
   const post = useSelector((state) => selectPostById(state, postId));
   const likesTotal = (post?.likes || []).length;
   const repostsTotal = (post?.reposts || []).length;
-  const commentsTotal = useSelector((state) =>
-    selectPostTotalComments(state, postId)
-  );
+  const commentsTotal = (post?.comments || []).length;
+  // const commentsTotal = useSelector((state) =>
+  //   selectPostTotalComments(state, postId)
+  // );
 
   const {
     authUser: { id: authUserId },
