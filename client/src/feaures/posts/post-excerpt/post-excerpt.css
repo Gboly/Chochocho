@@ -6,13 +6,13 @@
     font-weight: 500; 
     border-radius: 1rem;  
     position: relative;
-    cursor: pointer;
 }
 .post-container:first-of-type{
     margin-top: 0;
 }
 .post-container-Wpopup:hover{
-    background-color: rgba(195, 42, 163, 0.05)
+    background-color: rgba(195, 42, 163, 0.05);
+    cursor: pointer;
 }
 /* .post-container:last-of-type{
     margin-bottom: 1rem;
