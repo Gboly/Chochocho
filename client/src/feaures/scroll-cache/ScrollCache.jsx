@@ -12,14 +12,14 @@ import { GeneralContext } from "../../routes/Router";
 export const ScrollCache = forwardRef(({ children, defaultScrollTop }, ref) => {
   const location = useLocation();
   const { userId } = useParams();
-  const { pageRefresh, setPageRefresh } = useContext(GeneralContext);
+  const { pageRefresh, setPageRefresh, authUser } = useContext(GeneralContext);
 
   useLayoutEffect(() => {
     const scrollCache = getSessionStorageItem(scrollCacheType);
     const key =
       ref.current.id === viewPostPageType ||
       // #3
-      (userId !== "1" && ref.current.id === profilePageType)
+      (userId !== authUser?.id && ref.current.id === profilePageType)
         ? location.key
         : location.pathname;
 
@@ -27,7 +27,15 @@ export const ScrollCache = forwardRef(({ children, defaultScrollTop }, ref) => {
 
     // cleanup function.
     return () => setPageRefresh(false);
-  }, [location, ref, userId, pageRefresh, setPageRefresh, defaultScrollTop]);
+  }, [
+    location,
+    ref,
+    userId,
+    pageRefresh,
+    setPageRefresh,
+    defaultScrollTop,
+    authUser,
+  ]);
 
   return <>{children}</>;
 });
