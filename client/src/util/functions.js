@@ -73,7 +73,7 @@ export const handleMediaUpload = (e, action) => {
   const fileObject = e.target.files[0];
   const { type, size } = fileObject;
 
-  if (size > 60 * 1024 * 1024) {
+  if (size > 10 * 1024 * 1024) {
     return store.dispatch(
       showConfirmation({ type: "mediaSize", progress: 100 })
     );
@@ -81,11 +81,11 @@ export const handleMediaUpload = (e, action) => {
 
   const reader = new FileReader();
   reader.addEventListener("loadstart", (e) => {
-    action({ reading: true });
+    store.dispatch(action({ reading: true }));
   });
   reader.addEventListener("load", (e) => {
     const src = e.target.result;
-    action({ type, src });
+    store.dispatch(action({ type, src }));
   });
   reader.readAsDataURL(fileObject);
 };
