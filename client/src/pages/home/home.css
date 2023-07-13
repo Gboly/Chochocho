@@ -73,14 +73,14 @@
         /* width: calc(100vw - 10%); */
         /* left: 50%;
         transform: translateX(-50%); */
-        width: 95%;
+        width: 100%;
     }
 }
 @media screen and (max-width: 560px) {
     .home-main-wrapper{
         width: 98%;
     }
-    .home-create-post-container-active{
+    /* .home-create-post-container-active{
         width: 99%;
-    }
+    } */
 }

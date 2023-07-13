@@ -44,7 +44,7 @@ export default function WriteAlt() {
             disabled={altText.length > 1000 ? true : false}
             onClick={() => {
               dispatch(setAltValue(altText));
-              dispatch(closeWriteAlt());
+              closeNestedPopupOnOpaqueOverlay(closeWriteAlt, type);
             }}
           >
             Done
