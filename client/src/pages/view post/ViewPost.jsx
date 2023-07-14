@@ -128,7 +128,7 @@ export default function ViewPost() {
               <>
                 {parentsLoadIsSuccessful && (
                   <PostList
-                    postIds={parentsIds}
+                    postIds={[...parentsIds].reverse()}
                     comment={true}
                     loadComponent={<Spinner />}
                   />
