@@ -5,7 +5,7 @@ import Spinner from "../../../../components/Spinner/Spinner";
 import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 import { iconStyle } from "../../../../util/iconDescContent";
 import { useDispatch, useSelector } from "react-redux";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   closeCreatePost,
   removeMedia,
@@ -49,6 +49,8 @@ export default function CreatePostActive({
   const newPost = useSelector(getNewPostDetails);
 
   const addNewPost = (e) => {
+    // Since the media src is not a serializable data. Discard immediately here.
+    dispatch(removeMedia());
     e && e.preventDefault();
     const args = {
       ...newPost,
@@ -56,7 +58,6 @@ export default function CreatePostActive({
       parents: parents || [],
       date: new Date().toISOString(),
     };
-
     (newPost.content || src) && addPost(args);
   };
 

@@ -73,7 +73,7 @@ export const handleMediaUpload = (e, action) => {
   const fileObject = e.target.files[0];
   const { type, size } = fileObject;
 
-  if (size > 10 * 1024 * 1024) {
+  if (size > 60 * 1024 * 1024) {
     return store.dispatch(
       showConfirmation({ type: "mediaSize", progress: 100 })
     );
