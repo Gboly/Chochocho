@@ -9,7 +9,13 @@ import {
   setOutletOption,
 } from "../../app/actions/communityActions";
 import { Outlet } from "react-router-dom";
-import { useContext, useEffect, useLayoutEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   getCommunityOutletIndexFromLocation,
@@ -19,6 +25,7 @@ import { GeneralContext } from "../../routes/Router";
 import { outletOptionsType } from "../../util/types";
 
 export default function Community() {
+  const communityNode = useRef();
   const dispatch = useDispatch();
   const { isOpen: outletOptionIsOpen, valueId } =
     useSelector(getOutletOptionState);
@@ -82,7 +89,7 @@ export default function Community() {
 
   return (
     <>
-      <div className="community-wrapper">
+      <div ref={communityNode} className="community-wrapper">
         <div>
           <header>
             {content}
@@ -90,7 +97,11 @@ export default function Community() {
               <CustomSelect {...CustomSelectProps} />
             </div>
           </header>
-          {authUser && <Outlet context={{ followers, followings, authUser }} />}
+          {authUser && (
+            <Outlet
+              context={{ followers, followings, authUser, communityNode }}
+            />
+          )}
         </div>
       </div>
       <div className="rightbar-container">

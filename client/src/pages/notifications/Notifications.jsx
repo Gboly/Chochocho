@@ -28,7 +28,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 import { Skeleton } from "@mui/material";
 
-const initialPage = { skip: 0, limit: 3 };
+const initialPage = { skip: 0, limit: 10 };
 export default function Notifications() {
   const notificationsNode = useRef();
   const {
@@ -47,17 +47,14 @@ export default function Notifications() {
 
   const [pageRange, setPageRange] = useState(initialPage);
 
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setPageRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
-      10000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const { isLoading: notificationsIsLoading } =
+  const { isLoading: notificationsIsLoading, data } =
     useGetNotificationsQuery(pageRange);
+
+  const fetchMore = useCallback(() => {
+    !notificationsIsLoading &&
+      data.ids.length &&
+      setPageRange(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [notificationsIsLoading, data]);
 
   const notificationIds = useSelector(selectNotificationsIds);
   const isFetched = useCallback(
@@ -93,7 +90,7 @@ export default function Notifications() {
 
   return (
     <>
-      <ScrollCache ref={notificationsNode}>
+      <ScrollCache ref={notificationsNode} fetchMore={fetchMore}>
         <div
           ref={notificationsNode}
           className="notification-wrapper"

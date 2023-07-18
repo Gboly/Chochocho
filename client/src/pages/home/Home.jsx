@@ -27,10 +27,11 @@ import { getOpaqueOverlayState } from "../../layout/layoutSlice";
 export const HomeContext = createContext();
 
 // Limit of 1 & 2 works inconsistently.
-const initialPage = { skip: 0, limit: 3 };
+const initialPage = { skip: 0, limit: 10 };
 export default function Home() {
   const [postRange, setPostRange] = useState(initialPage);
   const {
+    data,
     isLoading,
     error,
     refetch: refetchPosts,
@@ -52,14 +53,11 @@ export default function Home() {
     [homeNode]
   );
 
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
-      10000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
+  const fetchMore = useCallback(() => {
+    !isLoading &&
+      data.ids.length &&
+      setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [isLoading, data]);
 
   // Whenever a new post is added by the authorized user, the home page is refreshed so that the new post is viewed easily by the user
   // This function sets the post range to the initial page
@@ -70,7 +68,7 @@ export default function Home() {
 
   return (
     <>
-      <ScrollCache ref={homeNode}>
+      <ScrollCache ref={homeNode} fetchMore={fetchMore}>
         <div
           ref={homeNode}
           className={`home-wrapper ${

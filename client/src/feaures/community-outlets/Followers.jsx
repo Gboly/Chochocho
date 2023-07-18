@@ -5,20 +5,23 @@ import {
 } from "../../app/api-slices/usersApiSlice";
 import CommunityBlock from "./CommunityBlock";
 import { useOutletContext } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import {
   getAnArrayOfSpecificKeyPerObjectInArray,
+  newRange,
   prepareIdsForQuery,
-  prepareUserIdsForQuery,
 } from "../../util/functions";
 import { useSelector } from "react-redux";
+import { ScrollCache } from "../scroll-cache/ScrollCache";
 
+const initialPage = { skip: 0, limit: 10 };
 export default function Followers() {
   const {
     authUser: { followers },
+    communityNode,
   } = useOutletContext();
-  const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
+  const [{ skip, limit }, setRefetch] = useState(initialPage);
 
   const { isLoading: followersFetchIsLoading, data: followersResult } =
     useGetUsersByIdQuery({
@@ -27,12 +30,19 @@ export default function Followers() {
       end: limit,
     });
 
+  const fetchMore = useCallback(() => {
+    !followersFetchIsLoading &&
+      followersResult.ids.length &&
+      setRefetch(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [followersFetchIsLoading, followersResult]);
+
   const fetchedUserIds = useSelector(selectFetchedUsersIds);
   const isFetched = (userId) =>
     (fetchedUserIds || []).includes(userId) || false;
 
   return (
     <>
+      <ScrollCache ref={communityNode} fetchMore={fetchMore} />
       {getAnArrayOfSpecificKeyPerObjectInArray(followers, "userId").map(
         (userId, index) =>
           isFetched(userId) && <CommunityBlock key={index} {...{ userId }} />

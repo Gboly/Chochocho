@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect } from "react";
+import React, { useContext, useEffect, useLayoutEffect } from "react";
 import { forwardRef } from "react";
 import { getSessionStorageItem } from "../../util/functions";
 import {
@@ -9,33 +9,61 @@ import {
 import { useLocation, useParams } from "react-router-dom";
 import { GeneralContext } from "../../routes/Router";
 
-export const ScrollCache = forwardRef(({ children, defaultScrollTop }, ref) => {
-  const location = useLocation();
-  const { userId } = useParams();
-  const { pageRefresh, setPageRefresh, authUser } = useContext(GeneralContext);
+export const ScrollCache = forwardRef(
+  ({ children, defaultScrollTop, fetchMore }, ref) => {
+    const location = useLocation();
+    const { userId } = useParams();
+    const { pageRefresh, setPageRefresh, authUser } =
+      useContext(GeneralContext);
 
-  useLayoutEffect(() => {
-    const scrollCache = getSessionStorageItem(scrollCacheType);
-    const key =
-      ref.current.id === viewPostPageType ||
-      // #3
-      (userId !== authUser?.id && ref.current.id === profilePageType)
-        ? location.key
-        : location.pathname;
+    // Restoring a page's scroll position
+    useLayoutEffect(() => {
+      const scrollCache = getSessionStorageItem(scrollCacheType);
+      const key =
+        ref.current?.id === viewPostPageType ||
+        // #3
+        (userId !== authUser?.id && ref.current.id === profilePageType)
+          ? location.key
+          : location.pathname;
 
-    ref.current.scrollTop = scrollCache[key] || defaultScrollTop || 0;
+      ref.current.scrollTop = scrollCache[key] || defaultScrollTop || 0;
 
-    // cleanup function.
-    return () => setPageRefresh(false);
-  }, [
-    location,
-    ref,
-    userId,
-    pageRefresh,
-    setPageRefresh,
-    defaultScrollTop,
-    authUser,
-  ]);
+      // cleanup function.
+      return () => setPageRefresh(false);
+    }, [
+      location,
+      ref,
+      userId,
+      pageRefresh,
+      setPageRefresh,
+      defaultScrollTop,
+      authUser,
+    ]);
 
-  return <>{children}</>;
-});
+    // Implementation of infinite page
+    useEffect(() => {
+      const element = ref.current;
+      let isThrottled = false;
+      let timeOutId = null;
+
+      const handleScroll = (e) => {
+        const { scrollTop, scrollHeight, offsetHeight } = e.target;
+
+        if (scrollTop + offsetHeight >= scrollHeight - 20 && !isThrottled) {
+          isThrottled = true;
+          fetchMore();
+          timeOutId = setTimeout(() => (isThrottled = false), 3000);
+        }
+      };
+
+      element.addEventListener("scroll", handleScroll);
+
+      return () => {
+        element.removeEventListener("scroll", handleScroll);
+        clearTimeout(timeOutId);
+      };
+    }, [ref, fetchMore]);
+
+    return <>{children}</>;
+  }
+);

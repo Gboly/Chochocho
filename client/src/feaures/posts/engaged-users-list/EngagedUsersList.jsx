@@ -2,10 +2,11 @@ import Searchbar from "../../../components/searchbar/Searchbar";
 import SimpleHeader from "../../../components/simple-header/SimpleHeader";
 import { SettingsHeader } from "../../../pages/settings/Settings";
 import "./engaged-users-list.css";
-import { useContext, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import {
   capitalize,
   closePopupOnOpaqueOverlay,
+  newRange,
   prepareUserIdsForQuery,
 } from "../../../util/functions";
 import { closeEngagedUsersList } from "../../../app/actions/homeActions";
@@ -19,16 +20,18 @@ import { getEngagedUsersListState } from "../post-excerpt/postExcerptSlice";
 import { followersType, followingType } from "../../../util/types";
 import Spinner from "../../../components/Spinner/Spinner";
 import { GeneralContext } from "../../../routes/Router";
+import { ScrollCache } from "../../scroll-cache/ScrollCache";
 
 const followTypes = [followingType, followersType];
 const header = (type) =>
   `${capitalize(type)} ${!followTypes.includes(type) ? "by" : ""}`;
-
+const initialPage = { skip: 0, limit: 10 };
 export default function EngagedUsersList() {
+  const listRef = useRef();
   const { type, userIds } = useSelector(getEngagedUsersListState);
   const [searchText, setSearchText] = useState("");
 
-  const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
+  const [{ skip, limit }, setRefetch] = useState(initialPage);
 
   const { isLoading: usersFetchIsLoading, data: usersFetchResult } =
     useGetUsersByIdQuery({
@@ -36,6 +39,12 @@ export default function EngagedUsersList() {
       start: skip,
       end: limit,
     });
+
+  const fetchMore = useCallback(() => {
+    !usersFetchIsLoading &&
+      usersFetchResult.ids.length &&
+      setRefetch(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [usersFetchIsLoading, usersFetchResult]);
 
   const isFetched = (userId) =>
     (usersFetchResult || []).ids?.includes(userId) || false;
@@ -86,32 +95,34 @@ export default function EngagedUsersList() {
   const handleChange = (e) => setSearchText(e.target.value);
 
   return (
-    <div className="popup-scroll">
-      <div className="lg-header">
-        <SimpleHeader
-          desc={header(type)}
-          fontSize={"1.3rem"}
-          closeAction={handleClose}
-          overlay={true}
+    <ScrollCache ref={listRef} fetchMore={fetchMore}>
+      <div ref={listRef} className="popup-scroll">
+        <div className="lg-header">
+          <SimpleHeader
+            desc={header(type)}
+            fontSize={"1.3rem"}
+            closeAction={handleClose}
+            overlay={true}
+          />
+        </div>
+        <div className="sm-header">
+          <SettingsHeader
+            text={header(type)}
+            closePopup={handleClose}
+            overlay={true}
+          />
+        </div>
+        <Searchbar
+          {...{
+            searchText,
+            handleChange,
+            placeholder: "Search User",
+            maxWidth: "28rem",
+          }}
         />
+        <ul className="no-bullet">{usersList}</ul>
+        {usersFetchIsLoading && <Spinner />}
       </div>
-      <div className="sm-header">
-        <SettingsHeader
-          text={header(type)}
-          closePopup={handleClose}
-          overlay={true}
-        />
-      </div>
-      <Searchbar
-        {...{
-          searchText,
-          handleChange,
-          placeholder: "Search User",
-          maxWidth: "28rem",
-        }}
-      />
-      <ul className="no-bullet">{usersList}</ul>
-      {usersFetchIsLoading && <Spinner />}
-    </div>
+    </ScrollCache>
   );
 }

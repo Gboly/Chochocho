@@ -10,9 +10,9 @@ import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutl
 import { useParams, useNavigate } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
-import { showPopupOnOpaqueOverlay } from "../../util/functions";
+import { newRange, showPopupOnOpaqueOverlay } from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { createContext, useContext, useImperativeHandle } from "react";
 import Spinner from "../../components/Spinner/Spinner";
@@ -22,7 +22,7 @@ import { useGetPostsByUserIdQuery } from "../../app/api-slices/postsApiSlice";
 import { postSkeletons } from "../../feaures/posts/post-excerpt/PostExcerpt";
 
 export const ProfileContext = createContext();
-const initialPage = { skip: 0, limit: 1 };
+const initialPage = { skip: 0, limit: 10 };
 export const Profile = () => {
   const { userId } = useParams();
   const { isLoading: userIsLoading, data: user } = useGetUserByIdQuery(userId);
@@ -42,22 +42,16 @@ function ProfileComponent({ user, userId }) {
   const { pageNodes, isFollowing, isAuth } = useContext(GeneralContext);
 
   const [postRange, setPostRange] = useState(initialPage);
-  const { isLoading: userPostsIsLoading } = useGetPostsByUserIdQuery({
+  const { isLoading: userPostsIsLoading, data } = useGetPostsByUserIdQuery({
     userId,
     ...postRange,
   });
 
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setPostRange(({ limit }) => ({
-          skip: limit,
-          limit: limit + initialPage.limit,
-        })),
-      10000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
+  const fetchMore = useCallback(() => {
+    !userPostsIsLoading &&
+      data.ids.length &&
+      setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [userPostsIsLoading, data]);
 
   // #16, #17
   useImperativeHandle(
@@ -80,7 +74,7 @@ function ProfileComponent({ user, userId }) {
 
   return (
     <>
-      <ScrollCache ref={profileNode}>
+      <ScrollCache ref={profileNode} fetchMore={fetchMore}>
         <div
           className="profile-container"
           ref={profileNode}

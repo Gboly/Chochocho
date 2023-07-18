@@ -17,7 +17,7 @@ import {
   useGetPostCommentsOrParentsQuery,
 } from "../../app/api-slices/postsApiSlice";
 import { useSelector } from "react-redux";
-import { createContext, useEffect, useRef, useState } from "react";
+import { createContext, useCallback, useEffect, useRef, useState } from "react";
 import { useImperativeHandle, useContext } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import useOffsetTop from "../../util/useCallbackRef";
@@ -28,7 +28,7 @@ import Spinner from "../../components/Spinner/Spinner";
 
 export const ViewPostContext = createContext();
 
-const initialPage = { skip: 0, limit: 3 };
+const initialPage = { skip: 0, limit: 10 };
 export default function ViewPost() {
   const navigate = useNavigate();
   const opaqueLayer = useOutletContext();
@@ -38,6 +38,7 @@ export default function ViewPost() {
   const [postRange, setPostRange] = useState(initialPage);
 
   const {
+    data,
     isLoading: commentIsLoading,
     error: commentsFetchError,
     refetch: refetchPosts,
@@ -47,14 +48,11 @@ export default function ViewPost() {
     ...postRange,
   });
 
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage)),
-      10000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
+  const fetchMore = useCallback(() => {
+    !commentIsLoading &&
+      data.ids.length &&
+      setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [commentIsLoading, data]);
 
   // Whenever a new post is added by the authorized user, the page is refreshed so that the new post is viewed easily by the user+++++++++++
   // This function sets the post range to the initial page
@@ -107,7 +105,11 @@ export default function ViewPost() {
 
   return (
     <>
-      <ScrollCache ref={viewPostNode} defaultScrollTop={defaultScrollTop}>
+      <ScrollCache
+        ref={viewPostNode}
+        defaultScrollTop={defaultScrollTop}
+        fetchMore={fetchMore}
+      >
         <div
           ref={viewPostNode}
           className={`home-wrapper view-post-container ${
