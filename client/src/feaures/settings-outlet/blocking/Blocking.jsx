@@ -9,39 +9,38 @@ import {
   selectUserById,
   useGetUsersByIdQuery,
 } from "../../../app/api-slices/usersApiSlice";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import Searchbar from "../../../components/searchbar/Searchbar";
 import {
+  newRange,
   prepareIdsForQuery,
   prepareUserIdsForQuery,
 } from "../../../util/functions";
 import Spinner from "../../../components/Spinner/Spinner";
 import { GeneralContext } from "../../../routes/Router";
+import { useOutletContext } from "react-router-dom";
+import { ScrollCache } from "../../scroll-cache/ScrollCache";
 
-const initialPage = { skip: 0, limit: 1 };
+const initialPage = { skip: 0, limit: 10 };
 export default function Blocking() {
   const {
     authUser: { blocked },
   } = useContext(GeneralContext);
+  const { settingsNode } = useOutletContext();
 
   const [postRange, setPostRange] = useState(initialPage);
 
-  const { isLoading: blockedUsersFetchIsLoading } = useGetUsersByIdQuery({
-    userIds: prepareIdsForQuery(blocked, "userId"),
-    ...postRange,
-  });
+  const { isLoading: blockedUsersFetchIsLoading, data: blockedUsersResult } =
+    useGetUsersByIdQuery({
+      userIds: prepareIdsForQuery(blocked, "userId"),
+      ...postRange,
+    });
 
-  useEffect(() => {
-    const timeout = setTimeout(
-      () =>
-        setPostRange(({ limit }) => ({
-          skip: limit,
-          limit: limit + initialPage.limit,
-        })),
-      10000
-    );
-    return () => clearTimeout(timeout);
-  }, []);
+  const fetchMore = useCallback(() => {
+    !blockedUsersFetchIsLoading &&
+      blockedUsersResult.ids.length &&
+      setPostRange(({ skip, limit }) => newRange(skip, limit, initialPage));
+  }, [blockedUsersFetchIsLoading, blockedUsersResult]);
 
   const fetchedUserIds = useSelector(selectFetchedUsersIds);
   const isFetched = (userId) =>
@@ -52,30 +51,36 @@ export default function Blocking() {
   const handleChange = (e) => setSearchText(e.target.value);
 
   return (
-    <main className="settings-blocking">
-      <SettingsHeader text={"Block users"} />
-      <p>
-        Once you block someone, that person can no longer see things you post on
-        your timeline, tag you, start a conversation with you or add you as a
-        friend.
-      </p>
-      <section>
-        <Searchbar
-          {...{ searchText, handleChange, placeholder: "Search blocked user" }}
-        />
-        <p>Blocked users list</p>
-        <ul className="no-bullet">
-          {(blocked || []).map((user, index) => {
-            const { userId, date } = user;
-            return (
-              isFetched(userId) && (
-                <BlockedUser key={index} {...{ userId, date, searchText }} />
-              )
-            );
-          })}
-        </ul>
-        {blockedUsersFetchIsLoading && <Spinner />}
-      </section>
-    </main>
+    <ScrollCache ref={settingsNode} fetchMore={fetchMore}>
+      <main className="settings-blocking">
+        <SettingsHeader text={"Block users"} />
+        <p>
+          Once you block someone, that person can no longer see things you post
+          on your timeline, tag you, start a conversation with you or add you as
+          a friend.
+        </p>
+        <section>
+          <Searchbar
+            {...{
+              searchText,
+              handleChange,
+              placeholder: "Search blocked user",
+            }}
+          />
+          <p>Blocked users list</p>
+          <ul className="no-bullet">
+            {(blocked || []).map((user, index) => {
+              const { userId, date } = user;
+              return (
+                isFetched(userId) && (
+                  <BlockedUser key={index} {...{ userId, date, searchText }} />
+                )
+              );
+            })}
+          </ul>
+          {blockedUsersFetchIsLoading && <Spinner />}
+        </section>
+      </main>
+    </ScrollCache>
   );
 }

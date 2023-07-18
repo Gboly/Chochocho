@@ -4,10 +4,11 @@ import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutl
 import ArrowBackIosOutlinedIcon from "@mui/icons-material/ArrowBackIosOutlined";
 import { iconStyle } from "../../util/iconDescContent";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Settings() {
+  const settingsNode = useRef();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -69,7 +70,7 @@ export default function Settings() {
               currentPathName === "settings" ? "responsive-settings-outlet" : ""
             }
           >
-            <Outlet />
+            <Outlet context={{ settingsNode }} />
           </main>
         </div>
       </div>
