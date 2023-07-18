@@ -6,6 +6,7 @@ import { iconStyle } from "../../util/iconDescContent";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
+import { settingsPageType } from "../../util/types";
 
 export default function Settings() {
   const settingsNode = useRef();
@@ -56,7 +57,11 @@ export default function Settings() {
 
   return (
     <>
-      <div className="settings-container">
+      <div
+        ref={settingsNode}
+        className="settings-container"
+        id={settingsPageType}
+      >
         <div className="settings-wrapper">
           <aside
             className={

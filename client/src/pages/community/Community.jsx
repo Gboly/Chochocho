@@ -22,7 +22,7 @@ import {
   showPopupOnTransparentOverlay,
 } from "../../util/functions";
 import { GeneralContext } from "../../routes/Router";
-import { outletOptionsType } from "../../util/types";
+import { communityPageType, outletOptionsType } from "../../util/types";
 
 export default function Community() {
   const communityNode = useRef();
@@ -89,7 +89,11 @@ export default function Community() {
 
   return (
     <>
-      <div ref={communityNode} className="community-wrapper">
+      <div
+        ref={communityNode}
+        className="community-wrapper"
+        id={communityPageType}
+      >
         <div>
           <header>
             {content}
