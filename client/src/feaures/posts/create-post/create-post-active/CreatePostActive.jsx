@@ -20,6 +20,7 @@ import {
 import HomeUserAvatar from "../../../../components/home-user-avatar/HomeUserAvatar";
 import {
   closePopupOnOpaqueOverlay,
+  effectConfirmation,
   showPopupOnOpaqueOverlay,
 } from "../../../../util/functions";
 import { GeneralContext } from "../../../../routes/Router";
@@ -62,16 +63,13 @@ export default function CreatePostActive({
   };
 
   useEffect(() => {
-    isLoading &&
-      dispatch(hideOpaqueOverlay()) &&
-      dispatch(showConfirmation({ type: "post" }));
-  }, [isLoading, dispatch]);
-  useEffect(() => {
+    isLoading && effectConfirmation("post");
+
     if (isSuccess) {
       invalidatePostList();
       closePopupOnOpaqueOverlay(closeCreatePost);
     }
-  }, [isSuccess, invalidatePostList]);
+  }, [isSuccess, invalidatePostList, isLoading]);
 
   const mediasection = reading ? (
     <Spinner sxx={"media-load-spinner"} />

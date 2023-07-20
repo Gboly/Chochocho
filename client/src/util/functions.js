@@ -9,6 +9,7 @@ import {
   closeOpaqueOverlay,
   openTransparentOverlay,
   closeTransparentOverlay,
+  hideOpaqueOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
 import {
@@ -497,5 +498,10 @@ export const newRange = (skip, limit, initialPage) => ({
   skip: limit !== initialPage.limit ? limit : skip + limit,
   limit: initialPage.limit,
 });
+
+export const effectConfirmation = (type) => {
+  store.dispatch(hideOpaqueOverlay());
+  store.dispatch(showConfirmation({ type }));
+};
 
 //export const removeSessionToken = () => sessionStorage.removeItem("authToken");
