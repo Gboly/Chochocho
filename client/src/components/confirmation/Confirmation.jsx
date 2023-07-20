@@ -10,8 +10,9 @@ const successTypes = {
   post: "successfully created post",
   mediaSize: "Media file too large. Upload a file less than 60mb.",
   avatarSize: "Image is too large. Upload an image less than 5mb.",
+  report: "Report successfully created",
 };
-const progressTypes = { post: "Creating post" };
+const progressTypes = { post: "Creating post", report: "Reporting user" };
 const noCheck = ["mediaSize", "avatarSize"];
 
 export default function Confirmation({ type, progress }) {

@@ -4,6 +4,9 @@
     background-color: #fff;
     border-radius: 1rem;
 }
+.report-transparent{
+    visibility: hidden;
+}
 .report-post-wrapper{
     margin: 0rem 1rem 1rem;
 }

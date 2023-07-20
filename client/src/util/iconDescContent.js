@@ -1,10 +1,8 @@
 import PermMediaOutlinedIcon from "@mui/icons-material/PermMediaOutlined";
-import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
 import LocalOfferOutlinedIcon from "@mui/icons-material/LocalOfferOutlined";
 
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
-import NotificationsOffOutlinedIcon from "@mui/icons-material/NotificationsOffOutlined";
 import ReportOutlinedIcon from "@mui/icons-material/ReportOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 
@@ -19,14 +17,12 @@ import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined
 //Notifications
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
-import HistoryOutlinedIcon from "@mui/icons-material/HistoryOutlined";
 //visibilityOff
 
 import DoNotDisturbOnTotalSilenceIcon from "@mui/icons-material/DoNotDisturbOnTotalSilence";
 
 import {
   hidePost,
-  openReportPost,
   openFollowPoster,
   openBlockPoster,
   openDeletePost,
@@ -37,14 +33,12 @@ import {
   editPostType,
   blockPosterType,
   unfollowPosterType,
-  reportPostType,
   deletePostType,
   hidePostType,
   postNotifcationType,
   pinPostType,
-  muteType,
-  reportStoryType,
   muteStoryType,
+  reportType,
 } from "./types";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
@@ -59,17 +53,14 @@ import {
   faInstagram,
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
-import { faCakeCandles } from "@fortawesome/free-solid-svg-icons";
-import {
-  openMuteStoryAuthor,
-  openReportStory,
-} from "../app/actions/storyActions";
+import { openMuteStoryAuthor } from "../app/actions/storyActions";
 import {
   faUsers,
   faUserGroup,
   faUserPen,
   faUserSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import { openReport } from "../app/actions/layoutActions";
 
 export const iconStyle = {
   fontSize: "inherit",
@@ -105,9 +96,9 @@ export const othersPostOptions = [
   //   action: "",
   // },
   {
-    desc: reportPostType,
+    desc: reportType,
     icon: <ReportOutlinedIcon style={iconStyle} />,
-    action: openReportPost,
+    action: openReport,
   },
   {
     desc: unfollowPosterType,
@@ -146,9 +137,9 @@ export const userPostOptions = [
 
 export const storyOptions = [
   {
-    desc: reportStoryType,
+    desc: reportType,
     icon: <ReportOutlinedIcon style={iconStyle} />,
-    action: openReportStory,
+    action: openReport,
   },
   {
     desc: muteStoryType,

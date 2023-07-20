@@ -1,10 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { startOfWeek } from "date-fns";
 
 const initialState = {
   postOptionsState: { isOpen: false, postId: "", optionType: "" },
   postShareState: { isOpen: false, postId: "", username: "" },
-  reportPostState: { isOpen: false, valueId: "", id: "" },
   followPosterState: { isOpen: false, id: "" },
   blockPosterState: { isOpen: false, id: "" },
   hiddenPosts: [],
@@ -49,20 +47,6 @@ export const postExcerptSlice = createSlice({
     },
     closeEngagedUsersList: (state) => {
       state.engagedUsersListState = { isOpen: false, type: "", userIds: [] };
-      return state;
-    },
-    openReportPost: (state, action) => {
-      state.reportPostState.isOpen = true;
-      state.reportPostState.id = action.payload;
-      state.postOptionsState.isOpen = false;
-      return state;
-    },
-    closeReportPost: (state) => {
-      state.reportPostState = { isOpen: false, valueId: "", id: "" };
-      return state;
-    },
-    setReportValue: (state, action) => {
-      state.reportPostState.valueId = action.payload;
       return state;
     },
     openFollowPoster: (state, action) => {
@@ -158,8 +142,6 @@ export const postExcerptReducer = postExcerptSlice.reducer;
 export const getPostOptionState = (state) => state.postExcerpt.postOptionsState;
 
 export const getPostShareState = (state) => state.postExcerpt.postShareState;
-
-export const getReportPostState = (state) => state.postExcerpt.reportPostState;
 
 export const getFollowPosterstate = (state) =>
   state.postExcerpt.followPosterState;

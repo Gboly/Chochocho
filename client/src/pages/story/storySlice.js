@@ -3,7 +3,6 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   options: { isOpen: false, storyId: "" },
   mute: { isOpen: false, storyId: "", username: "" },
-  report: { isOpen: false, storyId: "", username: "" },
   uploadedMedia: { type: "", src: "", reading: false },
   settings: {
     isOpen: false,
@@ -32,15 +31,6 @@ export const storySlice = createSlice({
     },
     closeMuteStoryAuthor: (state) => {
       state.mute = initialState.mute;
-      return state;
-    },
-    openReportStory: (state, action) => {
-      const { storyId, username } = action.payload;
-      state.report = { isOpen: true, storyId, username };
-      return state;
-    },
-    closeReportStory: (state) => {
-      state.report = initialState.report;
       return state;
     },
     readUploadedMedia: (state, action) => {
@@ -105,8 +95,6 @@ export const storyReducer = storySlice.reducer;
 export const getStoryOptionsState = (state) => state.story.options;
 
 export const getMuteStoryAuthorState = (state) => state.story.mute;
-
-export const getReportStoryState = (state) => state.story.report;
 
 export const getUploadedMedia = (state) => state.story.uploadedMedia;
 

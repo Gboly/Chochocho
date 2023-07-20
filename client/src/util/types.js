@@ -73,4 +73,5 @@ export const storyVisibilitySettingsType = "story visibility settings";
 export const selectUsersType = "select users";
 export const suggestedUsersType = "suggested users";
 export const logOutType = "log out";
+export const reportType = "report";
 //export const

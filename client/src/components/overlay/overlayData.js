@@ -2,7 +2,6 @@ import {
   editPostType,
   blockPosterType,
   unfollowPosterType,
-  reportPostType,
   deletePostType,
   writeAltType,
   createPostType,
@@ -18,14 +17,14 @@ import {
   outletOptionsType,
   friendsOptionsType,
   storyOptionsType,
-  reportStoryType,
   muteStoryType,
   storyVisibilitySettingsType,
   selectUsersType,
   logOutType,
+  reportType,
 } from "../../util/types";
 import WriteAlt from "../../feaures/posts/write-alt/WriteAlt";
-import ReportPost from "../../feaures/posts/report-post/ReportPost";
+import Report from "../../feaures/report/Report";
 import EditPost from "../../feaures/posts/edit-post/EditPost";
 import DeletePost from "../../feaures/posts/delete-post/DeletePost";
 import BlockUser from "../../feaures/posts/block-user/BlockUser";
@@ -42,10 +41,13 @@ import {
   closePlaybackSpeed,
   closePostOption,
   closePostShare,
-  closeReportPost,
   closeWriteAlt,
 } from "../../app/actions/homeActions";
-import { closeLogOut, closeSidebarNav } from "../../app/actions/layoutActions";
+import {
+  closeLogOut,
+  closeReport,
+  closeSidebarNav,
+} from "../../app/actions/layoutActions";
 import PostImageAlt from "../../feaures/posts/post-image-alt/PostImageAlt";
 import EditProfile from "../../feaures/users/edit-profile/EditProfile";
 import {
@@ -64,7 +66,6 @@ import NotificationOptions from "../../feaures/notification-block/NotificationOp
 import StoryOptions from "../../pages/story/StoryOptions";
 import {
   closeMuteStoryAuthor,
-  closeReportStory,
   closeSelectUserAsCancel,
   closeSettings,
   closeStoryOptions,
@@ -91,9 +92,9 @@ export const opaqueOverlayComponents = [
     closeAction: closeWriteAlt,
   },
   {
-    type: reportPostType,
-    component: <ReportPost />,
-    closeAction: closeReportPost,
+    type: reportType,
+    component: <Report />,
+    closeAction: closeReport,
   },
   {
     type: deletePostType,
@@ -134,11 +135,6 @@ export const opaqueOverlayComponents = [
     type: engagedUsersListType,
     component: <EngagedUsersList />,
     closeAction: closeEngagedUsersList,
-  },
-  {
-    type: reportStoryType,
-    component: <ReportPost />,
-    closeAction: closeReportStory,
   },
   {
     type: muteStoryType,
