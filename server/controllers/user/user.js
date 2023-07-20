@@ -1,6 +1,10 @@
 import User from "../../models/user.js";
+import Report from "../../models/report.js";
 import { sendNotification } from "../notification/notification.js";
 import { findById } from "../../util/helperFunctions.js";
+import transport from "../../config/nodeMailer.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 const getAuthenticatedUser = async (req, res) => {
   res.status(200).json(req.user);
@@ -146,6 +150,36 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const reportUser = async (req, res) => {
+  try {
+    const report = new Report({
+      ...req.body,
+      reporterId: req.user.id,
+    });
+    await report.save();
+
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: process.env.EMAIL,
+      subject: "REPORT",
+      text: `A new report has been made. Check report collection on database for severity of report and take necessary actions. Report ${report.id}`,
+    };
+
+    try {
+      await transport.sendMail(mailOptions);
+    } catch (error) {
+      console.log(error);
+    }
+
+    res.status(200).json(report);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
 // Other functions
 const fetchUsers = async (query) => {
   const { id, id_ne, _start, _end } = query;
@@ -174,4 +208,5 @@ export {
   followUser,
   blockUser,
   deleteUser,
+  reportUser,
 };

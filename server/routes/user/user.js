@@ -7,6 +7,7 @@ import {
   followUser,
   deleteUser,
   blockUser,
+  reportUser,
 } from "../../controllers/user/user.js";
 
 const router = Router();
@@ -20,5 +21,6 @@ router
 router.route("/:id").get(getUser);
 router.put("/:id/follow", followUser);
 router.put("/:id/block", blockUser);
+router.post("/report", reportUser);
 
 export default router;
