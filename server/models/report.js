@@ -4,7 +4,7 @@ const schema = mongoose.Schema;
 const reportSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
   postId: { type: schema.Types.ObjectId, ref: "Post" },
-  storyId: { type: schema.Types.ObjectId, ref: "Post" },
+  storyId: { type: schema.Types.ObjectId, ref: "Story" },
   reporterId: { type: schema.Types.ObjectId, ref: "User" },
   report: { type: String },
   type: { type: String, enum: ["post", "story"] },

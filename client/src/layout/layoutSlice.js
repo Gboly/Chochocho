@@ -87,7 +87,11 @@ export const layoutSlice = createSlice({
       return state;
     },
     openReport: (state, action) => {
-      state.report = { ...state.report, isOpen: true, id: action.payload };
+      state.report = {
+        ...state.report,
+        isOpen: true,
+        id: action.payload?.storyId || action.payload,
+      };
       return state;
     },
     closeReport: (state) => {

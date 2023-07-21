@@ -8,26 +8,60 @@ import {
   effectConfirmation,
 } from "../../util/functions";
 import { getReportState } from "../../layout/layoutSlice";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { closeReport, setReportValue } from "../../app/actions/layoutActions";
+import { useReportUserMutation } from "../../app/api-slices/usersApiSlice";
+import { selectPostById } from "../../app/api-slices/postsApiSlice";
+import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
+import { getCurrentPageState } from "../../routes/routerSlice";
 
 export default function Report() {
   const dispatch = useDispatch();
+  const [report, { error }] = useReportUserMutation();
   const { valueId, isReporting, isReported, id } = useSelector(getReportState);
+  const { isStoryPage } = useSelector(getCurrentPageState);
+
+  const post = useSelector((state) => selectPostById(state, id));
+  const { data: story } = useGetStoryByIdQuery(id, { skip: !isStoryPage });
 
   const handleClose = () => closePopupOnOpaqueOverlay(closeReport);
 
-  // Comes in after report mutation endpoint has been created
+  const { type, userId } = useMemo(() => {
+    return isStoryPage
+      ? {
+          type: "story",
+          userId: story?.userId,
+        }
+      : {
+          type: "post",
+          userId: post?.userId,
+        };
+  }, [isStoryPage, story, post]);
+
+  const handleSubmit = (e) => {
+    e && e.preventDefault();
+    const args = {
+      userId,
+      [`${type}Id`]: id,
+      report: reportOptions[valueId],
+      type,
+      date: new Date().toISOString(),
+    };
+
+    valueId && userId && report(args);
+  };
+
   useEffect(() => {
     isReporting && effectConfirmation("report");
     isReported && closePopupOnOpaqueOverlay(closeReport);
   }, [isReported, isReporting]);
 
   return (
-    <div
+    <form
       className={`report-post-container ${
         isReporting ? "report-transparent" : ""
       }`}
+      onSubmit={handleSubmit}
     >
       <div className="report-post-wrapper">
         <SimpleHeader
@@ -49,9 +83,11 @@ export default function Report() {
           <button className="report-cancel report-button" onClick={handleClose}>
             Cancel
           </button>
-          <button className="report-submit report-button">Submit</button>
+          <button className="report-submit report-button" type="submit">
+            Submit
+          </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }
