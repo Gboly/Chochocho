@@ -8,9 +8,16 @@ import { openFullscreen } from "../../app/actions/homeActions";
 import { openEditProfile } from "../../app/actions/profileActions";
 import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import { useParams, useNavigate } from "react-router-dom";
-import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
+import {
+  useFollowUserMutation,
+  useGetUserByIdQuery,
+} from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
-import { newRange, showPopupOnOpaqueOverlay } from "../../util/functions";
+import {
+  fieldUpdate,
+  newRange,
+  showPopupOnOpaqueOverlay,
+} from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
@@ -39,7 +46,8 @@ function ProfileComponent({ user, userId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileNode = useRef();
-  const { pageNodes, isFollowing, isAuth } = useContext(GeneralContext);
+  const { pageNodes, isFollowing, isAuth, authUser } =
+    useContext(GeneralContext);
 
   const [postRange, setPostRange] = useState(initialPage);
   const { isLoading: userPostsIsLoading, data } = useGetPostsByUserIdQuery({
@@ -71,6 +79,39 @@ function ProfileComponent({ user, userId }) {
     following,
     followers,
   } = user;
+
+  useEffect(() => {
+    console.log({
+      user: [following, followers],
+      authUser: [authUser.following, authUser.followers],
+    });
+  }, [following, followers, authUser]);
+
+  const [follow, { error }] = useFollowUserMutation();
+
+  const handleFollow = (e) => {
+    e && e.preventDefault();
+    const args = {
+      authUserId: authUser.id,
+      userId,
+      updates: {
+        following: fieldUpdate({
+          record: authUser,
+          updateFieldKey: "following",
+          checkId: userId,
+          checkKey: "userId",
+        }),
+        followers: fieldUpdate({
+          record: user,
+          updateFieldKey: "followers",
+          checkId: authUser.id,
+          checkKey: "userId",
+        }),
+      },
+    };
+
+    follow(args);
+  };
 
   return (
     <>
@@ -129,6 +170,7 @@ function ProfileComponent({ user, userId }) {
                       className={`square-button ${
                         isFollowing(userId) ? "followed" : ""
                       }`}
+                      onClick={handleFollow}
                     >
                       {isFollowing(userId) ? "Following" : "Follow"}
                     </button>

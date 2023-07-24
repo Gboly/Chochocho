@@ -74,7 +74,10 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
     getAuthUser: builder.query({
       query: () => "/users/authUser",
       transformResponse: (response) => getTransformed(response),
-      providesTags: (result, error, arg) => [{ type: "Users", id: "auth" }],
+      providesTags: (result, error, arg) => [
+        { type: "Users", id: "auth" },
+        { type: "Users", id: result?.id },
+      ],
     }),
     reportUser: builder.mutation({
       queryFn: async (body, api) => {
@@ -110,6 +113,55 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    followUser: builder.mutation({
+      query: ({ userId }) => ({
+        url: `/users/${userId}/follow`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      async onQueryStarted(
+        { authUserId, userId, updates },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const tagTypes = [
+          { type: "Users", id: authUserId },
+          { type: "Users", id: userId },
+        ];
+
+        for (const {
+          endpointName,
+          originalArgs,
+        } of extendedUsersApiSlice.util.selectInvalidatedBy(
+          getState(),
+          tagTypes
+        )) {
+          const patchResult = dispatch(
+            extendedUsersApiSlice.util.updateQueryData(
+              endpointName,
+              originalArgs,
+              (draft) => {
+                //Some drafts are normalized, some aren't.
+                const authUser = draft?.entities
+                  ? draft.entities?.[authUserId]
+                  : draft?.id === authUserId && draft;
+
+                const user = draft?.entities
+                  ? draft.entities?.[userId]
+                  : draft?.id === userId && draft;
+
+                authUser && (authUser.following = updates.following);
+                user && (user.followers = updates.followers);
+              }
+            )
+          );
+          try {
+            await queryFulfilled;
+          } catch (error) {
+            patchResult.undo();
+          }
+        }
+      },
+    }),
   }),
 });
 
@@ -122,6 +174,7 @@ export const {
   useUserSigninMutation,
   useGetAuthUserQuery,
   useReportUserMutation,
+  useFollowUserMutation,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];

@@ -12,18 +12,11 @@ import {
   hideOpaqueOverlay,
 } from "../app/actions/layoutActions";
 import { openEditProfileImage } from "../app/actions/profileActions";
-import {
-  editProfileImageType,
-  scrollCacheType,
-  exemptionType,
-  onlineType,
-  offlineType,
-} from "./types";
+import { editProfileImageType, scrollCacheType, exemptionType } from "./types";
 import {
   postSliceInitialState,
   postsQueryEndPoints,
 } from "../app/api-slices/postsApiSlice";
-import uniqid from "uniqid";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -502,6 +495,17 @@ export const newRange = (skip, limit, initialPage) => ({
 export const effectConfirmation = (type) => {
   store.dispatch(hideOpaqueOverlay());
   store.dispatch(showConfirmation({ type }));
+};
+
+export const fieldUpdate = ({ record, updateFieldKey, checkId, checkKey }) => {
+  const isExisting = findByIdKey(record[updateFieldKey], checkKey, checkId);
+
+  return isExisting
+    ? removeFromAnArray(record[updateFieldKey], checkKey, checkId)
+    : [
+        ...record[updateFieldKey],
+        { [checkKey]: checkId, date: new Date().toISOString() },
+      ];
 };
 
 //export const removeSessionToken = () => sessionStorage.removeItem("authToken");
