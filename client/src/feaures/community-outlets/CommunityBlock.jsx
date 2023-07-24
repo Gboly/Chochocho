@@ -10,18 +10,19 @@ import {
 import { useSelector } from "react-redux";
 import {
   selectFetchedUsersById,
-  selectUserById,
+  useFollowUserMutation,
 } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
-import { useOutletContext } from "react-router-dom";
 import { useContext } from "react";
 import { GeneralContext } from "../../routes/Router";
+import { fieldUpdate } from "../../util/functions";
 
 const iconLink = [faGlobe, faFacebook, faTwitter, faInstagram];
 
 export default function CommunityBlock({ userId }) {
-  const { isFollowing, isFollower } = useContext(GeneralContext);
+  const { isFollowing, isFollower, authUser } = useContext(GeneralContext);
 
+  const user = useSelector((state) => selectFetchedUsersById(state, userId));
   const {
     bio,
     displayName,
@@ -31,11 +32,38 @@ export default function CommunityBlock({ userId }) {
     facebook,
     twitter,
     instagram,
-  } = useSelector((state) => selectFetchedUsersById(state, userId));
+  } = user;
+
+  const [follow, { error }] = useFollowUserMutation();
+
+  const handleFollow = (e) => {
+    e && e.preventDefault();
+    const args = {
+      authUserId: authUser.id,
+      userId,
+      updates: {
+        following: fieldUpdate({
+          record: authUser,
+          updateFieldKey: "following",
+          checkId: userId,
+          checkKey: "userId",
+        }),
+        followers: fieldUpdate({
+          record: user,
+          updateFieldKey: "followers",
+          checkId: authUser.id,
+          checkKey: "userId",
+        }),
+      },
+    };
+
+    follow(args);
+  };
 
   const userLinks = [website, facebook, twitter, instagram];
 
   const followStatus = isFollowing(userId) ? "unfollow" : "follow";
+  const isSuggested = !isFollower(userId) && !isFollowing(userId);
 
   const iconContent = userLinks.reduce((accum, current, index) => {
     if (current) {
@@ -69,9 +97,12 @@ export default function CommunityBlock({ userId }) {
       {bio ? <p>{bio}</p> : <p style={{ opacity: 0.4 }}>Bio...</p>}
       <div>
         <button className={`outlet-button ${followStatus}-outlet-button1`}>
-          {!isFollower(userId) && !isFollowing(userId) ? "Ignore" : "Message"}
+          {isSuggested ? "Ignore" : "Message"}
         </button>
-        <button className={`outlet-button ${followStatus}-outlet-button2`}>
+        <button
+          onClick={handleFollow}
+          className={`outlet-button ${followStatus}-outlet-button2`}
+        >
           {followStatus}
         </button>
       </div>
