@@ -15,7 +15,7 @@ const successTypes = {
 const progressTypes = { post: "Creating post", report: "Reporting user" };
 const noCheck = ["mediaSize", "avatarSize"];
 
-export default function Confirmation({ type, progress }) {
+export default function Confirmation({ type, progress, message }) {
   const dispatch = useDispatch();
 
   const Successful = () => {
@@ -26,7 +26,7 @@ export default function Confirmation({ type, progress }) {
 
     return (
       <div className="quote confirmation-success">
-        {successTypes[type] || ""}
+        {successTypes[type] || message || "what?!"}
         {!noCheck.includes(type) && (
           <span className="success-check">
             <TaskAltIcon color="inherit" />

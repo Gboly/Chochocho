@@ -14,6 +14,7 @@ import DoneAllIcon from "@mui/icons-material/DoneAll";
 import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 //Notifications
 import BlockOutlinedIcon from "@mui/icons-material/BlockOutlined";
 import GppGoodOutlinedIcon from "@mui/icons-material/GppGoodOutlined";
@@ -39,6 +40,7 @@ import {
   pinPostType,
   muteStoryType,
   reportType,
+  followPosterType,
 } from "./types";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
@@ -102,7 +104,10 @@ export const othersPostOptions = [
   },
   {
     desc: unfollowPosterType,
-    icon: <PersonRemoveOutlinedIcon style={iconStyle} />,
+    icon: [
+      <PersonRemoveOutlinedIcon style={iconStyle} />,
+      <PersonAddAltIcon style={iconStyle} />,
+    ],
     action: openFollowPoster,
   },
   {

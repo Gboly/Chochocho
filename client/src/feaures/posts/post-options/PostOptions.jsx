@@ -11,12 +11,15 @@ import {
 import { capitalize } from "../../../util/functions";
 import {
   authUserType,
+  followPosterType,
   otherUsersType,
-  postNotifcationType,
+  unfollowPosterType,
 } from "../../../util/types";
-import { useMemo } from "react";
+import { useMemo, useContext } from "react";
 import { getPostOptionState } from "../post-excerpt/postExcerptSlice";
 import { closePostOption } from "../../../app/actions/homeActions";
+import { selectPostById } from "../../../app/api-slices/postsApiSlice";
+import { GeneralContext } from "../../../routes/Router";
 
 const options = [
   {
@@ -31,6 +34,9 @@ const options = [
 export default function PostOptions() {
   const dispatch = useDispatch();
   const { postId, optionType } = useSelector(getPostOptionState);
+  const { userId } = useSelector((state) => selectPostById(state, postId));
+
+  const { isFollowing } = useContext(GeneralContext);
 
   const optionData = useMemo(
     () => options.find((option) => option.type === optionType)?.data || [],
@@ -50,7 +56,7 @@ export default function PostOptions() {
 
   const content = optionData.reduce((accum, current, index) => {
     const { desc, icon } = current;
-    desc === postNotifcationType
+    desc === unfollowPosterType
       ? accum.push(
           // #4
           <div
@@ -58,8 +64,12 @@ export default function PostOptions() {
             className="post-option"
             onClick={(e) => handleClick(e, current)}
           >
-            <i className="post-option-icon">{icon}</i>
-            <span className="post-option-desc">{capitalize(desc)}</span>
+            <i className="post-option-icon">
+              {isFollowing(userId) ? icon[0] : icon[1]}
+            </i>
+            <span className="post-option-desc">
+              {isFollowing(userId) ? "Unfollow" : "Follow"}
+            </span>
           </div>
         )
       : accum.push(

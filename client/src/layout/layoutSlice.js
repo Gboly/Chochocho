@@ -10,7 +10,7 @@ const initialState = {
     isBottom: false,
   },
   sidebarNav: false,
-  confirmation: { isOpen: false, type: "", progress: 0 },
+  confirmation: { isOpen: false, type: "", progress: 0, message: "" },
   pageHeight: "",
   report: {
     isOpen: false,
@@ -66,11 +66,12 @@ export const layoutSlice = createSlice({
       return state;
     },
     showConfirmation: (state, action) => {
-      const { type, progress } = action.payload;
+      const { type, progress, message } = action.payload;
       state.confirmation = {
         isOpen: true,
         type,
         progress: progress || state.confirmation.progress,
+        message: message || state.confirmation.message,
       };
       return state;
     },

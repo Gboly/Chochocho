@@ -80,13 +80,6 @@ function ProfileComponent({ user, userId }) {
     followers,
   } = user;
 
-  useEffect(() => {
-    console.log({
-      user: [following, followers],
-      authUser: [authUser.following, authUser.followers],
-    });
-  }, [following, followers, authUser]);
-
   const [follow, { error }] = useFollowUserMutation();
 
   const handleFollow = (e) => {

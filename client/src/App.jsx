@@ -68,6 +68,7 @@ export default function App({ children }) {
   const {
     isOpen: confirmationIsOpen,
     type: confirmationType,
+    message,
     progress,
   } = useSelector(getConfirmationState);
 
@@ -97,7 +98,11 @@ export default function App({ children }) {
       {/* #2 */}
       {fullscreenIsOpen && <PostImageFullscreen />}
       {confirmationIsOpen && (
-        <Confirmation type={confirmationType} progress={progress} />
+        <Confirmation
+          type={confirmationType}
+          progress={progress}
+          message={message}
+        />
       )}
 
       {opaqueOverlayIsOpen && <OpaqueOverlay />}
