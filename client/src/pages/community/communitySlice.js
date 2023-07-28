@@ -6,6 +6,7 @@ const initialState = {
     isOpen: false,
     valueId: getCommunityOutletIndexFromLocation(window.location.pathname),
   },
+  ignoredSuggestedIds: [],
 };
 
 // console.log(window.location.pathname);
@@ -26,9 +27,15 @@ export const communitySlice = createSlice({
       state.outletOption.valueId = action.payload;
       return state;
     },
+    ignoreSuggestedUser: (state, action) => {
+      state.ignoredSuggestedIds.push(action.payload);
+      return state;
+    },
   },
 });
 
 export const communityReducer = communitySlice.reducer;
 
 export const getOutletOptionState = (state) => state.community.outletOption;
+
+export const getIgnoredUserIds = (state) => state.community.ignoredSuggestedIds;

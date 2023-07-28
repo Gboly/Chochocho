@@ -31,8 +31,6 @@ export default function Community() {
     useSelector(getOutletOptionState);
 
   const { authUser } = useContext(GeneralContext);
-  const followers = authUser?.followers || [];
-  const followings = authUser?.following || [];
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -48,8 +46,8 @@ export default function Community() {
   }, [location, dispatch]);
 
   const outlets = [
-    `${followers.length} Followers`,
-    `${followings.length} Following`,
+    `${authUser?.followers?.length || 0} Followers`,
+    `${authUser?.following?.length || 0} Following`,
     "People you might like",
   ];
 
@@ -101,11 +99,7 @@ export default function Community() {
               <CustomSelect {...CustomSelectProps} />
             </div>
           </header>
-          {authUser && (
-            <Outlet
-              context={{ followers, followings, authUser, communityNode }}
-            />
-          )}
+          {authUser && <Outlet context={{ authUser, communityNode }} />}
         </div>
       </div>
       <div className="rightbar-container">

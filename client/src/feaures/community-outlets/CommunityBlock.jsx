@@ -1,5 +1,4 @@
 import React from "react";
-import avi2 from "../../assets/avatar-square.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGlobe } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -7,7 +6,7 @@ import {
   faTwitter,
   faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectFetchedUsersById,
   useFollowUserMutation,
@@ -16,10 +15,12 @@ import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { useContext } from "react";
 import { GeneralContext } from "../../routes/Router";
 import { fieldUpdate } from "../../util/functions";
+import { ignoreSuggestedUser } from "../../app/actions/communityActions";
 
 const iconLink = [faGlobe, faFacebook, faTwitter, faInstagram];
 
 export default function CommunityBlock({ userId }) {
+  const dispatch = useDispatch();
   const { isFollowing, isFollower, authUser } = useContext(GeneralContext);
 
   const user = useSelector((state) => selectFetchedUsersById(state, userId));
@@ -60,6 +61,10 @@ export default function CommunityBlock({ userId }) {
     follow(args);
   };
 
+  const handleIgnore = () => {
+    dispatch(ignoreSuggestedUser(userId));
+  };
+
   const userLinks = [website, facebook, twitter, instagram];
 
   const followStatus = isFollowing(userId) ? "unfollow" : "follow";
@@ -96,7 +101,11 @@ export default function CommunityBlock({ userId }) {
       </div>
       {bio ? <p>{bio}</p> : <p style={{ opacity: 0.4 }}>Bio...</p>}
       <div>
-        <button className={`outlet-button ${followStatus}-outlet-button1`}>
+        <button
+          className={`outlet-button ${followStatus}-outlet-button1`}
+          // Use the isSuggested condition to decided if its ignore or message
+          onClick={handleIgnore}
+        >
           {isSuggested ? "Ignore" : "Message"}
         </button>
         <button

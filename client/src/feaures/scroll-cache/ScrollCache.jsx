@@ -47,26 +47,28 @@ export const ScrollCache = forwardRef(
 
     // Implementation of infinite page
     useEffect(() => {
-      const element = ref.current;
-      let isThrottled = false;
-      let timeOutId = null;
+      if (fetchMore) {
+        let element = ref.current;
+        let isThrottled = false;
+        let timeOutId = null;
 
-      const handleScroll = (e) => {
-        const { scrollTop, scrollHeight, offsetHeight } = e.target;
+        const handleScroll = (e) => {
+          const { scrollTop, scrollHeight, offsetHeight } = e.target;
 
-        if (scrollTop + offsetHeight >= scrollHeight - 20 && !isThrottled) {
-          isThrottled = true;
-          fetchMore();
-          timeOutId = setTimeout(() => (isThrottled = false), 3000);
-        }
-      };
+          if (scrollTop + offsetHeight >= scrollHeight - 20 && !isThrottled) {
+            isThrottled = true;
+            fetchMore();
+            timeOutId = setTimeout(() => (isThrottled = false), 3000);
+          }
+        };
 
-      element.addEventListener("scroll", handleScroll);
+        element.addEventListener("scroll", handleScroll);
 
-      return () => {
-        element.removeEventListener("scroll", handleScroll);
-        clearTimeout(timeOutId);
-      };
+        return () => {
+          element.removeEventListener("scroll", handleScroll);
+          clearTimeout(timeOutId);
+        };
+      }
     }, [ref, fetchMore]);
 
     return <>{children}</>;

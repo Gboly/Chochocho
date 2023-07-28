@@ -238,7 +238,7 @@ export const unNormalize = (data) => {
 
 const argumentMatch = (originalArg, myArg) =>
   Object.entries(originalArg).every(([key, value]) => {
-    if (key === "skip" || key === "limit") {
+    if (key === "skip" || key === "limit" || key === "start" || key === "end") {
       return true;
     }
     return value === myArg[key];

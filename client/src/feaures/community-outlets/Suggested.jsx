@@ -1,49 +1,56 @@
 import "./community-outlet.css";
 import CommunityBlock from "./CommunityBlock";
 import { useOutletContext } from "react-router-dom";
-import { useCallback, useState } from "react";
-import {
-  selectUserIdsByArgs,
-  useGetUsersByIdExceptionsQuery,
-} from "../../app/api-slices/usersApiSlice";
+import { useGetUsersByIdExceptionsQuery } from "../../app/api-slices/usersApiSlice";
 import Spinner from "../../components/Spinner/Spinner";
-import { newRange, prepareIdsForQuery } from "../../util/functions";
+import {
+  getAnArrayOfSpecificKeyPerObjectInArray,
+  prepareUserIdsForQuery,
+} from "../../util/functions";
 import { exemptionType, suggestedUsersType } from "../../util/types";
 import { useSelector } from "react-redux";
 import { ScrollCache } from "../scroll-cache/ScrollCache";
+import { getIgnoredUserIds } from "../../pages/community/communitySlice";
 
-const initialPage = { skip: 0, limit: 10 };
 export default function Suggested() {
-  const { followings, followers, authUser, communityNode } = useOutletContext();
-  const [{ skip, limit }, setRefetch] = useState(initialPage);
+  const {
+    authUser: { id: authUserId, following, followers },
+    communityNode,
+  } = useOutletContext();
+  const ignoredUserIds = useSelector(getIgnoredUserIds);
 
-  const friends = [{ userId: authUser?.id }, ...followings, ...followers];
+  const friends = [
+    authUserId,
+    ...getAnArrayOfSpecificKeyPerObjectInArray(
+      [...following, ...followers],
+      "userId"
+    ),
+    ...ignoredUserIds,
+  ];
 
   const queryArgs = {
-    userIds: prepareIdsForQuery(friends, "userId", exemptionType),
-    start: skip,
-    end: limit,
+    userIds: prepareUserIdsForQuery(friends, exemptionType),
+    start: 0,
+    end: 12,
     type: suggestedUsersType,
   };
+
   const { isLoading: suggestedFetchIsLoading, data: suggestedResult } =
     useGetUsersByIdExceptionsQuery(queryArgs);
 
-  const fetchMore = useCallback(() => {
-    !suggestedFetchIsLoading &&
-      suggestedResult.ids.length &&
-      setRefetch(({ skip, limit }) => newRange(skip, limit, initialPage));
-  }, [suggestedFetchIsLoading, suggestedResult]);
-
-  const fetchedUserIds = useSelector((state) =>
-    selectUserIdsByArgs(state, queryArgs)
-  );
-
   return (
     <>
-      <ScrollCache ref={communityNode} fetchMore={fetchMore} />
-      {(fetchedUserIds || []).map((userId, index) => (
-        <CommunityBlock key={index} {...{ userId }} />
-      ))}
+      <ScrollCache ref={communityNode} />
+      {(suggestedResult?.ids || [])
+        .filter(
+          (id) =>
+            // This is more or less an optimistic update. Although the query is refetched whenever a user is ignored or followed, this ensures a better ux. The change is seen immediately and doesn't have to wait for the query to be successful.
+            !ignoredUserIds.includes(id) &&
+            !getAnArrayOfSpecificKeyPerObjectInArray(following).includes(id)
+        )
+        .map((userId, index) => (
+          <CommunityBlock key={index} {...{ userId }} />
+        ))}
       {suggestedFetchIsLoading && <Spinner />}
       <div
         className="nots-void"

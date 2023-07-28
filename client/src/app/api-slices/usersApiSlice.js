@@ -41,7 +41,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
       transformResponse: (response) => getTransformed(response, usersAdapter),
       providesTags: (result, error, arg) => [
         { type: "Users", id: "List" },
-        ...result.ids.map((id) => ({ type: "Users", id })),
+        ...(result?.ids || []).map((id) => ({ type: "Users", id })),
       ],
     }),
     userSignUp: builder.mutation({
