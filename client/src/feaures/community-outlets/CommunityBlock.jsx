@@ -101,16 +101,20 @@ export default function CommunityBlock({ userId }) {
       </div>
       {bio ? <p>{bio}</p> : <p style={{ opacity: 0.4 }}>Bio...</p>}
       <div>
-        <button
-          className={`outlet-button ${followStatus}-outlet-button1`}
-          // Use the isSuggested condition to decided if its ignore or message
-          onClick={handleIgnore}
-        >
-          {isSuggested ? "Ignore" : "Message"}
-        </button>
+        {isSuggested && (
+          <button
+            className={`outlet-button ${followStatus}-outlet-button1`}
+            // Use the isSuggested condition to decided if its ignore or message
+            onClick={handleIgnore}
+          >
+            Ignore
+          </button>
+        )}
         <button
           onClick={handleFollow}
-          className={`outlet-button ${followStatus}-outlet-button2`}
+          className={`outlet-button ${followStatus}-outlet-button2 ${
+            isSuggested ? "" : "full-button"
+          }`}
         >
           {followStatus}
         </button>
