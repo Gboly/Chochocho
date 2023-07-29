@@ -66,6 +66,42 @@ const extractMentionedUsers = (content) => {
 const removeFromArray = (array, itemToRemove) =>
   array.filter((item) => item !== itemToRemove);
 
+const getUpdateMutualData = (
+  [{ authType, authUser }, { userType, user }],
+  updateType
+) => {
+  const idKey = "userId";
+  const updateData = [
+    {
+      type: authType,
+      queryId: authUser._id,
+      existingRecord: findById(authUser[authType], idKey, user._id),
+      recordId: user._id,
+    },
+    {
+      type: userType,
+      queryId: user._id,
+      existingRecord: findById(user[userType], idKey, authUser._id),
+      recordId: authUser._id,
+    },
+  ];
+
+  const updates = updateData.map(
+    ({ type, queryId, existingRecord, recordId }) => ({
+      updateOne: {
+        filter: { _id: queryId },
+        update: existingRecord
+          ? updateType !== "push only" && { $pull: { [type]: existingRecord } }
+          : updateType !== "pull only" && {
+              $push: { [type]: { userId: recordId } },
+            },
+      },
+    })
+  );
+
+  return { updateData, updates };
+};
+
 export {
   getMutuals,
   deriveSnippet,
@@ -75,4 +111,5 @@ export {
   deriveStoryQueryIds,
   extractMentionedUsers,
   removeFromArray,
+  getUpdateMutualData,
 };

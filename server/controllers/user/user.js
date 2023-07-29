@@ -1,7 +1,7 @@
 import User from "../../models/user.js";
 import Report from "../../models/report.js";
 import { sendNotification } from "../notification/notification.js";
-import { findById } from "../../util/helperFunctions.js";
+import { findById, getUpdateMutualData } from "../../util/helperFunctions.js";
 import transport from "../../config/nodeMailer.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -54,38 +54,17 @@ const updateUserDetails = async (req, res) => {
 
 const followUser = async (req, res) => {
   const { id: userId } = req.params;
-  const { id: authUserId, following: authUserfollowing } = req.user;
+  const authUser = req.user;
+
   try {
     const user = await User.findById({
       _id: userId,
     });
 
-    const idKey = "userId";
-    const updateData = [
-      {
-        type: "following",
-        queryId: authUserId,
-        followRecord: findById(authUserfollowing, idKey, userId),
-        recordId: userId,
-      },
-      {
-        type: "followers",
-        queryId: userId,
-        followRecord: findById(user.followers, idKey, authUserId),
-        recordId: authUserId,
-      },
-    ];
-
-    const updates = updateData.map(
-      ({ type, queryId, followRecord, recordId }) => ({
-        updateOne: {
-          filter: { _id: queryId },
-          update: followRecord
-            ? { $pull: { [type]: followRecord } }
-            : { $push: { [type]: { userId: recordId } } },
-        },
-      })
-    );
+    const { updateData, updates } = getUpdateMutualData([
+      { authType: "following", authUser },
+      { userType: "followers", user },
+    ]);
 
     const updateResult = await User.bulkWrite(updates);
 
@@ -94,7 +73,7 @@ const followUser = async (req, res) => {
     const isUnFollow = updateData.every((data) => data.followRecord);
     if (!isUnFollow) {
       await sendNotification({
-        userId: authUserId,
+        userId: authUser.id,
         type: "follow",
         recipient: userId,
       });
