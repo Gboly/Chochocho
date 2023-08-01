@@ -73,31 +73,29 @@ const getUpdateMutualData = (
   const idKey = "userId";
   const updateData = [
     {
-      type: authType,
       queryId: authUser._id,
       existingRecord: findById(authUser[authType], idKey, user._id),
-      recordId: user._id,
+      update: { [authType]: { userId: user._id } },
     },
     {
-      type: userType,
       queryId: user._id,
       existingRecord: findById(user[userType], idKey, authUser._id),
-      recordId: authUser._id,
+      update: { [userType]: { userId: authUser._id } },
     },
   ];
 
-  const updates = updateData.map(
-    ({ type, queryId, existingRecord, recordId }) => ({
+  const updates = updateData
+    .map(({ queryId, existingRecord, update }) => ({
       updateOne: {
         filter: { _id: queryId },
         update: existingRecord
-          ? updateType !== "push only" && { $pull: { [type]: existingRecord } }
+          ? updateType !== "push only" && { $pull: update }
           : updateType !== "pull only" && {
-              $push: { [type]: { userId: recordId } },
+              $push: update,
             },
       },
-    })
-  );
+    }))
+    .filter(({ updateOne: { update } }) => update);
 
   return { updateData, updates };
 };

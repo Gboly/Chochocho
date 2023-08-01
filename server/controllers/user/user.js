@@ -1,7 +1,7 @@
 import User from "../../models/user.js";
 import Report from "../../models/report.js";
 import { sendNotification } from "../notification/notification.js";
-import { findById, getUpdateMutualData } from "../../util/helperFunctions.js";
+import { getUpdateMutualData } from "../../util/helperFunctions.js";
 import transport from "../../config/nodeMailer.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -69,7 +69,7 @@ const followUser = async (req, res) => {
     const updateResult = await User.bulkWrite(updates);
 
     //notification
-    // nots should only be sent when a follow is the case and not unfollow
+    //nots should only be sent when a follow is the case and not unfollow
     const isUnFollow = updateData.every((data) => data.followRecord);
     if (!isUnFollow) {
       await sendNotification({
@@ -79,7 +79,7 @@ const followUser = async (req, res) => {
       });
     }
 
-    res.status(201).json(updateResult);
+    res.status(201).json(updates);
   } catch (error) {
     console.log(error);
     return res
@@ -89,25 +89,46 @@ const followUser = async (req, res) => {
 };
 
 const blockUser = async (req, res) => {
-  // const { type } = req.body;
-  const { id: authUserId, blocked } = req.user;
   const { id: userId } = req.params;
+  const authUser = req.user;
 
-  // check if the likes or repost already contain the authUser as one of its userId. If, it does, make it undo the reaction.(e.g; like and dislike)
   try {
-    const blockRecord = blocked.find((record) => record.userId.equals(userId));
+    const user = await User.findById({
+      _id: userId,
+    });
 
-    const updateUser = await User.updateOne(
-      { _id: authUserId },
-      blockRecord
-        ? { $pull: { blocked: blockRecord } }
-        : { $push: { blocked: { userId } } }
+    // Update blocked
+    const { updates: blockUpdates } = getUpdateMutualData([
+      { authType: "youBlocked", authUser },
+      { userType: "blockedYou", user },
+    ]);
+    //const blockedUpdateResult = await User.bulkWrite(blockUpdates);
+
+    // Unfollow if you follow
+    const { updates: unFollowUpdates } = getUpdateMutualData(
+      [
+        { authType: "following", authUser },
+        { userType: "followers", user },
+      ],
+      "pull only"
     );
+
+    // If the user follows you, stop them from following you. Become unfollowed
+    const { updates: unFollowedUpdates } = getUpdateMutualData(
+      [
+        { authType: "followers", authUser },
+        { userType: "following", user },
+      ],
+      "pull only"
+    );
+
+    const updates = [...blockUpdates, ...unFollowUpdates, ...unFollowedUpdates];
+    const updateResult = await User.bulkWrite(updates);
 
     // notification
     // Nobody gets notified when a block happens.
 
-    res.status(201).json(updateUser);
+    res.status(201).json(updates);
   } catch (error) {
     console.log(error);
     return res

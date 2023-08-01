@@ -52,7 +52,8 @@ const userSchema = new schema({
     type: notificationTypesSchema,
     default: defaultNotificationTypes,
   },
-  blocked: { type: [subUserSchema], default: [] },
+  youBlocked: { type: [subUserSchema], default: [] },
+  blockedYou: { type: [subUserSchema], default: [] },
   //socket.io should keep track of online and offline status and should be reflected here based on time
   online: { type: Boolean, default: true },
   lastSeen: { type: Date, default: new Date() },
