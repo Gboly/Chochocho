@@ -65,6 +65,12 @@ const addNewPost = async (req, res) => {
     // return readyContent when @ is no more included.
 
     // If its a regualr post, make mutuals recieve nots. for comments, only users who were part of the conversation should get the nots
+    // You shouldn't get notified when you comment on YOUR own post
+    const notifyingUserIds = removeFromArray(
+      getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
+      userId
+    );
+    const filterednotifyingUserIds = excludeBlocked(notifyingUserIds, req.user);
     await sendNotification({
       type,
       snippet: deriveSnippet(content, mediaType),
@@ -74,10 +80,7 @@ const addNewPost = async (req, res) => {
         type === "post"
           ? getMutuals(followers, following)
           : // You shouldn't get notified when you comment on YOUR own post
-            removeFromArray(
-              getAnArrayOfSpecificKeyPerObjectInArray(parents, "userId"),
-              userId
-            ),
+            filterednotifyingUserIds,
     });
 
     // Treat mention notification.
@@ -149,13 +152,17 @@ const getPosts = async (req, res) => {
 const getPostCommentsOrParents = async (req, res) => {
   const { id, postRel } = req.params;
   const { _start, _end } = req.query;
+  const blockeduserIds = getBlockeduserIds(req.user);
   try {
     const post = await Post.findById(id);
     const ids = getAnArrayOfSpecificKeyPerObjectInArray(
       post[postRel],
       "postId"
     );
-    const postCommentsOrParents = await Post.find({ _id: ids })
+    const postCommentsOrParents = await Post.find({
+      _id: ids,
+      userId: { $nin: blockedUserIds },
+    })
       .sort({ date: -1 })
       .skip(_start)
       .limit(_end);

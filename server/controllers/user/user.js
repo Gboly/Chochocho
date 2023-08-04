@@ -1,7 +1,10 @@
 import User from "../../models/user.js";
 import Report from "../../models/report.js";
 import { sendNotification } from "../notification/notification.js";
-import { getUpdateMutualData } from "../../util/helperFunctions.js";
+import {
+  getUpdateMutualData,
+  excludeBlocked,
+} from "../../util/helperFunctions.js";
 import transport from "../../config/nodeMailer.js";
 import dotenv from "dotenv";
 dotenv.config();
@@ -53,8 +56,16 @@ const updateUserDetails = async (req, res) => {
 };
 
 const followUser = async (req, res) => {
-  const { id: userId } = req.params;
+  const { id: userToFollowId } = req.params;
   const authUser = req.user;
+
+  const userId = excludeBlocked(userToFollowId, authUser);
+  if (!userId?.length)
+    return res.status(403).json({
+      error: true,
+      message:
+        "You cannot follow this user because they have either blocked you or you blocked them.",
+    });
 
   try {
     const user = await User.findById({
