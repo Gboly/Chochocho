@@ -162,6 +162,10 @@ const getStoryById = async (req, res) => {
   const { id } = req.params;
   try {
     const story = await Story.findById(id);
+
+    const storyUserId = excludeBlocked(story?.userId, authUser);
+    if (!storyUserId?.length) return res.status(403).json({});
+
     story
       ? res.status(200).json(story)
       : res.status(404).json({ error: "No story found" });
