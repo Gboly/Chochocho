@@ -8,6 +8,8 @@ import {
   getAnArrayOfSpecificKeyPerObjectInArray,
   extractMentionedUsers,
   removeFromArray,
+  excludeBlocked,
+  getBlockedUserIds,
 } from "../../util/helperFunctions.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 
@@ -103,25 +105,31 @@ const addNewPost = async (req, res) => {
 
 const getPosts = async (req, res) => {
   const { id, userId, _start, _end } = req.query;
-  const { following } = req.user;
+  const authUser = req.user;
+
+  const blockedUserIds = getBlockedUserIds(authUser);
+  const filteredUserId = excludeBlocked(userId, authUser);
+  // If all userId are blocked users, return.
+  if (userId && !filteredUserId.length) return res.status(403).json({});
+
   // Whenever a request is sent to this endpoint without passing ids as query,
   // then, post from those authUser follows should be supplied.
   // if a userId param is passed, fetch posts from a particular user
-  const homeOrProfileFeed = userId || [
-    ...getAnArrayOfSpecificKeyPerObjectInArray(following, "userId"),
-    req.user.id,
-  ];
+  const homeOrProfileFeed = userId
+    ? filteredUserId
+    : [
+        ...getAnArrayOfSpecificKeyPerObjectInArray(
+          authUser.following,
+          "userId"
+        ),
+        req.user.id,
+      ];
+
   const query = id
-    ? { ...req.query, _id: id }
+    ? { ...req.query, _id: id, userId: { $nin: blockedUserIds } }
     : {
         ...req.query,
-        // The or is not needed because i dont want to see a post made by a user i follow appear on my TL again because of a user i don't follow.
-        // This means that the i want to see on my TL, posts of those i don't follow if one i follow reposts it. A way of sharing
         userId: homeOrProfileFeed,
-        // $or: [
-        //   { userId: homeOrProfileFeed },
-        //   { originalUserId: homeOrProfileFeed },
-        // ],
       };
   try {
     const posts = await Post.find(query)
@@ -130,10 +138,6 @@ const getPosts = async (req, res) => {
       .limit(_end);
 
     res.status(200).json(posts);
-
-    // posts.length > 0
-    //   ? res.status(200).json(posts)
-    //   : res.status(204).json({ error: "No post found" });
   } catch (error) {
     console.log(error);
     return res

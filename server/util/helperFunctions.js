@@ -19,7 +19,7 @@ const getAnArrayOfSpecificKeyPerObjectInArray = (
   originalArray,
   specificKey
 ) => {
-  return originalArray.map((item) => item[specificKey]);
+  return (originalArray || []).map((item) => item[specificKey]);
 };
 
 const findById = (array, idKey, id) =>
@@ -100,6 +100,25 @@ const getUpdateMutualData = (
   return { updateData, updates };
 };
 
+const getBlockedUserIds = (authUser) => {
+  const { youBlocked, blockedYou } = authUser;
+  return [
+    ...getAnArrayOfSpecificKeyPerObjectInArray(blockedYou, "userId"),
+    ...getAnArrayOfSpecificKeyPerObjectInArray(youBlocked, "userId"),
+  ];
+};
+
+const excludeBlocked = (query, authUser) => {
+  if (query) {
+    const blockedUserIds = getBlockedUserIds(authUser);
+    return Array.isArray(query)
+      ? query.filter((userId) => !blockedUserIds.includes(userId))
+      : blockedUserIds.some((userId) => userId.equals(query))
+      ? []
+      : query;
+  }
+};
+
 export {
   getMutuals,
   deriveSnippet,
@@ -110,4 +129,6 @@ export {
   extractMentionedUsers,
   removeFromArray,
   getUpdateMutualData,
+  excludeBlocked,
+  getBlockedUserIds,
 };
