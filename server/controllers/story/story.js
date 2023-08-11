@@ -1,6 +1,9 @@
 import Story from "../../models/story.js";
 import User from "../../models/user.js";
-import { deriveStoryQueryIds } from "../../util/helperFunctions.js";
+import {
+  deriveStoryQueryIds,
+  excludeBlocked,
+} from "../../util/helperFunctions.js";
 
 const addNewStory = async (req, res) => {
   const { id: authUserId, storyVisibility } = req.user;
@@ -163,11 +166,13 @@ const getStoryById = async (req, res) => {
   try {
     const story = await Story.findById(id);
 
-    const storyUserId = excludeBlocked(story?.userId, authUser);
-    if (!storyUserId?.length) return res.status(403).json({});
+    const refinedResult_Short4BlockedUser = returnShortForBlockedUsers(
+      story,
+      req.user
+    );
 
     story
-      ? res.status(200).json(story)
+      ? res.status(200).json(refinedResult_Short4BlockedUser)
       : res.status(404).json({ error: "No story found" });
   } catch (error) {
     console.log(error);

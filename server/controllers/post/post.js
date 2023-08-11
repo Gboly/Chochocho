@@ -9,6 +9,7 @@ import {
   extractMentionedUsers,
   removeFromArray,
   excludeBlocked,
+  returnShortForBlockedUsers,
   getBlockedUserIds,
 } from "../../util/helperFunctions.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
@@ -110,26 +111,20 @@ const getPosts = async (req, res) => {
   const { id, userId, _start, _end } = req.query;
   const authUser = req.user;
 
-  const blockedUserIds = getBlockedUserIds(authUser);
   const filteredUserId = excludeBlocked(userId, authUser);
   // If all userId are blocked users, return.
   if (userId && !filteredUserId.length) return res.status(403).json({});
 
   // Whenever a request is sent to this endpoint without passing ids as query,
   // then, post from those authUser follows should be supplied.
-  // if a userId param is passed, fetch posts from a particular user
-  const homeOrProfileFeed = userId
-    ? filteredUserId
-    : [
-        ...getAnArrayOfSpecificKeyPerObjectInArray(
-          authUser.following,
-          "userId"
-        ),
-        req.user.id,
-      ];
+  // if a userId param is passed, fetch posts from a particular user/array of users
+  const homeOrProfileFeed = userId || [
+    ...getAnArrayOfSpecificKeyPerObjectInArray(authUser.following, "userId"),
+    req.user.id,
+  ];
 
   const query = id
-    ? { ...req.query, _id: id, userId: { $nin: blockedUserIds } }
+    ? { ...req.query, _id: id }
     : {
         ...req.query,
         userId: homeOrProfileFeed,
@@ -140,7 +135,12 @@ const getPosts = async (req, res) => {
       .skip(_start)
       .limit(_end);
 
-    res.status(200).json(posts);
+    const refinedResult_Short4BlockedUser = returnShortForBlockedUsers(
+      posts,
+      authUser
+    );
+
+    res.status(200).json(refinedResult_Short4BlockedUser);
   } catch (error) {
     console.log(error);
     return res
@@ -152,7 +152,9 @@ const getPosts = async (req, res) => {
 const getPostCommentsOrParents = async (req, res) => {
   const { id, postRel } = req.params;
   const { _start, _end } = req.query;
-  const blockeduserIds = getBlockeduserIds(req.user);
+  const authUser = req.user;
+
+  const blockeduserIds = getBlockedUserIds(authUser);
   try {
     const post = await Post.findById(id);
     const ids = getAnArrayOfSpecificKeyPerObjectInArray(
@@ -161,13 +163,18 @@ const getPostCommentsOrParents = async (req, res) => {
     );
     const postCommentsOrParents = await Post.find({
       _id: ids,
-      userId: { $nin: blockedUserIds },
+      userId: { $nin: postRel === "comments" ? blockeduserIds : [] },
     })
       .sort({ date: -1 })
       .skip(_start)
       .limit(_end);
 
-    res.status(200).json(postCommentsOrParents);
+    const refinedResult_Short4BlockedUser = returnShortForBlockedUsers(
+      postCommentsOrParents,
+      authUser
+    );
+
+    res.status(200).json(refinedResult_Short4BlockedUser);
   } catch (error) {
     console.log(error);
     return res

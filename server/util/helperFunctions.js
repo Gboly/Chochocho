@@ -103,8 +103,10 @@ const getUpdateMutualData = (
 const getBlockedUserIds = (authUser) => {
   const { youBlocked, blockedYou } = authUser;
   return [
-    ...getAnArrayOfSpecificKeyPerObjectInArray(blockedYou, "userId"),
-    ...getAnArrayOfSpecificKeyPerObjectInArray(youBlocked, "userId"),
+    ...new Set([
+      ...getAnArrayOfSpecificKeyPerObjectInArray(blockedYou, "userId"),
+      ...getAnArrayOfSpecificKeyPerObjectInArray(youBlocked, "userId"),
+    ]),
   ];
 };
 
@@ -119,6 +121,16 @@ const excludeBlocked = (query, authUser) => {
   }
 };
 
+const returnShortForBlockedUsers = (posts, authUser) => {
+  const blockedUserIds = getBlockedUserIds(authUser);
+  return posts.map((post) => {
+    const { _id, userId } = post;
+    return blockedUserIds.some((blockedUserId) => blockedUserId.equals(userId))
+      ? { _id, userId }
+      : post;
+  });
+};
+
 export {
   getMutuals,
   deriveSnippet,
@@ -131,4 +143,5 @@ export {
   getUpdateMutualData,
   excludeBlocked,
   getBlockedUserIds,
+  returnShortForBlockedUsers,
 };
