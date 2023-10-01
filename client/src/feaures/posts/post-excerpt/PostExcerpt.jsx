@@ -4,7 +4,6 @@ import PostContent from "../../../components/post/post-content/PostContent";
 import Likes from "../../../components/post/post-engagements/Likes";
 import Others from "../../../components/post/post-engagements/Others";
 import PostReaction from "../post-reaction/PostReaction";
-import PostShare from "../post-share/PostShare";
 import { useSelector, useDispatch } from "react-redux";
 import {
   selectPostById,
@@ -25,7 +24,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useGetUserByIdQuery } from "../../../app/api-slices/usersApiSlice";
 import NavigateWithScrollCache from "../../scroll-cache/NavigateWithScrollCache";
-import Spinner from "../../../components/Spinner/Spinner";
 import {
   authUserType,
   otherUsersType,
@@ -33,6 +31,7 @@ import {
 } from "../../../util/types";
 import { GeneralContext } from "../../../routes/Router";
 import { Skeleton } from "@mui/material";
+import Excerpt4Blocked from "./Excerpt4Blocked";
 
 export default function PostExcerpt({
   postId,
@@ -40,10 +39,18 @@ export default function PostExcerpt({
   comment,
   loadComponent,
 }) {
+  const {
+    authUser: { youBlocked, blockedYou },
+  } = useContext(GeneralContext);
   const { userId, type, originalPostId, originalUserId, cachedId } =
     useSelector((state) => selectPostById(state, postId));
 
   const isRepost = type === "repost";
+  const isBlocked = findByIdKey(
+    [...youBlocked, ...blockedYou],
+    "userId",
+    isRepost ? originalUserId : userId
+  );
 
   const originalPostIsFetched = useSelector((state) =>
     selectPostById(state, originalPostId)
@@ -68,7 +75,17 @@ export default function PostExcerpt({
       {/* The originalPost would be null when this post is not a repost or the post has already been fetched, So this condition provides an immediate truthy response for the question "Has the post been fetched?" */}
       {(isRepost && !originalPostIsFetched ? originalPost : true) &&
         userFetchIsSuccesfull &&
-        user && (
+        user &&
+        (isBlocked ? (
+          <Excerpt4Blocked
+            {...{
+              postId: originalPostId || cachedId || postId,
+              viewPost,
+              user,
+              ...(isRepost ? { rePostId: postId, rePostUserId: userId } : {}),
+            }}
+          />
+        ) : (
           <Excerpt
             {...{
               // The cachedId represents the actual Id of a particular post which have been pre-fetched (cached) already and there's no need to populate the cached state with it
@@ -76,10 +93,10 @@ export default function PostExcerpt({
               viewPost,
               comment,
               user,
-              ...(isRepost ? { rePostId: postId } : {}),
+              ...(isRepost ? { rePostId: postId, rePostUserId: userId } : {}),
             }}
           />
-        )}
+        ))}
     </>
   );
 }
@@ -107,7 +124,14 @@ export const postSkeletons = (postRange) => {
   return skeletons;
 };
 
-const Excerpt = ({ postId, viewPost, comment, user, rePostId }) => {
+const Excerpt = ({
+  postId,
+  viewPost,
+  comment,
+  user,
+  rePostId,
+  rePostUserId,
+}) => {
   const {
     isAuth,
     authUser: { _id: authUserId },
@@ -115,9 +139,8 @@ const Excerpt = ({ postId, viewPost, comment, user, rePostId }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post = useSelector((state) => selectPostById(state, postId));
-  const { isOpen: optionsIsOpen, id: optionsId } =
-    useSelector(getPostOptionState);
-  const { isOpen: shareIsOpen, id: shareId } = useSelector(getPostShareState);
+  const { isOpen: optionsIsOpen } = useSelector(getPostOptionState);
+  const { isOpen: shareIsOpen } = useSelector(getPostShareState);
   const { isOpen: editPostIsOpen } = useSelector(getEditPostState);
 
   const [isPopUp, setIsPopUp] = useState(false);
@@ -179,18 +202,18 @@ const Excerpt = ({ postId, viewPost, comment, user, rePostId }) => {
   const cleanUp = () => setRoute(false);
 
   //Get user who made the repost
-  const { data: repostUser } = useGetUserByIdQuery(userId);
+  const { data: repostUser } = useGetUserByIdQuery(rePostUserId);
   const showReposter = useMemo(
     () =>
       // check if its a repost and also if the reposter is actually still reposting it at the point
-      rePostId &&
+      rePostUserId &&
       repostUser &&
-      findByIdKey(reposts, "userId", userId) && (
+      findByIdKey(reposts, "userId", rePostUserId) && (
         <div className="reposted-by">
-          {userId === authUserId ? "You" : repostUser.username} reposted
+          {rePostUserId === authUserId ? "You" : repostUser.username} reposted
         </div>
       ),
-    [rePostId, userId, reposts, authUserId, repostUser]
+    [rePostUserId, reposts, authUserId, repostUser]
   );
 
   return (

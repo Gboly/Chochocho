@@ -74,4 +74,10 @@ export const selectUsersType = "select users";
 export const suggestedUsersType = "suggested users";
 export const logOutType = "log out";
 export const reportType = "report";
+export const blockedYouMessage =
+  "⚠ Oops, you cannot view because you have been blocked by this user";
+export const youBlockedMessage =
+  "⚠ Oops, you cannot view because you already blocked this user";
+export const mutualBlockMessage =
+  "⚠ Oops, you cannot view because you and this user mutually blocked each other";
 //export const

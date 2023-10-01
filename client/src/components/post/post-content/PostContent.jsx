@@ -8,46 +8,54 @@ import {
 import { showPopupOnOpaqueOverlay } from "../../../util/functions";
 import { altMessageType } from "../../../util/types";
 
-export default function PostContent({ content, mediaType, media, postId }) {
+export default function PostContent({
+  content,
+  mediaType,
+  media,
+  postId,
+  blocked,
+}) {
   const dispatch = useDispatch();
 
   return (
     <div className="post-center">
-      <p className="post-text">{content}</p>
-      <div
-        className="post-media-container"
-        onClick={(e) => e && e.stopPropagation && e.stopPropagation()}
-      >
-        {mediaType.startsWith("video") && (
-          <CustomVideo src={media[0].src} postId={postId} />
-        )}
-        {mediaType.startsWith("image") &&
-          media &&
-          media.map(({ src, alt }, idx) => (
-            <div key={idx}>
-              <img
-                src={src}
-                alt={alt}
-                className="post-media"
-                onClick={() => dispatch(openFullscreen(src))}
-              />
-              {alt && (
-                <button
-                  className="post-img-alt-button"
-                  onClick={() =>
-                    showPopupOnOpaqueOverlay(
-                      openAltMessage,
-                      altMessageType,
-                      alt
-                    )
-                  }
-                >
-                  ALT
-                </button>
-              )}
-            </div>
-          ))}
-      </div>
+      <p className={`post-text ${blocked ? "block-message" : ""}`}>{content}</p>
+      {!blocked && (
+        <div
+          className="post-media-container"
+          onClick={(e) => e && e.stopPropagation && e.stopPropagation()}
+        >
+          {mediaType.startsWith("video") && (
+            <CustomVideo src={media[0].src} postId={postId} />
+          )}
+          {mediaType.startsWith("image") &&
+            media &&
+            media.map(({ src, alt }, idx) => (
+              <div key={idx}>
+                <img
+                  src={src}
+                  alt={alt}
+                  className="post-media"
+                  onClick={() => dispatch(openFullscreen(src))}
+                />
+                {alt && (
+                  <button
+                    className="post-img-alt-button"
+                    onClick={() =>
+                      showPopupOnOpaqueOverlay(
+                        openAltMessage,
+                        altMessageType,
+                        alt
+                      )
+                    }
+                  >
+                    ALT
+                  </button>
+                )}
+              </div>
+            ))}
+        </div>
+      )}
     </div>
   );
 }
