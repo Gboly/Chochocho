@@ -4,6 +4,7 @@ import {
   deriveStoryQueryIds,
   excludeBlocked,
 } from "../../util/helperFunctions.js";
+import { returnShortForBlockedUsers } from "../../util/helperFunctions.js";
 
 const addNewStory = async (req, res) => {
   const { id: authUserId, storyVisibility } = req.user;
@@ -167,12 +168,12 @@ const getStoryById = async (req, res) => {
     const story = await Story.findById(id);
 
     const refinedResult_Short4BlockedUser = returnShortForBlockedUsers(
-      story,
+      [story],
       req.user
     );
 
     story
-      ? res.status(200).json(refinedResult_Short4BlockedUser)
+      ? res.status(200).json(refinedResult_Short4BlockedUser[0])
       : res.status(404).json({ error: "No story found" });
   } catch (error) {
     console.log(error);

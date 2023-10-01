@@ -16,10 +16,16 @@ const getAuthenticatedUser = async (req, res) => {
 const getUser = async (req, res) => {
   const { id } = req.params;
   try {
-    const user = await User.findById(id, { password: 0 });
-    user
-      ? res.status(200).json(user)
-      : res.status(404).json({ error: "User not found" });
+    if (id === "undefined" || id === undefined) {
+      res
+        .status(400)
+        .json({ error: "Invalid user ID provided in the request." });
+    } else {
+      const user = await User.findById(id, { password: 0 });
+      user
+        ? res.status(200).json(user)
+        : res.status(404).json({ error: "User not found" });
+    }
   } catch (error) {
     console.log(error);
     return res

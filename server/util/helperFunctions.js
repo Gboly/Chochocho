@@ -121,6 +121,7 @@ const excludeBlocked = (query, authUser) => {
   }
 };
 
+// story uses this too
 const returnShortForBlockedUsers = (posts, authUser) => {
   const blockedUserIds = getBlockedUserIds(authUser);
   return posts.map((post) => {
