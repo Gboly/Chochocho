@@ -114,7 +114,12 @@ const excludeBlocked = (query, authUser) => {
   if (query) {
     const blockedUserIds = getBlockedUserIds(authUser);
     return Array.isArray(query)
-      ? query.filter((userId) => !blockedUserIds.includes(userId))
+      ? query.filter(
+          (user) =>
+            !blockedUserIds.some((userId) =>
+              userId.equals(user?.userId || user)
+            )
+        )
       : blockedUserIds.some((userId) => userId.equals(query))
       ? []
       : query;
@@ -125,9 +130,9 @@ const excludeBlocked = (query, authUser) => {
 const returnShortForBlockedUsers = (posts, authUser) => {
   const blockedUserIds = getBlockedUserIds(authUser);
   return posts.map((post) => {
-    const { _id, userId, date } = post;
+    const { _id, userId, date, createdAt } = post;
     return blockedUserIds.some((blockedUserId) => blockedUserId.equals(userId))
-      ? { _id, userId, date }
+      ? { _id, userId, date, createdAt }
       : post;
   });
 };

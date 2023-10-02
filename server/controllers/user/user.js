@@ -10,7 +10,17 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const getAuthenticatedUser = async (req, res) => {
-  res.status(200).json(req.user);
+  const authUser = req.user;
+  const excludedBlockedUsersFromStory = excludeBlocked(
+    [...authUser?.otherStories],
+    authUser
+  );
+  res
+    .status(200)
+    .json({
+      ...JSON.parse(JSON.stringify(authUser)),
+      otherStories: excludedBlockedUsersFromStory,
+    });
 };
 
 const getUser = async (req, res) => {

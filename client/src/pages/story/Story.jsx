@@ -12,8 +12,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
 import video from "../../assets/video.mp4";
-import { videoType, imageType } from "../../util/types";
-import { getStoryUserDetails } from "../../util/functions";
+import {
+  videoType,
+  imageType,
+  blockedYouMessage,
+  youBlockedMessage,
+} from "../../util/types";
+import { findByIdKey, getStoryUserDetails } from "../../util/functions";
 import PrevSlide from "./prevSlide";
 import NextSlide from "./nextSlide";
 import StoryHeader from "./StoryHeader";
@@ -33,7 +38,15 @@ const Story = () => {
     isError: storyFetchFailed,
   } = useGetStoryByIdQuery(storyId);
   const { data: user, isLoading: userFetchIsLoading } = useGetUserByIdQuery(
-    story?.userId || ""
+    story?.userId,
+    { skip: !story?.userId }
+  );
+
+  // Check for block
+  const isBlocked = findByIdKey(
+    [...authUser?.youBlocked, ...authUser?.blockedYou],
+    "userId",
+    story?.userId
   );
 
   const [storyIndex, userIndex, users] = useMemo(() => {
@@ -54,20 +67,22 @@ const Story = () => {
   //Transition
   const handleTransition = useCallback(
     (transitionType) => {
-      const { username: newUsername, storyId: newStoryId } =
-        transitionType === "prev"
-          ? prevParams
-          : transitionType === "next"
-          ? nextParams
-          : { username, storyId };
+      if (!isBlocked) {
+        const { username: newUsername, storyId: newStoryId } =
+          transitionType === "prev"
+            ? prevParams
+            : transitionType === "next"
+            ? nextParams
+            : { username, storyId };
 
-      // When making a transition on the last story, navigate to the default story route.
-      // The nextParams remains the currentParam whenever it gets to the last story
-      transitionType === "next" && isEqual(nextParams, { username, storyId })
-        ? navigate("/story")
-        : navigate(`/story/${newUsername}/${newStoryId}`, { replace: true });
+        // When making a transition on the last story, navigate to the default story route.
+        // The nextParams remains the currentParam whenever it gets to the last story
+        transitionType === "next" && isEqual(nextParams, { username, storyId })
+          ? navigate("/story")
+          : navigate(`/story/${newUsername}/${newStoryId}`, { replace: true });
+      }
     },
-    [nextParams, navigate, prevParams, username, storyId]
+    [nextParams, navigate, prevParams, username, storyId, isBlocked]
   );
 
   return (
@@ -81,6 +96,7 @@ const Story = () => {
         users,
         storyIndex,
         userIndex,
+        isBlocked,
       }}
     >
       <main className="story-page-main">
@@ -96,7 +112,9 @@ const Story = () => {
             {!storyFetchFailed && story && user && (
               <>
                 <StoryHeader ref={videoRef} />
-                {story.mediaType === videoType ? (
+                {isBlocked ? (
+                  <BlockedUserStory userId={user.id} />
+                ) : story.mediaType === videoType ? (
                   <video ref={videoRef} src={video} alt="story" autoPlay />
                 ) : (
                   <img src={story.media} alt="story" />
@@ -111,6 +129,22 @@ const Story = () => {
         <NextSlide />
       </main>
     </StoryContext.Provider>
+  );
+};
+
+const BlockedUserStory = ({ userId }) => {
+  const {
+    authUser: { blockedYou, youBlocked },
+  } = useContext(GeneralContext);
+
+  const blockMessage = findByIdKey(blockedYou, "userId", userId)
+    ? blockedYouMessage
+    : findByIdKey(youBlocked, "userId", userId) && youBlockedMessage;
+
+  return (
+    <>
+      <div className="story-link-error">{blockMessage}</div>
+    </>
   );
 };
 

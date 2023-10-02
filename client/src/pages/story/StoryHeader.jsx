@@ -17,19 +17,13 @@ import {
   faPlay,
   faPause,
 } from "@fortawesome/free-solid-svg-icons";
-import {
-  videoType,
-  imageType,
-  postOptionsType,
-  storyOptionsType,
-} from "../../util/types";
+import { videoType, storyOptionsType } from "../../util/types";
 import {
   convertToUserFriendlyTime,
   showPopupOnTransparentOverlay,
 } from "../../util/functions";
 import { GeneralContext } from "../../routes/Router";
 import { useParams } from "react-router-dom";
-import { openPostOption } from "../../app/actions/homeActions";
 import { openStoryOptions } from "../../app/actions/storyActions";
 
 const initialProgressState = {
@@ -43,6 +37,7 @@ const StoryHeader = forwardRef((_, videoRef) => {
     story,
     storyId,
     handleTransition,
+    isBlocked,
   } = useContext(StoryContext);
 
   const [{ value, max, progressing }, setProgress] =
@@ -107,14 +102,15 @@ const StoryHeader = forwardRef((_, videoRef) => {
   return (
     <aside className="story-desc-actions">
       <div className="story-progress-container">
-        {(myStories || []).map((userStory) => (
-          <StoryProgress
-            key={userStory.storyId}
-            userStory={userStory}
-            value={value}
-            max={max}
-          />
-        ))}
+        {!isBlocked &&
+          (myStories || []).map((userStory) => (
+            <StoryProgress
+              key={userStory.storyId}
+              userStory={userStory}
+              value={value}
+              max={max}
+            />
+          ))}
       </div>
       <div className="story-user-actions">
         <UserCameo
@@ -122,16 +118,18 @@ const StoryHeader = forwardRef((_, videoRef) => {
             userId: id,
             alignItems: true,
             single: true,
-            header: displayName,
+            header: displayName || username,
             sub: username,
             aside: convertToUserFriendlyTime(story.createdAt),
             avatarProp: { size: 2.5, src: profileImage },
-            icon: (
+            icon: !isBlocked ? (
               <StoryActions
                 ref={videoRef}
                 story={story}
                 playPauseTransition={playPauseTransition}
               />
+            ) : (
+              <></>
             ),
           }}
         />

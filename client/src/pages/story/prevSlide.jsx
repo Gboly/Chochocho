@@ -16,15 +16,16 @@ const PrevSlide = () => {
     users,
     storyIndex,
     userIndex,
+    isBlocked,
   } = useContext(StoryContext);
 
   const [prevUserId, firstStory, firstUserStory] = useMemo(() => {
     const firstUser = userIndex <= 0;
     const firstUserStory = storyIndex <= 0;
-    const firstStory = firstUser && firstUserStory;
+    const firstStory = (firstUser && firstUserStory) || isBlocked;
     const prevUserId = users[firstUser ? userIndex : userIndex - 1]?.userId;
     return [prevUserId, firstStory, firstUserStory];
-  }, [users, storyIndex, userIndex]);
+  }, [users, storyIndex, userIndex, isBlocked]);
 
   const prevUser = useSelector((state) =>
     selectFetchedUsersById(state, prevUserId)
