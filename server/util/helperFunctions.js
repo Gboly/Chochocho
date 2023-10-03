@@ -37,23 +37,29 @@ const customExemptUsersFromStory = (followers, users) => {
   return target;
 };
 
-const deriveStoryQueryIds = (authUser, visibilityPerStory) => {
+const deriveStoryQueryIds = (authUser, visibilityPerStory, newFollowerId) => {
   const { storyVisibility: visibilityPerUser, followers, following } = authUser;
 
   // The whole perUser and perStory is done to ensure that users who got the stories are the same ones that would be pulled from when deleting.
   const storyVisibility = visibilityPerStory || visibilityPerUser;
   const { type, users } = storyVisibility;
 
+  // This is for the follow endpoint where the user's followers field has not yet been updated.
+  const updatedFollowers = [
+    ...followers,
+    ...(newFollowerId ? [{ userId: newFollowerId }] : []),
+  ];
+
   const idKey = "userId";
   const queryIds =
     type === "followers"
-      ? getAnArrayOfSpecificKeyPerObjectInArray(followers, idKey)
+      ? getAnArrayOfSpecificKeyPerObjectInArray(updatedFollowers, idKey)
       : type === "mutuals"
-      ? getMutuals(followers, following)
+      ? getMutuals(updatedFollowers, following)
       : type === "custom select"
       ? getAnArrayOfSpecificKeyPerObjectInArray(users, idKey)
       : type === "custom exempt" &&
-        customExemptUsersFromStory(followers, users);
+        customExemptUsersFromStory(updatedFollowers, users);
 
   return queryIds;
 };
@@ -137,6 +143,36 @@ const returnShortForBlockedUsers = (posts, authUser) => {
   });
 };
 
+const addToOtherStories = (authUser, user) => {
+  const otherStories = authUser.otherStories;
+  const myStories = user.myStories;
+  const userId = user._id;
+
+  const authUserCanView = deriveStoryQueryIds(
+    user,
+    false,
+    authUser._id
+  ).includes(authUser._id);
+
+  if (!authUserCanView) return otherStories;
+
+  const myStoriesRefined = myStories.map(({ storyId, date }) => ({
+    userId,
+    storyId,
+    viewed: false,
+    date,
+  }));
+
+  const updatedOtherStories = [...otherStories, ...myStoriesRefined];
+  const sortedOtherStories = updatedOtherStories.sort(
+    (a, b) => Number(new Date(b.date)) - Number(new Date(a.date))
+  );
+  return sortedOtherStories;
+};
+
+const removeIdFromArray = (array, key, id) =>
+  array.filter((item) => !item[key].equals(id));
+
 export {
   getMutuals,
   deriveSnippet,
@@ -150,4 +186,6 @@ export {
   excludeBlocked,
   getBlockedUserIds,
   returnShortForBlockedUsers,
+  addToOtherStories,
+  removeIdFromArray,
 };

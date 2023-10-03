@@ -4,6 +4,8 @@ import { sendNotification } from "../notification/notification.js";
 import {
   getUpdateMutualData,
   excludeBlocked,
+  removeIdFromArray,
+  addToOtherStories,
 } from "../../util/helperFunctions.js";
 import transport from "../../config/nodeMailer.js";
 import dotenv from "dotenv";
@@ -11,16 +13,7 @@ dotenv.config();
 
 const getAuthenticatedUser = async (req, res) => {
   const authUser = req.user;
-  const excludedBlockedUsersFromStory = excludeBlocked(
-    [...authUser?.otherStories],
-    authUser
-  );
-  res
-    .status(200)
-    .json({
-      ...JSON.parse(JSON.stringify(authUser)),
-      otherStories: excludedBlockedUsersFromStory,
-    });
+  res.status(200).json(authUser);
 };
 
 const getUser = async (req, res) => {
@@ -93,11 +86,23 @@ const followUser = async (req, res) => {
       { userType: "followers", user },
     ]);
 
-    const updateResult = await User.bulkWrite(updates);
+    const isUnFollow = updateData.every((data) => data.existingRecord);
+
+    const otherStoriesUpdate = {
+      updateOne: {
+        filter: { _id: authUser?._id },
+        update: {
+          otherStories: isUnFollow
+            ? removeIdFromArray(authUser.otherStories, "userId", user.id)
+            : addToOtherStories(authUser, user),
+        },
+      },
+    };
+
+    const updateResult = await User.bulkWrite([...updates, otherStoriesUpdate]);
 
     //notification
     //nots should only be sent when a follow is the case and not unfollow
-    const isUnFollow = updateData.every((data) => data.followRecord);
     if (!isUnFollow) {
       await sendNotification({
         userId: authUser.id,
@@ -125,7 +130,7 @@ const blockUser = async (req, res) => {
     });
 
     // Update blocked
-    const { updates: blockUpdates } = getUpdateMutualData([
+    const { updateData, updates: blockUpdates } = getUpdateMutualData([
       { authType: "youBlocked", authUser },
       { userType: "blockedYou", user },
     ]);
@@ -149,7 +154,27 @@ const blockUser = async (req, res) => {
       "pull only"
     );
 
-    const updates = [...blockUpdates, ...unFollowUpdates, ...unFollowedUpdates];
+    const isUnBlock = updateData.every((data) => data.existingRecord);
+    // Remove when the user is blocked
+    const otherStoriesUpdate = {
+      updateOne: {
+        filter: { _id: authUser?._id },
+        update: {
+          otherStories: removeIdFromArray(
+            authUser.otherStories,
+            "userId",
+            user.id
+          ),
+        },
+      },
+    };
+
+    const updates = [
+      ...blockUpdates,
+      ...unFollowUpdates,
+      ...unFollowedUpdates,
+      ...(!isUnblock ? [otherStoriesUpdate] : []),
+    ];
     const updateResult = await User.bulkWrite(updates);
 
     // notification

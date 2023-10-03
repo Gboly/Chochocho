@@ -22,7 +22,11 @@ const addNewStory = async (req, res) => {
       {
         updateOne: {
           filter: { _id: authUserId },
-          update: { $push: { myStories: { storyId: story.id } } },
+          update: {
+            $push: {
+              myStories: { storyId: story.id, date: new Date() },
+            },
+          },
         },
       },
       {
@@ -34,6 +38,7 @@ const addNewStory = async (req, res) => {
                 storyId: story.id,
                 userId: authUserId,
                 viewed: false,
+                date: new Date(),
               },
             },
           },
