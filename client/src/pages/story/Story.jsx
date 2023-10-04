@@ -27,7 +27,7 @@ import { GeneralContext } from "../../routes/Router";
 
 export const StoryContext = createContext();
 const Story = () => {
-  const { authUser } = useContext(GeneralContext);
+  const { authUser, isBlocked } = useContext(GeneralContext);
   const navigate = useNavigate();
   const { username, storyId } = useParams();
   const videoRef = useRef();
@@ -40,13 +40,6 @@ const Story = () => {
   const { data: user, isLoading: userFetchIsLoading } = useGetUserByIdQuery(
     story?.userId,
     { skip: !story?.userId }
-  );
-
-  // Check for block
-  const isBlocked = findByIdKey(
-    [...authUser?.youBlocked, ...authUser?.blockedYou],
-    "userId",
-    story?.userId
   );
 
   const [storyIndex, userIndex, users] = useMemo(() => {
@@ -67,7 +60,7 @@ const Story = () => {
   //Transition
   const handleTransition = useCallback(
     (transitionType) => {
-      if (!isBlocked) {
+      if (!isBlocked(user?.id)) {
         const { username: newUsername, storyId: newStoryId } =
           transitionType === "prev"
             ? prevParams
@@ -82,7 +75,7 @@ const Story = () => {
           : navigate(`/story/${newUsername}/${newStoryId}`, { replace: true });
       }
     },
-    [nextParams, navigate, prevParams, username, storyId, isBlocked]
+    [nextParams, navigate, prevParams, username, storyId, isBlocked, user]
   );
 
   return (

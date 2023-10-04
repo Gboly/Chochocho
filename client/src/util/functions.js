@@ -17,6 +17,7 @@ import {
   postSliceInitialState,
   postsQueryEndPoints,
 } from "../app/api-slices/postsApiSlice";
+import { extendedUsersApiSlice } from "../app/api-slices/usersApiSlice";
 
 export const convertToUserFriendlyTime = (date) => {
   const ISOdate = parseISO(date);
@@ -474,13 +475,18 @@ export const getFullDate = (date, { time, day, month, year }) => {
   return organizedFullDate;
 };
 
-export const getStoryAuthors = (otherStories) => {
+export const getStoryAuthors = (otherStories, isFollowing) => {
   const authorIds = getAnArrayOfSpecificKeyPerObjectInArray(
     otherStories,
     "userId"
   );
   const uniqueAuthorIds = [...new Set(authorIds)];
-  return uniqueAuthorIds.map((userId) => ({ userId }));
+  return (
+    uniqueAuthorIds
+      // This filtering is done to serve as an optimistic update for whenever a user is unfollowed. The user should be removed from the story author list
+      .filter((userId) => isFollowing(userId))
+      .map((userId) => ({ userId }))
+  );
 };
 
 export const removeFromAnArray = (array, key, value) => {
@@ -497,15 +503,91 @@ export const effectConfirmation = (type) => {
   store.dispatch(showConfirmation({ type }));
 };
 
-export const fieldUpdate = ({ record, updateFieldKey, checkId, checkKey }) => {
+export const fieldUpdate = ({
+  record,
+  updateFieldKey,
+  checkId,
+  checkKey,
+  type,
+}) => {
   const isExisting = findByIdKey(record[updateFieldKey], checkKey, checkId);
 
   return isExisting
     ? removeFromAnArray(record[updateFieldKey], checkKey, checkId)
+    : type === "pull only"
+    ? record[updateFieldKey]
     : [
         ...record[updateFieldKey],
         { [checkKey]: checkId, date: new Date().toISOString() },
       ];
 };
+
+export const mutualUpdate = async ({
+  authUserId,
+  userId,
+  updates,
+  getState,
+  dispatch,
+  queryFulfilled,
+  block,
+}) => {
+  const tagTypes = [
+    { type: "Users", id: authUserId },
+    { type: "Users", id: userId },
+  ];
+
+  for (const {
+    endpointName,
+    originalArgs,
+  } of extendedUsersApiSlice.util.selectInvalidatedBy(getState(), tagTypes)) {
+    const patchResult = dispatch(
+      extendedUsersApiSlice.util.updateQueryData(
+        endpointName,
+        originalArgs,
+        (draft) => {
+          //Some drafts are normalized, some aren't.
+          const authUser = draft?.entities
+            ? draft.entities?.[authUserId]
+            : draft?.id === authUserId && draft;
+
+          const user = draft?.entities
+            ? draft.entities?.[userId]
+            : draft?.id === userId && draft;
+
+          if (authUser) {
+            if (block) {
+              authUser.youBlocked = updates.youBlocked;
+              authUser.following = updates.authUserFollowing;
+              authUser.followers = updates.authUserFollowers;
+            } else {
+              authUser.following = updates.following;
+            }
+          }
+          if (user) {
+            if (block) {
+              user.blockedYou = updates.blockedYou;
+              user.followers = updates.userFollowers;
+              user.following = updates.userFollowing;
+            } else {
+              user.followers = updates.followers;
+            }
+          }
+        }
+      )
+    );
+    try {
+      await queryFulfilled;
+    } catch (error) {
+      patchResult.undo();
+    }
+  }
+};
+
+// authUser.youBlocked = updates.youBlocked;
+//               user.blockedYou = updates.blockedYou;
+//               authUser.following = updates.authUserFollowing;
+//               user.followers = updates.userFollowers;
+//               authUser.followers = updates.authUserFollowers;
+//               user.following = updates.userFollowing;
 
 //export const removeSessionToken = () => sessionStorage.removeItem("authToken");

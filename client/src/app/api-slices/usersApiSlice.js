@@ -1,5 +1,9 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { getTransformed, selectTotalFetchedResult } from "../../util/functions";
+import {
+  getTransformed,
+  selectTotalFetchedResult,
+  mutualUpdate,
+} from "../../util/functions";
 
 import { apiSlice } from "../api";
 import {
@@ -119,47 +123,39 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
         credentials: "include",
       }),
-      async onQueryStarted(
+      onQueryStarted(
         { authUserId, userId, updates },
         { dispatch, queryFulfilled, getState }
       ) {
-        const tagTypes = [
-          { type: "Users", id: authUserId },
-          { type: "Users", id: userId },
-        ];
-
-        for (const {
-          endpointName,
-          originalArgs,
-        } of extendedUsersApiSlice.util.selectInvalidatedBy(
-          getState(),
-          tagTypes
-        )) {
-          const patchResult = dispatch(
-            extendedUsersApiSlice.util.updateQueryData(
-              endpointName,
-              originalArgs,
-              (draft) => {
-                //Some drafts are normalized, some aren't.
-                const authUser = draft?.entities
-                  ? draft.entities?.[authUserId]
-                  : draft?.id === authUserId && draft;
-
-                const user = draft?.entities
-                  ? draft.entities?.[userId]
-                  : draft?.id === userId && draft;
-
-                authUser && (authUser.following = updates.following);
-                user && (user.followers = updates.followers);
-              }
-            )
-          );
-          try {
-            await queryFulfilled;
-          } catch (error) {
-            patchResult.undo();
-          }
-        }
+        mutualUpdate({
+          authUserId,
+          userId,
+          updates,
+          getState,
+          dispatch,
+          queryFulfilled,
+        });
+      },
+    }),
+    blockUser: builder.mutation({
+      query: ({ userId }) => ({
+        url: `/users/${userId}/block`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      onQueryStarted(
+        { authUserId, userId, updates },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        mutualUpdate({
+          authUserId,
+          userId,
+          updates,
+          getState,
+          dispatch,
+          queryFulfilled,
+          block: true,
+        });
       },
     }),
   }),
@@ -175,6 +171,7 @@ export const {
   useGetAuthUserQuery,
   useReportUserMutation,
   useFollowUserMutation,
+  useBlockUserMutation,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];

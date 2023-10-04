@@ -154,7 +154,7 @@ const blockUser = async (req, res) => {
       "pull only"
     );
 
-    const isUnBlock = updateData.every((data) => data.existingRecord);
+    const isUnblock = updateData.every((data) => data.existingRecord);
     // Remove when the user is blocked
     const otherStoriesUpdate = {
       updateOne: {

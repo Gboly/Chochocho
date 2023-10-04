@@ -39,18 +39,11 @@ export default function PostExcerpt({
   comment,
   loadComponent,
 }) {
-  const {
-    authUser: { youBlocked, blockedYou },
-  } = useContext(GeneralContext);
+  const { isBlocked } = useContext(GeneralContext);
   const { userId, type, originalPostId, originalUserId, cachedId } =
     useSelector((state) => selectPostById(state, postId));
 
   const isRepost = type === "repost";
-  const isBlocked = findByIdKey(
-    [...youBlocked, ...blockedYou],
-    "userId",
-    isRepost ? originalUserId : userId
-  );
 
   const originalPostIsFetched = useSelector((state) =>
     selectPostById(state, originalPostId)
@@ -76,7 +69,7 @@ export default function PostExcerpt({
       {(isRepost && !originalPostIsFetched ? originalPost : true) &&
         userFetchIsSuccesfull &&
         user &&
-        (isBlocked ? (
+        (isBlocked(isRepost ? originalUserId : userId) ? (
           <Excerpt4Blocked
             {...{
               postId: originalPostId || cachedId || postId,

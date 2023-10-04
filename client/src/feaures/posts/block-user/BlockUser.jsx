@@ -1,23 +1,97 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { selectPostById } from "../../../app/api-slices/postsApiSlice";
 import { closeBlockPoster } from "../../../app/actions/homeActions";
-import { closePopupOnOpaqueOverlay } from "../../../util/functions";
+import {
+  closePopupOnOpaqueOverlay,
+  fieldUpdate,
+  findByIdKey,
+} from "../../../util/functions";
 import { getBlockPosterstate } from "../post-excerpt/postExcerptSlice";
-import { selectFetchedUsersById } from "../../../app/api-slices/usersApiSlice";
+import {
+  selectFetchedUsersById,
+  useBlockUserMutation,
+} from "../../../app/api-slices/usersApiSlice";
+import { useContext } from "react";
+import { GeneralContext } from "../../../routes/Router";
+import { showConfirmation } from "../../../app/actions/layoutActions";
 
 export default function BlockUser() {
+  const dispatch = useDispatch();
   const { id: posterId } = useSelector(getBlockPosterstate);
+  const { authUser, isBlocked } = useContext(GeneralContext);
   const { userId } = useSelector((state) => selectPostById(state, posterId));
 
-  const { username } = useSelector((state) =>
-    selectFetchedUsersById(state, userId)
-  );
+  const user = useSelector((state) => selectFetchedUsersById(state, userId));
+
+  const blockState = isBlocked(userId) ? "Unblock" : "Block";
+
+  const [block, { error }] = useBlockUserMutation();
+
+  const handleBlock = (e) => {
+    e && e.preventDefault();
+    const args = {
+      authUserId: authUser.id,
+      userId,
+      updates: {
+        youBlocked: fieldUpdate({
+          record: authUser,
+          updateFieldKey: "youBlocked",
+          checkId: userId,
+          checkKey: "userId",
+        }),
+        blockedYou: fieldUpdate({
+          record: user,
+          updateFieldKey: "blockedYou",
+          checkId: authUser.id,
+          checkKey: "userId",
+        }),
+        authUserFollowing: fieldUpdate({
+          record: authUser,
+          updateFieldKey: "following",
+          checkId: userId,
+          checkKey: "userId",
+          type: "pull only",
+        }),
+        userFollowers: fieldUpdate({
+          record: user,
+          updateFieldKey: "followers",
+          checkId: authUser.id,
+          checkKey: "userId",
+          type: "pull only",
+        }),
+        userFollowing: fieldUpdate({
+          record: user,
+          updateFieldKey: "following",
+          checkId: authUser.id,
+          checkKey: "userId",
+          type: "pull only",
+        }),
+        authUserFollowers: fieldUpdate({
+          record: authUser,
+          updateFieldKey: "followers",
+          checkId: user.id,
+          checkKey: "userId",
+          type: "pull only",
+        }),
+      },
+    };
+
+    block(args);
+    closePopupOnOpaqueOverlay(closeBlockPoster);
+    dispatch(
+      showConfirmation({
+        type: "block",
+        progress: 100,
+        message: `You ${blockState}ed @${user.username}`,
+      })
+    );
+  };
 
   return (
     <div className="ffPost-container">
       <div className="ffPost-wrapper">
         <header className="ffPost-header create-top-description">
-          Block @{username}
+          {blockState} @{user.username}
         </header>
         <main className="ffPost-main">
           They can no longer see things you post on your timeline, tag you,
@@ -30,7 +104,9 @@ export default function BlockUser() {
           >
             Cancel
           </button>
-          <button className="ffPost-button ffPost-submit">Block</button>
+          <button className="ffPost-button ffPost-submit" onClick={handleBlock}>
+            {blockState}
+          </button>
         </footer>
       </div>
     </div>
