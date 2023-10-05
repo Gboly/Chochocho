@@ -97,7 +97,7 @@
     display: flex;
     align-items: center;
 }
-.profile-top-absolute > div > button:first-of-type{
+.round-button{
     width: 2.5rem;
     height: 2.5rem;
     border: 2px solid rgba(121, 121, 121, 0.7);
@@ -110,11 +110,11 @@
     justify-content: center;
     align-items: center;
 }
-.profile-top-absolute > div > button:first-of-type:hover{
+.round-button:hover{
     border-color: #2ac34b;
     color: #2ac34b;
 }
-.profile-top-absolute > div > button:first-of-type > i {
+.round-button > i {
     line-height: 0;
 }
 .square-button{
@@ -186,6 +186,16 @@
 .profile-bottom> div:last-of-type{
     width: 50rem;
     max-width: 50rem;
+}
+.blocked-profile {
+    background-color: #fff;
+    margin: 0.5rem 0 0;
+    padding: 5rem 2rem 5rem;
+    border-bottom: 1px solid #f4f5f7;
+    border-top: 1px solid #f4f5f7;
+    font-weight: 500; 
+    border-radius: 1rem;
+    color: #c32aa3;
 }
 
 @media screen and (max-width: 1400px) {

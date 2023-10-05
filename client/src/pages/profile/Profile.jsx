@@ -6,16 +6,26 @@ import { iconStyle } from "../../util/iconDescContent";
 import { useDispatch } from "react-redux";
 import { openFullscreen } from "../../app/actions/homeActions";
 import { openEditProfile } from "../../app/actions/profileActions";
-import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
+import BlockIcon from "@mui/icons-material/Block";
 import { useParams, useNavigate } from "react-router-dom";
 import {
+  useBlockUserMutation,
   useFollowUserMutation,
   useGetUserByIdQuery,
 } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
-import { newRange, showPopupOnOpaqueOverlay } from "../../util/functions";
-import { editProfileType, profilePageType } from "../../util/types";
-import { useCallback, useRef, useState } from "react";
+import {
+  findByIdKey,
+  newRange,
+  showPopupOnOpaqueOverlay,
+} from "../../util/functions";
+import {
+  blockedYouMessage,
+  editProfileType,
+  profilePageType,
+  youBlockedMessage,
+} from "../../util/types";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { createContext, useContext, useImperativeHandle } from "react";
 import Spinner from "../../components/Spinner/Spinner";
@@ -23,6 +33,7 @@ import { GeneralContext } from "../../routes/Router";
 import PostList from "../../feaures/posts/post-list/PostList";
 import { useGetPostsByUserIdQuery } from "../../app/api-slices/postsApiSlice";
 import { getFollowArgs } from "../../feaures/posts/follow-unfollow-poster/followUnfollowPoster";
+import { getBlockArgs } from "../../feaures/posts/block-user/BlockUser";
 
 export const ProfileContext = createContext();
 const initialPage = { skip: 0, limit: 10 };
@@ -42,11 +53,19 @@ function ProfileComponent({ user, userId }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileNode = useRef();
-  const { pageNodes, isFollowing, isAuth, authUser } =
+  const { pageNodes, isFollowing, isAuth, authUser, isBlocked } =
     useContext(GeneralContext);
 
+  const [follow, { error: followError }] = useFollowUserMutation();
+  const [block, { error: blockError, data: blockResponse }] =
+    useBlockUserMutation();
+
   const [postRange, setPostRange] = useState(initialPage);
-  const { isLoading: userPostsIsLoading, data } = useGetPostsByUserIdQuery({
+  const {
+    isLoading: userPostsIsLoading,
+    data,
+    refetch,
+  } = useGetPostsByUserIdQuery({
     userId,
     ...postRange,
   });
@@ -76,13 +95,29 @@ function ProfileComponent({ user, userId }) {
     followers,
   } = user;
 
-  const [follow, { error }] = useFollowUserMutation();
-
   const handleFollow = (e) => {
     e && e.preventDefault();
     const args = getFollowArgs(authUser, user);
     follow(args);
   };
+  const handleBlock = (e) => {
+    e && e.preventDefault();
+    const args = getBlockArgs(authUser, user);
+    block(args);
+  };
+
+  const isBlockedByYou = useMemo(
+    () => findByIdKey(authUser?.youBlocked, "userId", userId),
+    [authUser, userId]
+  );
+
+  useEffect(() => {
+    // When you have successfully unblocked a user, and there are no pending posts, Fetch posts buy making a refetch of the query.
+    blockResponse?.success &&
+      blockResponse?.isUnblock &&
+      !data.ids.length &&
+      refetch();
+  }, [refetch, blockResponse, data]);
 
   return (
     <>
@@ -132,18 +167,26 @@ function ProfileComponent({ user, userId }) {
                   </button>
                 ) : (
                   <div>
-                    <button>
-                      <i>
-                        <LocalPostOfficeOutlinedIcon />
-                      </i>
-                    </button>
+                    {!isBlocked(userId) && (
+                      <button className="round-button" onClick={handleBlock}>
+                        <i>
+                          <BlockIcon />
+                        </i>
+                      </button>
+                    )}
                     <button
                       className={`square-button ${
                         isFollowing(userId) ? "followed" : ""
                       }`}
-                      onClick={handleFollow}
+                      onClick={isBlocked(userId) ? handleBlock : handleFollow}
                     >
-                      {isFollowing(userId) ? "Following" : "Follow"}
+                      {isBlocked(userId)
+                        ? isBlockedByYou
+                          ? "Unblock"
+                          : "Block"
+                        : isFollowing(userId)
+                        ? "Following"
+                        : "Follow"}
                     </button>
                   </div>
                 )}
@@ -168,8 +211,14 @@ function ProfileComponent({ user, userId }) {
                 )}
               </div>
               <div>
-                <PostList loadComponent={<Spinner />} />
-                {userPostsIsLoading && <Spinner />}
+                {isBlocked(userId) ? (
+                  <BlockedProfile />
+                ) : (
+                  <>
+                    <PostList loadComponent={<Spinner />} />
+                    {userPostsIsLoading && <Spinner />}
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -178,5 +227,18 @@ function ProfileComponent({ user, userId }) {
     </>
   );
 }
+
+const BlockedProfile = () => {
+  const {
+    authUser: { blockedYou, youBlocked },
+  } = useContext(GeneralContext);
+  const { userId } = useParams();
+
+  const blockMessage = findByIdKey(blockedYou, "userId", userId)
+    ? blockedYouMessage
+    : findByIdKey(youBlocked, "userId", userId) && youBlockedMessage;
+
+  return <section className="blocked-profile">{blockMessage}</section>;
+};
 
 export default Profile;

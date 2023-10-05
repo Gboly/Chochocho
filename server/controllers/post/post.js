@@ -113,7 +113,7 @@ const getPosts = async (req, res) => {
 
   const filteredUserId = excludeBlocked(userId, authUser);
   // If all userId are blocked users, return.
-  if (userId && !filteredUserId.length) return res.status(403).json({});
+  if (userId && !filteredUserId.length) return res.status(200).json([]);
 
   // Whenever a request is sent to this endpoint without passing ids as query,
   // then, post from those authUser follows should be supplied.

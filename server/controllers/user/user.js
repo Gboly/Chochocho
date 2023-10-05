@@ -180,7 +180,7 @@ const blockUser = async (req, res) => {
     // notification
     // Nobody gets notified when a block happens.
 
-    res.status(201).json(updates);
+    res.status(201).json({ success: true, isUnblock });
   } catch (error) {
     console.log(error);
     return res
