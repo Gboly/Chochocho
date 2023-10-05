@@ -24,7 +24,7 @@ import { ScrollCache } from "../../scroll-cache/ScrollCache";
 const initialPage = { skip: 0, limit: 10 };
 export default function Blocking() {
   const {
-    authUser: { blocked },
+    authUser: { youBlocked },
   } = useContext(GeneralContext);
   const { settingsNode } = useOutletContext();
 
@@ -32,7 +32,7 @@ export default function Blocking() {
 
   const { isLoading: blockedUsersFetchIsLoading, data: blockedUsersResult } =
     useGetUsersByIdQuery({
-      userIds: prepareIdsForQuery(blocked, "userId"),
+      userIds: prepareIdsForQuery(youBlocked, "userId"),
       ...postRange,
     });
 
@@ -68,8 +68,13 @@ export default function Blocking() {
             }}
           />
           <p>Blocked users list</p>
+          {!youBlocked.length && (
+            <section className="no-block">
+              You have no user blocked yet.
+            </section>
+          )}
           <ul className="no-bullet">
-            {(blocked || []).map((user, index) => {
+            {(youBlocked || []).map((user, index) => {
               const { userId, date } = user;
               return (
                 isFetched(userId) && (

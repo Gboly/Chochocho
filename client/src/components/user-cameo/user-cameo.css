@@ -65,7 +65,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.round-button{
+.cameo-button{
     width: 8rem;
     height: 2.5rem;
     max-height: 2.5rem;
@@ -74,8 +74,9 @@
     border: none;
     color: #fff;
     font-weight: 700;
+    cursor: pointer;
 }
-.round-button:hover{
+.cameo-button:hover{
     opacity: 0.8;
 }
 .dark-button{

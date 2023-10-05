@@ -61,7 +61,11 @@
 .blocked-list-item > button:hover {
     opacity: 0.85;
 }
-
+.no-block{
+    margin: 0.5rem 0 0;
+    font-weight: 500; 
+    color: #c32aa3;
+}
 @media screen and (min-width: 850px) and (max-width: 1020px) {
     .settings-blocking > section{
         width: 100%;

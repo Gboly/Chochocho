@@ -19,6 +19,7 @@ export default function UserCameo({
   aside,
   single,
   alignItems,
+  buttonAction,
 }) {
   const { isFollowing } = useContext(GeneralContext);
 
@@ -64,13 +65,14 @@ export default function UserCameo({
           <div className="user-cameo-icon">
             {buttonType && (
               <button
-                className={`round-button ${
+                className={`cameo-button ${
                   buttonType === "follow"
                     ? isFollowing(userId)
                       ? "followed"
                       : ""
                     : ""
                 } ${darkButtons.includes(buttonType) ? "dark-button" : ""}`}
+                onClick={buttonAction && buttonAction}
               >
                 {buttonType === "follow"
                   ? isFollowing(userId)
