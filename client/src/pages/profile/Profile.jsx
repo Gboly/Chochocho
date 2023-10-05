@@ -13,20 +13,16 @@ import {
   useGetUserByIdQuery,
 } from "../../app/api-slices/usersApiSlice";
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
-import {
-  fieldUpdate,
-  newRange,
-  showPopupOnOpaqueOverlay,
-} from "../../util/functions";
+import { newRange, showPopupOnOpaqueOverlay } from "../../util/functions";
 import { editProfileType, profilePageType } from "../../util/types";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { ScrollCache } from "../../feaures/scroll-cache/ScrollCache";
 import { createContext, useContext, useImperativeHandle } from "react";
 import Spinner from "../../components/Spinner/Spinner";
 import { GeneralContext } from "../../routes/Router";
 import PostList from "../../feaures/posts/post-list/PostList";
 import { useGetPostsByUserIdQuery } from "../../app/api-slices/postsApiSlice";
-import { postSkeletons } from "../../feaures/posts/post-excerpt/PostExcerpt";
+import { getFollowArgs } from "../../feaures/posts/follow-unfollow-poster/followUnfollowPoster";
 
 export const ProfileContext = createContext();
 const initialPage = { skip: 0, limit: 10 };
@@ -84,25 +80,7 @@ function ProfileComponent({ user, userId }) {
 
   const handleFollow = (e) => {
     e && e.preventDefault();
-    const args = {
-      authUserId: authUser.id,
-      userId,
-      updates: {
-        following: fieldUpdate({
-          record: authUser,
-          updateFieldKey: "following",
-          checkId: userId,
-          checkKey: "userId",
-        }),
-        followers: fieldUpdate({
-          record: user,
-          updateFieldKey: "followers",
-          checkId: authUser.id,
-          checkKey: "userId",
-        }),
-      },
-    };
-
+    const args = getFollowArgs(authUser, user);
     follow(args);
   };
 

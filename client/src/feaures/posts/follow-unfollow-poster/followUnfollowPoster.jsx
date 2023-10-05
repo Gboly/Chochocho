@@ -15,6 +15,25 @@ import { GeneralContext } from "../../../routes/Router";
 import { useContext } from "react";
 import { showConfirmation } from "../../../app/actions/layoutActions";
 
+export const getFollowArgs = (authUser, user) => ({
+  authUserId: authUser.id,
+  userId: user.id,
+  updates: {
+    following: fieldUpdate({
+      record: authUser,
+      updateFieldKey: "following",
+      checkId: user.id,
+      checkKey: "userId",
+    }),
+    followers: fieldUpdate({
+      record: user,
+      updateFieldKey: "followers",
+      checkId: authUser.id,
+      checkKey: "userId",
+    }),
+  },
+});
+
 export default function FollowUnfollowPoster() {
   const dispatch = useDispatch();
   const { id: followPosterId } = useSelector(getFollowPosterstate);
@@ -31,25 +50,7 @@ export default function FollowUnfollowPoster() {
 
   const handleFollow = (e) => {
     e && e.preventDefault();
-    const args = {
-      authUserId: authUser.id,
-      userId,
-      updates: {
-        following: fieldUpdate({
-          record: authUser,
-          updateFieldKey: "following",
-          checkId: userId,
-          checkKey: "userId",
-        }),
-        followers: fieldUpdate({
-          record: user,
-          updateFieldKey: "followers",
-          checkId: authUser.id,
-          checkKey: "userId",
-        }),
-      },
-    };
-
+    const args = getFollowArgs(authUser, user);
     follow(args);
     closePopupOnOpaqueOverlay(closeFollowPoster);
     dispatch(

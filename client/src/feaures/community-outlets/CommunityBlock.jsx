@@ -14,8 +14,8 @@ import {
 import HomeUserAvatar from "../../components/home-user-avatar/HomeUserAvatar";
 import { useContext } from "react";
 import { GeneralContext } from "../../routes/Router";
-import { fieldUpdate } from "../../util/functions";
 import { ignoreSuggestedUser } from "../../app/actions/communityActions";
+import { getFollowArgs } from "../posts/follow-unfollow-poster/followUnfollowPoster";
 
 const iconLink = [faGlobe, faFacebook, faTwitter, faInstagram];
 
@@ -39,25 +39,7 @@ export default function CommunityBlock({ userId }) {
 
   const handleFollow = (e) => {
     e && e.preventDefault();
-    const args = {
-      authUserId: authUser.id,
-      userId,
-      updates: {
-        following: fieldUpdate({
-          record: authUser,
-          updateFieldKey: "following",
-          checkId: userId,
-          checkKey: "userId",
-        }),
-        followers: fieldUpdate({
-          record: user,
-          updateFieldKey: "followers",
-          checkId: authUser.id,
-          checkKey: "userId",
-        }),
-      },
-    };
-
+    const args = getFollowArgs(authUser, user);
     follow(args);
   };
 
