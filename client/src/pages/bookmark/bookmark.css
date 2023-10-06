@@ -1,0 +1,21 @@
+.bookmark-header{
+    padding: 1.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(121, 121, 121, 0.2);
+    height: fit-content;
+    border-radius: 1rem 1rem 0 0;
+    margin: 1rem 0;
+    background-color: #fff;
+    position: relative;
+}
+.bookmark-header > span{
+    font-size: 1rem;
+    font-weight: 700;
+}
+.bookmark-header > i{
+    line-height: 0;
+    font-size: 1.2rem;
+    cursor: pointer;
+}

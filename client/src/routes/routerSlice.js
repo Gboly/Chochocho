@@ -9,6 +9,7 @@ const initialState = {
   isCommunityPage: false,
   isStoryPage: false,
   isSettingsPage: false,
+  isBookmarksPage: false,
 };
 
 const basePathsAt1 = [
@@ -17,6 +18,7 @@ const basePathsAt1 = [
   "community",
   "story",
   "settings",
+  "bookmarks",
 ];
 
 // This isn't the best approach for this but i just resorted to it.

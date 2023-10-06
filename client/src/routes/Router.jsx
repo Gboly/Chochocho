@@ -25,6 +25,7 @@ import StoryIndexOutlet from "../pages/story/StoryIndexOutlet";
 import App from "../App";
 import StoryPreview from "../pages/story/StoryPreview";
 import StorySetting from "../feaures/settings-outlet/story/Story";
+import Bookmarks from "../pages/bookmark/Bookmark";
 
 export const GeneralContext = createContext();
 export default function Router() {
@@ -50,6 +51,7 @@ export default function Router() {
         {/* #12 */}
         <Route path="profile/:userId" element={<Profile />} />
         <Route path="notifications" element={<Notifications />} />
+        <Route path="bookmarks" element={<Bookmarks />} />
         <Route path="community" element={<Community />}>
           <Route index element={<Followers />} />
           <Route path="followers" element={<Followers />} />

@@ -47,7 +47,8 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         ],
     }),
     getPostById: builder.query({
-      query: ({ id, skip, limit }) => `/posts?id=${id}`,
+      query: ({ id, skip, limit }) =>
+        `/posts?id=${id}&_start=${skip || ""}&_end=${limit || ""}`,
       keepUnusedDataFor: 60 * 60 * 24 * 10,
       transformResponse: (response, _, args) =>
         response && getPostTransformed(response, postsAdapter),

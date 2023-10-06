@@ -4,10 +4,10 @@ import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined
 import ExploreOutlinedIcon from "@mui/icons-material/ExploreOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
-import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import OtherHousesOutlinedIcon from "@mui/icons-material/OtherHousesOutlined";
 import {
-  chatsBasePathType,
+  bookmarksBasePathType,
   communityBasePathType,
   homeBasePathType,
   logOutType,
@@ -33,9 +33,9 @@ export const sidebarContent = [
     id: communityBasePathType,
   },
   {
-    name: "Chats",
-    icon: <LocalPostOfficeOutlinedIcon />,
-    id: chatsBasePathType,
+    name: "Bookmarks",
+    icon: <BookmarkAddOutlinedIcon />,
+    id: bookmarksBasePathType,
   },
   {
     name: "Notification",
