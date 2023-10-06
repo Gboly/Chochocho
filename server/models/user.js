@@ -3,8 +3,9 @@ const schema = mongoose.Schema;
 
 const subUserSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
-  storyId: { type: schema.Types.ObjectId, ref: "Post" },
+  storyId: { type: schema.Types.ObjectId, ref: "Story" },
   notificationId: { type: schema.Types.ObjectId, ref: "Notification" },
+  postId: { type: schema.Types.ObjectId, ref: "Post" },
   viewed: Boolean,
   date: { type: Date, default: new Date() },
 });
@@ -70,6 +71,7 @@ const userSchema = new schema({
     type: { type: String, default: "followers" },
     users: { type: [subUserSchema], default: [] },
   },
+  bookmarks: { type: [subUserSchema], default: [] },
 });
 
 const User = mongoose.model("user", userSchema);

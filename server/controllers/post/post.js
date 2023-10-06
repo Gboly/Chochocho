@@ -11,6 +11,7 @@ import {
   excludeBlocked,
   returnShortForBlockedUsers,
   getBlockedUserIds,
+  findById,
 } from "../../util/helperFunctions.js";
 import cloudinary from "../../config/cloudinaryConfig.js";
 
@@ -311,6 +312,27 @@ const reactToPost = async (req, res) => {
   }
 };
 
+const bookmarkPost = async (req, res) => {
+  const { id: postId } = req.params;
+  const { id, bookmarks } = req.user;
+
+  try {
+    const isBookmarked = findById(bookmarks, "postId", postId);
+    const userUpdate = await User.updateOne(
+      { _id: id },
+      isBookmarked
+        ? { $pull: { bookmarks: { postId } } }
+        : { $push: { bookmarks: { postId, date: new Date() } } }
+    );
+
+    res.status(200).json({ success: true, isBookmarked });
+  } catch (error) {
+    return res
+      .status(400)
+      .json({ error: "An error was encountered. Incorrect details." });
+  }
+};
+
 const deletePost = async (req, res) => {
   const _id = req.params.id;
   try {
@@ -333,6 +355,7 @@ export {
   getPostCommentsOrParents,
   getPostById,
   updatePost,
+  bookmarkPost,
   deletePost,
   reactToPost,
   getPostsByAuthUser,
