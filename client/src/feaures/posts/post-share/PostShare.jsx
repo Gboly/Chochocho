@@ -1,12 +1,10 @@
 import "./post-share.css";
 import BookmarkRemoveOutlinedIcon from "@mui/icons-material/BookmarkRemoveOutlined";
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
-import LocalPostOfficeOutlinedIcon from "@mui/icons-material/LocalPostOfficeOutlined";
 import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import { iconStyle } from "../../../util/iconDescContent";
 import { useState } from "react";
 import { copyTextToClipboard } from "../../../util/functions";
-import { displayConfirmation } from "../../../util/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
 import {} from "../../../app/api-slices/usersApiSlice";
@@ -67,12 +65,6 @@ export default function PostShare() {
             onChange={handleChange}
             style={{ display: "none" }}
           />
-        </div>
-        <div className="post-share-item" onClick={handleClick}>
-          <i className="psi-icon">
-            <LocalPostOfficeOutlinedIcon style={iconStyle} />
-          </i>
-          <span className="psi-desc">Share via Direct Message</span>
         </div>
         <div
           className="post-share-item"
