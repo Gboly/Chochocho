@@ -3,20 +3,27 @@ import BookmarkRemoveOutlinedIcon from "@mui/icons-material/BookmarkRemoveOutlin
 import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
 import LinkOutlinedIcon from "@mui/icons-material/LinkOutlined";
 import { iconStyle } from "../../../util/iconDescContent";
-import { useState } from "react";
-import { copyTextToClipboard } from "../../../util/functions";
+import { useContext, useMemo, useState } from "react";
+import {
+  closePopupOnTransparentOverlay,
+  copyTextToClipboard,
+} from "../../../util/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
 import {} from "../../../app/api-slices/usersApiSlice";
 import { getPostShareState } from "../post-excerpt/postExcerptSlice";
 import { showConfirmation } from "../../../app/actions/layoutActions";
+import { GeneralContext } from "../../../routes/Router";
 
 export default function PostShare() {
   const dispatch = useDispatch();
-  const [{ bookmark: isBookmarked }, setIsChecked] = useState({
-    bookmark: false,
-  });
+  const { isBookmarked: getIsBookmarkedStatus } = useContext(GeneralContext);
   const { postId, username } = useSelector(getPostShareState);
+
+  const isBookmarked = useMemo(
+    () => getIsBookmarkedStatus(postId),
+    [getIsBookmarkedStatus, postId]
+  );
 
   const handleCopy = () => {
     // Change post link.
@@ -31,7 +38,7 @@ export default function PostShare() {
   };
 
   const handleChange = (e) => {
-    setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
+    // setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
   };
 
   const handleClick = (e, action) => {
@@ -39,7 +46,7 @@ export default function PostShare() {
     action && action();
   };
 
-  const close = () => dispatch(closePostShare());
+  const close = () => closePopupOnTransparentOverlay(closePostShare);
 
   return (
     <div className="post-share-container">

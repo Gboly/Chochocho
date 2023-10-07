@@ -39,38 +39,48 @@ export default function App({ children }) {
     dispatch(setCurrentPage(location.pathname));
   }, [location, dispatch]);
 
-  const { authUser, isFollowing, isFollower, isBlocked, isAuth, groupedUsers } =
-    useMemo(() => {
-      const authUser = JSON.parse(JSON.stringify(data || ""));
-      const isFollowing = (userId) =>
-        findByIdKey(authUser?.following, "userId", userId);
-      const isFollower = (userId) =>
-        findByIdKey(authUser?.followers, "userId", userId);
-      const isAuth = (userId) => authUser?.id === userId;
-      const isBlocked = (userId) =>
-        findByIdKey(
-          [...authUser?.youBlocked, ...authUser?.blockedYou],
-          "userId",
-          userId
-        );
+  const {
+    authUser,
+    isFollowing,
+    isFollower,
+    isBlocked,
+    isAuth,
+    isBookmarked,
+    groupedUsers,
+  } = useMemo(() => {
+    const authUser = JSON.parse(JSON.stringify(data || ""));
+    const isFollowing = (userId) =>
+      findByIdKey(authUser?.following, "userId", userId);
+    const isFollower = (userId) =>
+      findByIdKey(authUser?.followers, "userId", userId);
+    const isAuth = (userId) => authUser?.id === userId;
+    const isBlocked = (userId) =>
+      findByIdKey(
+        [...authUser?.youBlocked, ...authUser?.blockedYou],
+        "userId",
+        userId
+      );
+    const isBookmarked = (postId) =>
+      findByIdKey(authUser?.bookmarks, "postId", postId);
 
-      // The temporary json-server had otherStoryAuthors in the user schema. I worked with this. I Withdrew this from the mongoDB schema, so in order to avoid modifying the codebase, I would simply mutate the authUser to include this property.
-      authUser &&
-        (authUser.otherStoryAuthors = getStoryAuthors(
-          authUser?.otherStories,
-          isFollowing
-        ));
-      const groupedUsers = sortByViewedStatus(authUser);
+    // The temporary json-server had otherStoryAuthors in the user schema. I worked with this. I Withdrew this from the mongoDB schema, so in order to avoid modifying the codebase, I would simply mutate the authUser to include this property.
+    authUser &&
+      (authUser.otherStoryAuthors = getStoryAuthors(
+        authUser?.otherStories,
+        isFollowing
+      ));
+    const groupedUsers = sortByViewedStatus(authUser);
 
-      return {
-        authUser,
-        isFollowing,
-        isFollower,
-        isBlocked,
-        isAuth,
-        groupedUsers,
-      };
-    }, [data]);
+    return {
+      authUser,
+      isFollowing,
+      isFollower,
+      isBlocked,
+      isAuth,
+      isBookmarked,
+      groupedUsers,
+    };
+  }, [data]);
 
   const pageNodes = useRef();
   const videoPostNode = useRef();
@@ -96,6 +106,7 @@ export default function App({ children }) {
         isFollower,
         isBlocked,
         isAuth,
+        isBookmarked,
         pageNodes,
         pageRefresh,
         setPageRefresh,
