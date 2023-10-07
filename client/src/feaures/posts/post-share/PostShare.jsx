@@ -7,6 +7,7 @@ import { useContext, useMemo, useState } from "react";
 import {
   closePopupOnTransparentOverlay,
   copyTextToClipboard,
+  removeFromAnArray,
 } from "../../../util/functions";
 import { useDispatch, useSelector } from "react-redux";
 import { closePostShare } from "../../../app/actions/homeActions";
@@ -14,10 +15,14 @@ import {} from "../../../app/api-slices/usersApiSlice";
 import { getPostShareState } from "../post-excerpt/postExcerptSlice";
 import { showConfirmation } from "../../../app/actions/layoutActions";
 import { GeneralContext } from "../../../routes/Router";
+import { useBookmarkPostMutation } from "../../../app/api-slices/postsApiSlice";
 
 export default function PostShare() {
   const dispatch = useDispatch();
-  const { isBookmarked: getIsBookmarkedStatus } = useContext(GeneralContext);
+  const {
+    authUser: { bookmarks },
+    isBookmarked: getIsBookmarkedStatus,
+  } = useContext(GeneralContext);
   const { postId, username } = useSelector(getPostShareState);
 
   const isBookmarked = useMemo(
@@ -25,6 +30,9 @@ export default function PostShare() {
     [getIsBookmarkedStatus, postId]
   );
 
+  const [bookmark] = useBookmarkPostMutation();
+
+  const close = () => closePopupOnTransparentOverlay(closePostShare);
   const handleCopy = () => {
     // Change post link.
     const result = copyTextToClipboard(
@@ -38,15 +46,26 @@ export default function PostShare() {
   };
 
   const handleChange = (e) => {
-    // setIsChecked((prev) => ({ ...prev, [e.target.name]: e.target.checked }));
+    const update = isBookmarked
+      ? removeFromAnArray(bookmarks, "postId", postId)
+      : [...bookmarks, { postId, date: new Date().toISOString() }];
+    bookmark({ postId, update });
+    dispatch(
+      showConfirmation({
+        type: "bookmark",
+        progress: 100,
+        message: `Successfully ${
+          isBookmarked ? "removed" : "added"
+        } post to bookmarks`,
+      })
+    );
+    close();
   };
 
   const handleClick = (e, action) => {
     e && e.stopPropagation && e.stopPropagation();
     action && action();
   };
-
-  const close = () => closePopupOnTransparentOverlay(closePostShare);
 
   return (
     <div className="post-share-container">

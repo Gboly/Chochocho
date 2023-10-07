@@ -117,6 +117,29 @@ export const extendedPostsApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    bookmarkPost: builder.mutation({
+      query: ({ postId }) => ({
+        url: `/posts/${postId}/bookmark`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      async onQueryStarted({ update }, { dispatch, queryFulfilled }) {
+        const patchResult = dispatch(
+          extendedPostsApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              draft && (draft.bookmarks = update);
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          patchResult.undo();
+        }
+      },
+    }),
     addPost: builder.mutation({
       // query: (body) => ({
       //   url: "/posts",
@@ -172,6 +195,7 @@ export const {
   useAddPostMutation,
   useAddCommentMutation,
   useDeletePostMutation,
+  useBookmarkPostMutation,
 } = extendedPostsApiSlice;
 
 export const postsQueryEndPoints = [
