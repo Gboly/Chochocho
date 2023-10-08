@@ -99,6 +99,7 @@ const sendNotification = async ({
   postId,
   recipient: _id,
   username,
+  authUser,
 }) => {
   const query = username ? { username: _id } : { _id };
   const filterType = `allowedNotificationTypes.${type}`;
@@ -116,8 +117,16 @@ const sendNotification = async ({
     });
     await notification.save();
 
+    // Whenever the query key is username, the blocked users are yet to be excluded. Here, we are ensuring that the blocked is excluded.
+    const updateQueryIds = authUser
+      ? excludeBlocked(
+          getAnArrayOfSpecificKeyPerObjectInArray(user, "_id"),
+          authUser
+        )
+      : getAnArrayOfSpecificKeyPerObjectInArray(user, "_id");
+
     const updatedUser = await User.updateMany(
-      { _id: getAnArrayOfSpecificKeyPerObjectInArray(user, "_id") },
+      { _id: updateQueryIds },
       {
         $push: {
           notifications: {
