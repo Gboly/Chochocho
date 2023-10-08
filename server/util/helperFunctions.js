@@ -66,7 +66,9 @@ const deriveStoryQueryIds = (authUser, visibilityPerStory, newFollowerId) => {
 
 const extractMentionedUsers = (content) => {
   const matches = content.match(/\s@\w+/g);
-  return (matches || []).map((item) => item.slice(2));
+  const usernames = (matches || []).map((item) => item.slice(2));
+  // Remove duplicating usernames.
+  return [...new Set(usernames)];
 };
 
 const removeFromArray = (array, itemToRemove) =>
