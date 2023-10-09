@@ -27,7 +27,8 @@ import { GeneralContext } from "../../routes/Router";
 
 export const StoryContext = createContext();
 const Story = () => {
-  const { authUser, isBlocked } = useContext(GeneralContext);
+  const { authUser, isBlocked: getIsBlockedStatus } =
+    useContext(GeneralContext);
   const navigate = useNavigate();
   const { username, storyId } = useParams();
   const videoRef = useRef();
@@ -42,14 +43,15 @@ const Story = () => {
     { skip: !story?.userId }
   );
 
-  const [storyIndex, userIndex, users] = useMemo(() => {
+  const [storyIndex, userIndex, users, isBlocked] = useMemo(() => {
     const userStories = user?.myStories || [];
     const storyIndex = userStories.findIndex(
       (myStory) => myStory.storyId === storyId
     );
     const { userIndex, users } = getStoryUserDetails(authUser, user?.id);
-    return [storyIndex, userIndex, users];
-  }, [user, storyId, authUser]);
+    const isBlocked = getIsBlockedStatus(user?.id);
+    return [storyIndex, userIndex, users, isBlocked];
+  }, [user, storyId, authUser, getIsBlockedStatus]);
 
   const currentParams = { username, storyId };
   const [{ prevParams, nextParams }, setParams] = useState({
@@ -60,7 +62,7 @@ const Story = () => {
   //Transition
   const handleTransition = useCallback(
     (transitionType) => {
-      if (!isBlocked(user?.id)) {
+      if (!isBlocked) {
         const { username: newUsername, storyId: newStoryId } =
           transitionType === "prev"
             ? prevParams
@@ -75,7 +77,7 @@ const Story = () => {
           : navigate(`/story/${newUsername}/${newStoryId}`, { replace: true });
       }
     },
-    [nextParams, navigate, prevParams, username, storyId, isBlocked, user]
+    [nextParams, navigate, prevParams, username, storyId, isBlocked]
   );
 
   return (
