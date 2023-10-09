@@ -31,9 +31,11 @@ export default function PostContent({
     const [route, setRoute] = useState(false);
 
     const handleClick = (e) => {
-      e && e.stopPropagation && e.stopPropagation();
-      // No need for routing when you're already on the route
-      location.pathname !== userProfileRoute && setRoute(true);
+      if (user) {
+        e && e.stopPropagation && e.stopPropagation();
+        // No need for routing when you're already on the route
+        location.pathname !== userProfileRoute && setRoute(true);
+      }
     };
 
     const userProfileRoute = `/profile/${user?.userId}`;
