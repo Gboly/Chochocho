@@ -25,6 +25,7 @@ export default function EditProfile() {
   const { authUser } = useContext(GeneralContext);
   const { profileImage, coverPhoto } = authUser;
   const [profile, setProfile] = useState(getInitialState(authUser));
+  const [hasChanged, setHasChanged] = useState(false);
 
   const { isOpen: editProfileImageIsOpen } = useSelector(
     getEditProfileImageState
@@ -41,8 +42,10 @@ export default function EditProfile() {
       ? alert("File type not supported")
       : handleprofileImageUpload(e, { imageType });
 
-  const handleChange = (e) =>
+  const handleChange = (e) => {
+    setHasChanged(true);
     setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleClick = () => closePopupOnOpaqueOverlay(closeEditProfile);
 
@@ -131,7 +134,12 @@ export default function EditProfile() {
           >
             Cancel
           </button>
-          <button>Save</button>
+          <button
+            disabled={!hasChanged}
+            className={`${!hasChanged ? "disabled-button" : ""}`}
+          >
+            Save
+          </button>
         </div>
       </form>
     </div>
