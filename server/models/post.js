@@ -4,6 +4,7 @@ const schema = mongoose.Schema;
 const engagementSchema = new schema({
   userId: { type: schema.Types.ObjectId, ref: "User" },
   postId: { type: schema.Types.ObjectId, ref: "Post" },
+  username: { type: String },
   date: { type: Date, default: new Date() },
 });
 
@@ -19,6 +20,7 @@ const postSchema = new schema({
   },
   likes: { type: [engagementSchema], default: [] },
   reposts: { type: [engagementSchema], default: [] },
+  mentionedUsers: { type: [engagementSchema], default: [] },
   visibleFor: {
     type: String,
     enum: ["Public", "Friends", "Only me"],

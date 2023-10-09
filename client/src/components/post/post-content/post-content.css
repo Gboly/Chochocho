@@ -1,6 +1,7 @@
 .post-text{
     font-size: 1rem;
     white-space: pre-wrap;
+    padding: 1.5rem 0 1rem;
 }
 .block-message{
     color: #c32aac;
@@ -45,4 +46,19 @@
 }
 .post-media-playing{
     object-fit: contain;
+}
+.mentioned-user{
+    display: inline-block;
+    color: #c32aac;
+    width: fit-content;
+    cursor: pointer;
+}
+.mentioned-user:hover{
+    opacity: 50%;
+}
+.invalid-username{
+    color: inherit;    
+}
+.invalid-username:hover{
+    opacity: 100%;
 }

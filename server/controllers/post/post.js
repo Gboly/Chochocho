@@ -36,6 +36,19 @@ const addNewPost = async (req, res) => {
       });
     }
 
+    let mentions;
+    const mentionedUsers = extractMentionedUsers(content);
+    if (mentionedUsers.length > 0) {
+      const fetchedMentionedUsers = await User.find({
+        username: mentionedUsers,
+      });
+
+      mentions = fetchedMentionedUsers.map((user) => ({
+        userId: user._id,
+        username: user.username,
+      }));
+    }
+
     const post = new Post({
       userId,
       ...req.body,
@@ -46,6 +59,7 @@ const addNewPost = async (req, res) => {
           alt,
         },
       ],
+      mentionedUsers: mentions,
     });
     await post.save();
 
@@ -56,15 +70,6 @@ const addNewPost = async (req, res) => {
       );
       console.log(updatedPost);
     }
-
-    // -- Treating mention in the frontend
-    // create a recursive function that takes "content" and "recycledContent" as parameters
-    // Create a component that takes the username as prop. Style the component by giving it color, make it clickable just so it navigates to user's profile and then give it the userCameoHover effect.
-    // in the function, let readyContent = recycledContent || "";
-    // use regex to for search in cases like the spaceIndex because (its not really just space but any character that's not a word)
-    // derive the following; atIndex, spaceIndex, username(with @ attached), initials( slice from 0 to atIndex ), result (readyContent + initials + component above), remainderContent
-    // The function is then called again taking remainderContent and result as parameters.
-    // return readyContent when @ is no more included.
 
     // If its a regualr post, make mutuals recieve nots. for comments, only users who were part of the conversation should get the nots
     // You shouldn't get notified when you comment on YOUR own post
@@ -86,8 +91,7 @@ const addNewPost = async (req, res) => {
     });
 
     // Treat mention notification.
-    const mentionedUsers = extractMentionedUsers(content);
-    if (mentionedUsers.length > 1) {
+    if (mentionedUsers.length > 0) {
       await sendNotification({
         type: "mention",
         snippet: deriveSnippet(content, mediaType),

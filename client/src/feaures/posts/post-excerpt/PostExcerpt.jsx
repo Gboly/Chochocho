@@ -155,6 +155,7 @@ const Excerpt = ({
     likes,
     reposts,
     comments,
+    mentionedUsers,
     visibleFor,
     date,
   } = post;
@@ -238,7 +239,9 @@ const Excerpt = ({
               }}
             />
           </div>
-          <PostContent {...{ content, mediaType, media, postId }} />
+          <PostContent
+            {...{ content, mediaType, media, postId, mentionedUsers }}
+          />
           {!comment ? (
             viewPost ? (
               <>
