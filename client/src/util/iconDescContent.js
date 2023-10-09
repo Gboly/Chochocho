@@ -168,16 +168,16 @@ export const notificationOptions = [
 
 export const editProfileData = [
   {
-    label: "Name",
+    label: "Display name",
     type: "text",
-    name: "name",
+    name: "displayName",
     placeholder: "Ben Joe",
     autoComplete: "on",
   },
   {
     label: "Date of birth",
     type: "text",
-    name: "birthday",
+    name: "DOB",
     placeholder: "22 June 2002",
     autoComplete: "off",
   },

@@ -16,16 +16,15 @@ import { editProfileData } from "../../../util/iconDescContent";
 import { avatarType, coverPhotoType } from "../../../util/types";
 import { GeneralContext } from "../../../routes/Router";
 
-const initialState = editProfileData.reduce((accum, current) => {
-  accum = { ...accum, [current.name]: "" };
-  return accum;
-}, {});
-
+const getInitialState = (authUser) =>
+  editProfileData.reduce((accum, current) => {
+    accum = { ...accum, [current.name]: authUser[current.name] };
+    return accum;
+  }, {});
 export default function EditProfile() {
-  const {
-    authUser: { profileImage, coverPhoto },
-  } = useContext(GeneralContext);
-  const [profile, setProfile] = useState(initialState);
+  const { authUser } = useContext(GeneralContext);
+  const { profileImage, coverPhoto } = authUser;
+  const [profile, setProfile] = useState(getInitialState(authUser));
 
   const { isOpen: editProfileImageIsOpen } = useSelector(
     getEditProfileImageState

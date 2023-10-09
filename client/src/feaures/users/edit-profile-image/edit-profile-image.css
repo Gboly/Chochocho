@@ -23,7 +23,7 @@
 }
 .edit-cover-photo-container img{
     width: 100%;
-    cursor:move;
+    /* cursor:move; */
 }
 
 .avatar-edit-wrapper{
@@ -48,7 +48,7 @@
     border-radius: 1rem;
 }
 .avatar-edit{
-    cursor:move;
+    /* cursor:move; */
 }
 .crop-circle{
     position: absolute;
@@ -63,6 +63,23 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.flex-end{
+    display: flex;
+    justify-content: flex-end;
+}
+.flex-end > button {
+    padding: 0.5rem 1.5rem;
+    background-color: #c32aa3;
+    border: none;
+    border-radius: 0.4rem;
+    color: #fff;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+.flex-end > button:hover{
+    opacity: 50%;
 }
 
 /* .edit-profile-image-container > div{

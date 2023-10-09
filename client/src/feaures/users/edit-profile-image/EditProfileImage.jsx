@@ -21,6 +21,7 @@ import {
 import {
   closeNestedPopupOnOpaqueOverlay,
   closePopupOnOpaqueOverlay,
+  capitalize,
 } from "../../../util/functions";
 import useZoom from "../../../components/zoom/useZoom";
 import Zoom from "../../../components/zoom/Zoom";
@@ -137,7 +138,7 @@ export default function EditProfileImage() {
       }`}
     >
       <SimpleHeader
-        desc={"Edit photo"}
+        desc={`Preview ${capitalize(imageType)}`}
         closeAction={handleClose}
         overlay={true}
       />
@@ -155,7 +156,7 @@ export default function EditProfileImage() {
       ) : (
         ""
       )}
-      <Zoom
+      {/* <Zoom
         {...{
           zoomIn,
           zoomOut,
@@ -164,7 +165,10 @@ export default function EditProfileImage() {
           reset,
           button: <button>Save</button>,
         }}
-      />
+      /> */}
+      <div className="flex-end">
+        <button>Save</button>
+      </div>
     </div>
   );
 }
@@ -200,9 +204,9 @@ const EditAvatar = forwardRef(
             className="avatar-edit"
             src={src}
             alt=""
-            onWheel={(e) => (e.deltaY > 0 ? zoomIn() : zoomOut())}
+            // onWheel={(e) => (e.deltaY > 0 ? zoomIn() : zoomOut())}
             draggable={false}
-            onMouseDown={handleMouseDown}
+            // onMouseDown={handleMouseDown}
           />
         </div>
       </div>
@@ -224,7 +228,7 @@ function EditCoverPhoto({
         style={{ transform: `scale(${zoom}) translateX(${translate})` }}
         src={src}
         alt="edit new avatar"
-        onWheel={(e) => (e.deltaY > 0 ? zoomIn() : zoomOut())}
+        // onWheel={(e) => (e.deltaY > 0 ? zoomIn() : zoomOut())}
       />
     </div>
   );
