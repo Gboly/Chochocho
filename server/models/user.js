@@ -32,8 +32,14 @@ const userSchema = new schema({
   password: { type: String, default: "", required: true, minlength: 6 },
   //If the user doesn't pass a displayName for any reason, just use the username in both instances. Do this in the frontend.
   displayName: { type: String, default: "" },
-  profileImage: { type: String, default: "" },
-  coverPhoto: { type: String, default: "" },
+  profileImage: {
+    type: { src: String, publicId: String },
+    default: "",
+  },
+  coverPhoto: {
+    type: { src: String, publicId: String },
+    default: "",
+  },
   bio: { type: String, default: "" },
   twitter: { type: String, default: "" },
   facebook: { type: String, default: "" },

@@ -10,6 +10,7 @@ import {
 import transport from "../../config/nodeMailer.js";
 import dotenv from "dotenv";
 dotenv.config();
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const getAuthenticatedUser = async (req, res) => {
   const authUser = req.user;
@@ -53,8 +54,35 @@ const getUsersById = async (req, res) => {
 };
 
 const updateUserDetails = async (req, res) => {
+  const { profileImage, coverPhoto } = req.body;
+  // profileImages and coverPhotos are updated singularly i.e, Request to this endpoint could only be for profileImage, coverPhoto, or others at a time.
+  const imageUploadType = profileImage
+    ? "profileImage"
+    : coverPhoto && "coverPhoto";
+  let cloudinaryMedia;
+  let imageUpdate;
   try {
-    const updatedUser = await User.updateOne({ _id: req.user.id }, req.body);
+    if (imageUploadType) {
+      cloudinaryMedia = await cloudinary.uploader.upload(
+        req.body[imageUploadType],
+        {
+          folder: imageUploadType,
+          resource_type: "image",
+        }
+      );
+
+      imageUpdate = {
+        [imageUploadType]: {
+          src: cloudinaryMedia?.secure_url || "",
+          publicId: cloudinaryMedia?.public_id || "",
+        },
+      };
+    }
+
+    const updatedUser = await User.updateOne(
+      { _id: req.user.id },
+      imageUpdate || req.body
+    );
     res.status(201).json(updatedUser);
   } catch (error) {
     console.log(error);
