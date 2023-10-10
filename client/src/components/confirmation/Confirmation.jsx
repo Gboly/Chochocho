@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { closeConfirmation } from "../../app/actions/layoutActions";
 import { LinearProgress } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import { avatarType, coverPhotoType } from "../../util/types";
 
 const successTypes = {
   copy: "Successfully copied link to post",
@@ -11,8 +12,15 @@ const successTypes = {
   mediaSize: "Media file too large. Upload a file less than 60mb.",
   avatarSize: "Image is too large. Upload an image less than 5mb.",
   report: "Report successfully created",
+  [coverPhotoType]: "Successfully updated your Cover photo",
+  [avatarType]: "Successfully updated your Avatar",
 };
-const progressTypes = { post: "Creating post", report: "Reporting user" };
+const progressTypes = {
+  post: "Creating post",
+  report: "Reporting user",
+  [coverPhotoType]: "Updating your Cover photo",
+  [avatarType]: "Updating your Avatar",
+};
 const noCheck = ["mediaSize", "avatarSize"];
 
 export default function Confirmation({ type, progress, message }) {

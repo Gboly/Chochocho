@@ -5,4 +5,6 @@ export const {
   closeEditProfile,
   openEditProfileImage,
   closeEditProfileImage,
+  setIsUpdating,
+  setIsUpdated,
 } = profileSlice.actions;

@@ -1,7 +1,10 @@
 import SimpleHeader from "../../../components/simple-header/SimpleHeader";
 import "./edit-profile-image.css";
 import { closeEditProfileImage } from "../../../app/actions/profileActions";
-import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
+import {
+  getEditProfileImageState,
+  getProfileUpdateState,
+} from "../../../pages/profile/profileSlice";
 import { useSelector } from "react-redux";
 import {
   useState,
@@ -22,9 +25,11 @@ import {
   closeNestedPopupOnOpaqueOverlay,
   closePopupOnOpaqueOverlay,
   capitalize,
+  effectConfirmation,
 } from "../../../util/functions";
 import useZoom from "../../../components/zoom/useZoom";
 import Zoom from "../../../components/zoom/Zoom";
+import { useUpdateProfileDetailsMutation } from "../../../app/api-slices/usersApiSlice";
 
 const translateInitialState = { x: 0, y: 0 };
 const overflowInitialState = {
@@ -38,12 +43,16 @@ export default function EditProfileImage() {
   const { src, imageType, reading, initiatingRoute } = useSelector(
     getEditProfileImageState
   );
+  const { isUpdating, isUpdated } = useSelector(getProfileUpdateState);
+
   const { zoomIn, zoomOut, zoom, setZoom, reset: resetZoom } = useZoom();
   const [translate, setTranslate] = useState(translateInitialState);
   const [initialOverflow, setInitialOverflow] = useState(overflowInitialState);
 
   const initialMousePosition = useRef();
   const imageNodes = useRef();
+
+  const [saveImage, { error }] = useUpdateProfileDetailsMutation();
 
   const getOverflow = useCallback(() => {
     if (imageNodes.current) {
@@ -126,16 +135,30 @@ export default function EditProfileImage() {
     setTranslate(translateInitialState);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     initiatingRoute === settingsType
       ? closePopupOnOpaqueOverlay(closeEditProfileImage)
       : closeNestedPopupOnOpaqueOverlay(closeEditProfileImage, editProfileType);
+  }, [initiatingRoute]);
+
+  const handleSave = (e) => {
+    e && e.preventDefault();
+    const body = {
+      [imageType === avatarType ? "profileImage" : "coverPhoto"]: src,
+    };
+    src && saveImage(body);
   };
+
+  useEffect(() => {
+    isUpdating && effectConfirmation(imageType);
+    isUpdated && handleClose();
+  }, [isUpdated, isUpdating, imageType, handleClose]);
+
   return (
     <div
       className={`edit-profile-image-container ${
         imageType === coverPhotoType ? "edit-cover-photo-container" : ""
-      }`}
+      } ${isUpdating ? "report-transparent" : ""}`}
     >
       <SimpleHeader
         desc={`Preview ${capitalize(imageType)}`}
@@ -167,7 +190,7 @@ export default function EditProfileImage() {
         }}
       /> */}
       <div className="flex-end">
-        <button>Save</button>
+        <button onClick={handleSave}>Save</button>
       </div>
     </div>
   );

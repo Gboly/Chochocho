@@ -10,6 +10,8 @@ const initialState = {
     reading: false,
     src: "",
   },
+  isUpdating: false,
+  isUpdated: false,
 };
 
 export const profileSlice = createSlice({
@@ -22,6 +24,7 @@ export const profileSlice = createSlice({
     },
     closeEditProfile: (state) => {
       state.editProfileState.isOpen = false;
+      state.isUpdated = false;
       return state;
     },
     openEditProfileImage: (state, action) => {
@@ -48,13 +51,29 @@ export const profileSlice = createSlice({
       state.editProfileImageState = { ...initialState.editProfileImageState };
       preservedInitiatingRoute !== settingsType &&
         (state.editProfileState.isOpen = true);
+      state.isUpdated = false;
       return state;
     },
+    setIsUpdating: (state) => ({
+      ...state,
+      isUpdating: true,
+    }),
+    setIsUpdated: (state) => ({
+      ...state,
+      isUpdating: false,
+      isUpdated: true,
+    }),
   },
 });
 
 export const getEditProfileState = (state) => state.profile.editProfileState;
 export const getEditProfileImageState = (state) =>
   state.profile.editProfileImageState;
+export const getProfileUpdateState = ({
+  profile: { isUpdated, isUpdating },
+}) => ({
+  isUpdated,
+  isUpdating,
+});
 
 export const profileReducer = profileSlice.reducer;

@@ -11,6 +11,7 @@ import {
   setIsReporting,
   updateProgress,
 } from "../actions/layoutActions";
+import { setIsUpdated, setIsUpdating } from "../actions/profileActions";
 import axios from "axios";
 
 const usersAdapter = createEntityAdapter({
@@ -158,6 +159,41 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         });
       },
     }),
+    updateProfileDetails: builder.mutation({
+      queryFn: async (body, api) => {
+        try {
+          api.dispatch(setIsUpdating());
+          const result = await axios.patch(
+            "http://localhost:3100/users/authUser",
+            body,
+            {
+              headers: {
+                // Using sessionStorage to keep auth token is not a good practice. This would be corrected later.
+                "auth-token": sessionStorage.getItem("authToken"),
+              },
+              onUploadProgress: (upload) => {
+                let progress = Math.round((100 * upload.loaded) / upload.total);
+                // This is just a UI trick.
+                api.dispatch(updateProgress(progress === 100 ? 95 : progress));
+              },
+            }
+          );
+
+          api.dispatch(setIsUpdated());
+          api.dispatch(updateProgress(100));
+          return { data: result.data };
+        } catch (axiosError) {
+          let err = axiosError;
+          return {
+            error: {
+              status: err.response?.status,
+              data: err.response?.data || err.message,
+            },
+          };
+        }
+      },
+      invalidatesTags: [{ type: "Users", id: "auth" }],
+    }),
   }),
 });
 
@@ -172,6 +208,7 @@ export const {
   useReportUserMutation,
   useFollowUserMutation,
   useBlockUserMutation,
+  useUpdateProfileDetailsMutation,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];
