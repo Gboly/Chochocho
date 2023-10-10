@@ -156,7 +156,7 @@ export default function EditProfileImage() {
 
   useEffect(() => {
     isUpdating && effectConfirmation(imageType);
-    isUpdated && handleClose();
+    isUpdated && closePopupOnOpaqueOverlay(closeEditProfileImage);
   }, [isUpdated, isUpdating, imageType, handleClose]);
 
   return (
