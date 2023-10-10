@@ -30,7 +30,7 @@ import {
 } from "../../../util/functions";
 import useZoom from "../../../components/zoom/useZoom";
 import Zoom from "../../../components/zoom/Zoom";
-import { useUpdateProfileDetailsMutation } from "../../../app/api-slices/usersApiSlice";
+import { useUpdateProfileImageMutation } from "../../../app/api-slices/usersApiSlice";
 import { GeneralContext } from "../../../routes/Router";
 
 const translateInitialState = { x: 0, y: 0 };
@@ -57,7 +57,7 @@ export default function EditProfileImage() {
   const initialMousePosition = useRef();
   const imageNodes = useRef();
 
-  const [saveImage, { error }] = useUpdateProfileDetailsMutation();
+  const [saveImage, { error }] = useUpdateProfileImageMutation();
 
   const getOverflow = useCallback(() => {
     if (imageNodes.current) {

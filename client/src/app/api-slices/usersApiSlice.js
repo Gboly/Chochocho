@@ -159,7 +159,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         });
       },
     }),
-    updateProfileDetails: builder.mutation({
+    updateProfileImage: builder.mutation({
       queryFn: async ({ body }, api) => {
         try {
           api.dispatch(setIsUpdating());
@@ -212,6 +212,7 @@ export const {
   useFollowUserMutation,
   useBlockUserMutation,
   useUpdateProfileDetailsMutation,
+  useUpdateProfileImageMutation,
 } = extendedUsersApiSlice;
 
 const selectedEndPoints = ["getUsersById", "getUsersByIdExceptions"];
