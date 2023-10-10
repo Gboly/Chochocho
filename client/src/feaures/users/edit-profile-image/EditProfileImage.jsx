@@ -13,6 +13,7 @@ import {
   forwardRef,
   useImperativeHandle,
   useCallback,
+  useContext,
 } from "react";
 import Spinner from "../../../components/Spinner/Spinner";
 import {
@@ -30,6 +31,7 @@ import {
 import useZoom from "../../../components/zoom/useZoom";
 import Zoom from "../../../components/zoom/Zoom";
 import { useUpdateProfileDetailsMutation } from "../../../app/api-slices/usersApiSlice";
+import { GeneralContext } from "../../../routes/Router";
 
 const translateInitialState = { x: 0, y: 0 };
 const overflowInitialState = {
@@ -40,6 +42,9 @@ const overflowInitialState = {
 };
 
 export default function EditProfileImage() {
+  const {
+    authUser: { id: authUserId },
+  } = useContext(GeneralContext);
   const { src, imageType, reading, initiatingRoute } = useSelector(
     getEditProfileImageState
   );
@@ -146,7 +151,7 @@ export default function EditProfileImage() {
     const body = {
       [imageType === avatarType ? "profileImage" : "coverPhoto"]: src,
     };
-    src && saveImage(body);
+    src && saveImage({ body, authUserId });
   };
 
   useEffect(() => {

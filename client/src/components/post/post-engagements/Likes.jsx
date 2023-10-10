@@ -59,13 +59,15 @@ export default function Likes({ likes }) {
 }
 
 const Liked = ({ userId }) => {
-  const { profileImage } = useSelector((state) =>
-    selectFetchedUsersById(state, userId)
-  );
+  const user = useSelector((state) => selectFetchedUsersById(state, userId));
 
   return (
-    <div className="likes-indicator">
-      <HomeUserAvatar userId={userId} size="2.2" src={profileImage} />
-    </div>
+    <>
+      {user && (
+        <div className="likes-indicator">
+          <HomeUserAvatar userId={userId} size="2.2" src={user.profileImage} />
+        </div>
+      )}
+    </>
   );
 };

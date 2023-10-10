@@ -160,7 +160,7 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
       },
     }),
     updateProfileDetails: builder.mutation({
-      queryFn: async (body, api) => {
+      queryFn: async ({ body }, api) => {
         try {
           api.dispatch(setIsUpdating());
           const result = await axios.patch(
@@ -192,7 +192,10 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
           };
         }
       },
-      invalidatesTags: [{ type: "Users", id: "auth" }],
+      invalidatesTags: (result, error, { authUserId }) => [
+        { type: "Users", id: "auth" },
+        { type: "Users", id: authUserId },
+      ],
     }),
   }),
 });
