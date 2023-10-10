@@ -72,10 +72,7 @@ const updateUserDetails = async (req, res) => {
       );
 
       imageUpdate = {
-        [imageUploadType]: {
-          src: cloudinaryMedia?.secure_url || "",
-          publicId: cloudinaryMedia?.public_id || "",
-        },
+        [imageUploadType]: cloudinaryMedia?.secure_url || "",
       };
     }
 
