@@ -27,22 +27,22 @@ const StoryPreview = () => {
   } = useContext(GeneralContext);
   const { type, src, reading } = useSelector(getUploadedMedia);
 
-  const { zoomIn, zoomOut, zoom, setZoom, reset } = useZoom();
-  const [rotation, setRotation] = useState(0);
+  // const { zoomIn, zoomOut, zoom, setZoom, reset } = useZoom();
+  // const [rotation, setRotation] = useState(0);
 
-  const [isEditing, setIsEditing] = useState(false);
+  // const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    const stopEdit = () => setIsEditing(false);
-    document.body.addEventListener("click", stopEdit);
+  // useEffect(() => {
+  //   const stopEdit = () => setIsEditing(false);
+  //   document.body.addEventListener("click", stopEdit);
 
-    return () => document.body.removeEventListener("click", stopEdit);
-  }, []);
+  //   return () => document.body.removeEventListener("click", stopEdit);
+  // }, []);
 
-  const startEdit = (e) => {
-    e && e.stopPropagation && e.stopPropagation();
-    type === imageType && setIsEditing(true);
-  };
+  // const startEdit = (e) => {
+  //   e && e.stopPropagation && e.stopPropagation();
+  //   type === imageType && setIsEditing(true);
+  // };
 
   const media =
     type === videoType ? (
@@ -51,8 +51,8 @@ const StoryPreview = () => {
       <img
         src={src}
         alt="my story"
-        style={{ transform: `scale(${zoom})` }}
-        onClick={startEdit}
+        // style={{ transform: `scale(${zoom})` }}
+        // onClick={startEdit}
       />
     );
 
@@ -75,7 +75,7 @@ const StoryPreview = () => {
               e && e.stopPropagation && e.stopPropagation();
             }}
           >
-            {type === imageType ? (
+            {/* {type === imageType ? (
               !isEditing ? (
                 <span>Select photo to crop and rotate</span>
               ) : (
@@ -92,7 +92,7 @@ const StoryPreview = () => {
               )
             ) : (
               ""
-            )}
+            )} */}
           </div>
           <div className="story-preview-actions-md">
             <div onClick={showSettings}>
