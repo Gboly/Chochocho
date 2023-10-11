@@ -14,9 +14,14 @@ import {
 import { useRef, useEffect, useState, useContext } from "react";
 import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
 import { editProfileData } from "../../../util/iconDescContent";
-import { avatarType, coverPhotoType } from "../../../util/types";
+import {
+  avatarType,
+  coverPhotoType,
+  defaultcoverPhoto,
+} from "../../../util/types";
 import { GeneralContext } from "../../../routes/Router";
 import { useUpdateProfileDetailsMutation } from "../../../app/api-slices/usersApiSlice";
+import HomeUserAvatar from "../../../components/home-user-avatar/HomeUserAvatar";
 
 const getInitialState = (authUser) =>
   editProfileData.reduce((accum, current) => {
@@ -104,7 +109,7 @@ export default function EditProfile() {
       />
       <div className="edit-profile-image-wrapper">
         <img
-          src={coverPhoto}
+          src={coverPhoto || defaultcoverPhoto}
           alt="profile cover"
           className="edit-profile-coverphoto"
         />
@@ -120,7 +125,13 @@ export default function EditProfile() {
         />
       </div>
       <div className="edit-profile-avatar-wrapper edit-profile-image-wrapper">
-        <img src={profileImage} alt="" className="edit-profile-avatar" />
+        <HomeUserAvatar
+          {...{
+            size: 5,
+            src: profileImage,
+            noLink: true,
+          }}
+        />
         <label htmlFor="edit-avatar">
           <i>
             <FileUploadOutlinedIcon style={iconStyle} />

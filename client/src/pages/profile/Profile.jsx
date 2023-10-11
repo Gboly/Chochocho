@@ -21,6 +21,7 @@ import {
 } from "../../util/functions";
 import {
   blockedYouMessage,
+  defaultcoverPhoto,
   editProfileType,
   profilePageType,
   youBlockedMessage,
@@ -138,7 +139,7 @@ function ProfileComponent({ user, userId }) {
                 </i>
               </button>
               <img
-                src={coverPhoto || "https://www.colorhexa.com/c32aa3.png"}
+                src={coverPhoto || defaultcoverPhoto}
                 alt="profile cover"
                 className="profile-coverphoto"
                 onClick={() => dispatch(openFullscreen(coverPhoto))}

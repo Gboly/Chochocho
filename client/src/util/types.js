@@ -80,4 +80,5 @@ export const youBlockedMessage =
   "⚠ Oops, you cannot view because you already blocked this user";
 export const mutualBlockMessage =
   "⚠ Oops, you cannot view because you and this user mutually blocked each other";
+export const defaultcoverPhoto = "https://www.colorhexa.com/c32aa3.png";
 //export const
