@@ -3,6 +3,7 @@ import {
   getTransformed,
   selectTotalFetchedResult,
   mutualUpdate,
+  showErrorAlert,
 } from "../../util/functions";
 
 import { apiSlice } from "../api";
@@ -196,6 +197,52 @@ export const extendedUsersApiSlice = apiSlice.injectEndpoints({
         { type: "Users", id: "auth" },
         { type: "Users", id: authUserId },
       ],
+    }),
+    updateProfileDetails: builder.mutation({
+      query: ({ body }) => ({
+        url: `/users/authUser`,
+        method: "PATCH",
+        body,
+        credentials: "include",
+      }),
+      async onQueryStarted(
+        { authUserId, body },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const tagTypes = [{ type: "Users", id: authUserId }];
+
+        for (const {
+          endpointName,
+          originalArgs,
+        } of extendedUsersApiSlice.util.selectInvalidatedBy(
+          getState(),
+          tagTypes
+        )) {
+          const patchResult = dispatch(
+            extendedUsersApiSlice.util.updateQueryData(
+              endpointName,
+              originalArgs,
+              (draft) => {
+                //Some drafts are normalized, some aren't.
+                let authUser = draft?.entities
+                  ? draft.entities?.[authUserId]
+                  : draft?.id === authUserId && draft;
+
+                authUser &&
+                  Object.entries(body).map(
+                    ([key, value]) => (authUser[key] = value)
+                  );
+              }
+            )
+          );
+          try {
+            await queryFulfilled;
+          } catch (error) {
+            showErrorAlert();
+            patchResult.undo();
+          }
+        }
+      },
     }),
   }),
 });

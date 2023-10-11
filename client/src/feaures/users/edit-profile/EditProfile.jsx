@@ -9,12 +9,14 @@ import SimpleHeader from "../../../components/simple-header/SimpleHeader";
 import {
   closePopupOnOpaqueOverlay,
   handleprofileImageUpload,
+  showErrorAlert,
 } from "../../../util/functions";
 import { useRef, useEffect, useState, useContext } from "react";
 import { getEditProfileImageState } from "../../../pages/profile/profileSlice";
 import { editProfileData } from "../../../util/iconDescContent";
 import { avatarType, coverPhotoType } from "../../../util/types";
 import { GeneralContext } from "../../../routes/Router";
+import { useUpdateProfileDetailsMutation } from "../../../app/api-slices/usersApiSlice";
 
 const getInitialState = (authUser) =>
   editProfileData.reduce((accum, current) => {
@@ -23,13 +25,15 @@ const getInitialState = (authUser) =>
   }, {});
 export default function EditProfile() {
   const { authUser } = useContext(GeneralContext);
-  const { profileImage, coverPhoto } = authUser;
+  const { profileImage, coverPhoto, id: authUserId } = authUser;
   const [profile, setProfile] = useState(getInitialState(authUser));
   const [hasChanged, setHasChanged] = useState(false);
 
   const { isOpen: editProfileImageIsOpen } = useSelector(
     getEditProfileImageState
   );
+
+  const [submitDetails, { error, data }] = useUpdateProfileDetailsMutation();
 
   const avatarNode = useRef();
 
@@ -47,7 +51,13 @@ export default function EditProfile() {
     setProfile((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = () => closePopupOnOpaqueOverlay(closeEditProfile);
+  const handleClose = () => closePopupOnOpaqueOverlay(closeEditProfile);
+
+  const handleSubmit = (e) => {
+    e && e.preventDefault();
+    profile && submitDetails({ body: profile, authUserId });
+    handleClose();
+  };
 
   const formContent = editProfileData.reduce((accum, current, index) => {
     const { label, type, placeholder, autoComplete, name } = current;
@@ -89,7 +99,7 @@ export default function EditProfile() {
     <div className="edit-profile-container">
       <SimpleHeader
         desc={"Edit details"}
-        closeAction={handleClick}
+        closeAction={handleClose}
         overlay={true}
       />
       <div className="edit-profile-image-wrapper">
@@ -123,20 +133,22 @@ export default function EditProfile() {
           onChange={(e) => handleMedia(e, avatarType)}
         />
       </div>
-      <form action="">
+      <form onSubmit={handleSubmit}>
         {formContent}
         <div>
           <button
             onClick={(e) => {
               e.preventDefault();
-              handleClick();
+              handleClose();
             }}
+            type="cancel"
           >
             Cancel
           </button>
           <button
             disabled={!hasChanged}
             className={`${!hasChanged ? "disabled-button" : ""}`}
+            type="submit"
           >
             Save
           </button>
