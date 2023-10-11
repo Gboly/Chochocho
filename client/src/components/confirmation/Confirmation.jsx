@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { closeConfirmation } from "../../app/actions/layoutActions";
 import { LinearProgress } from "@mui/material";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
+import ReportGmailerrorredIcon from "@mui/icons-material/ReportGmailerrorred";
 import { avatarType, coverPhotoType } from "../../util/types";
 
 const successTypes = {
@@ -21,7 +22,7 @@ const progressTypes = {
   [coverPhotoType]: "Updating your Cover photo",
   [avatarType]: "Updating your Avatar",
 };
-const noCheck = ["mediaSize", "avatarSize"];
+const noCheck = ["mediaSize", "avatarSize", "error"];
 
 export default function Confirmation({ type, progress, message }) {
   const dispatch = useDispatch();
@@ -34,8 +35,14 @@ export default function Confirmation({ type, progress, message }) {
 
     return (
       <div className="quote confirmation-success">
-        {successTypes[type] || message || "what?!"}
-        {!noCheck.includes(type) && (
+        {type === "error"
+          ? "Oops, Something went wrong. Retry"
+          : successTypes[type] || message || "what?!"}
+        {noCheck.includes(type) ? (
+          <span className="success-check">
+            <ReportGmailerrorredIcon color="inherit" />
+          </span>
+        ) : (
           <span className="success-check">
             <TaskAltIcon color="inherit" />
           </span>

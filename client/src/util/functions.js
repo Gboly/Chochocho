@@ -503,6 +503,10 @@ export const effectConfirmation = (type) => {
   store.dispatch(showConfirmation({ type }));
 };
 
+export const showErrorAlert = () => {
+  store.dispatch(showConfirmation({ type: "error", progress: 100 }));
+};
+
 export const fieldUpdate = ({
   record,
   updateFieldKey,
