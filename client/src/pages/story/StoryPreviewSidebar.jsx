@@ -43,7 +43,7 @@ const StoryPreviewSidebar = () => {
           userId: id,
           alignItems: true,
           single: true,
-          header: displayName,
+          header: displayName || username,
           sub: username,
           avatarProp: { size: 3, src: profileImage },
         }}
