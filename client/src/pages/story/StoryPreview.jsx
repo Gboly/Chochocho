@@ -1,5 +1,6 @@
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import Spinner from "../../components/Spinner/Spinner";
 import useZoom from "../../components/zoom/useZoom";
@@ -17,10 +18,14 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   changeVisibilityType,
   openSettings,
+  removeMedia,
 } from "../../app/actions/storyActions";
 import { showPopupOnOpaqueOverlay } from "../../util/functions";
+import { iconStyle } from "../../util/iconDescContent";
+import HighlightOffOutlinedIcon from "@mui/icons-material/HighlightOffOutlined";
 
 const StoryPreview = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {
     authUser: { id, profileImage, storyVisibility },
@@ -61,12 +66,26 @@ const StoryPreview = () => {
     showPopupOnOpaqueOverlay(openSettings, storyVisibilitySettingsType);
   };
 
+  const discard = (e) => {
+    e && e.preventDefault();
+    dispatch(removeMedia());
+    navigate(-1);
+  };
+
   return (
     <div className="story-preview-main">
       <section>
-        <h4>Preview</h4>
+        <header>
+          <h4>Preview</h4>
+          <i onClick={discard}>
+            <HighlightOffOutlinedIcon style={iconStyle} />
+          </i>
+        </header>
         <div>
           <div className="story-preview-box">
+            <i onClick={discard}>
+              <HighlightOffOutlinedIcon style={iconStyle} />
+            </i>
             {reading ? <Spinner /> : media}
           </div>
           <div
