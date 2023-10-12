@@ -5,16 +5,30 @@ import {
   excludeBlocked,
 } from "../../util/helperFunctions.js";
 import { returnShortForBlockedUsers } from "../../util/helperFunctions.js";
+import cloudinary from "../../config/cloudinaryConfig.js";
 
 const addNewStory = async (req, res) => {
   const { id: authUserId, storyVisibility } = req.user;
+  const { mediaType, media } = req.body;
+
+  if (!mediaType || !media)
+    return res.status(400).json({ error: "Invalid details" });
+
+  let cloudinaryMedia;
   try {
+    cloudinaryMedia = await cloudinary.uploader.upload(media, {
+      folder: "story",
+      resource_type: mediaType,
+    });
+
     const story = new Story({
       userId: authUserId,
       // This is included to keep track of the user's storyVisibility setting at the time when a story is created.
       // This is useful when deleting a story.
       storyVisibility,
-      ...req.body,
+      mediaType,
+      media: cloudinaryMedia?.secure_url || "",
+      createdAt: new Date(),
     });
     await story.save();
 
