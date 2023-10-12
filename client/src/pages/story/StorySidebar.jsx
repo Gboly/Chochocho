@@ -26,7 +26,7 @@ import {
 export const StorySidebar = ({ indexPage }) => {
   const dispatch = useDispatch();
   const {
-    authUser: { otherStoryAuthors, otherStories, storyVisibility },
+    authUser: { otherStoryAuthors, otherStories, myStories, storyVisibility },
     viewedUsers,
     activeUsers,
   } = useContext(GeneralContext);
@@ -80,6 +80,12 @@ export const StorySidebar = ({ indexPage }) => {
         <p>Your story</p>
         <div className="story-list">
           <CreateStory />
+          {myStories.length > 0 && (
+            <UserStory
+              viewed={myStories.every((story) => story.viewed)}
+              isAuthUser={true}
+            />
+          )}
         </div>
       </section>
       {activeUserStories.length > 0 && (
@@ -131,15 +137,27 @@ const CreateStory = () => {
   );
 };
 
-const UserStory = ({ userId, viewed, allStories }) => {
+const UserStory = ({
+  userId,
+  viewed,
+  allStories: otherStories,
+  isAuthUser,
+}) => {
   const navigate = useNavigate();
-  const { username, myStories } = useSelector((state) =>
-    selectFetchedUsersById(state, userId)
-  );
+  // Could have just passed the authUserId as the userId prop and myStories from authUser as allStories prop, Only that for some reason, the authUser was not fetched.
+  const user = useSelector((state) => selectFetchedUsersById(state, userId));
+  const {
+    authUser: { id, myStories: authUserStories },
+  } = useContext(GeneralContext);
 
-  const posterStoryId = useMemo(() => {
-    return myStories[myStories.length - 1].storyId;
-  }, [myStories]);
+  const [myStories, allStories, username, posterStoryId] = useMemo(() => {
+    const myStories = isAuthUser ? authUserStories : user?.myStories;
+    const allStories = isAuthUser ? authUserStories : otherStories;
+    const username = isAuthUser ? "You" : user?.username;
+    const posterStoryId = myStories[myStories.length - 1].storyId;
+
+    return [myStories, allStories, username, posterStoryId];
+  }, [user, authUserStories, isAuthUser, otherStories]);
 
   const { data: story, isLoading: storyIsLoading } =
     useGetStoryByIdQuery(posterStoryId);
