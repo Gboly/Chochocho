@@ -22,6 +22,7 @@ import {
   selectUsersType,
   logOutType,
   reportType,
+  deleteStoryType,
 } from "../../util/types";
 import WriteAlt from "../../feaures/posts/write-alt/WriteAlt";
 import Report from "../../feaures/report/Report";
@@ -65,6 +66,7 @@ import { closeFriendsOptions } from "../../app/actions/rightbarActions";
 import NotificationOptions from "../../feaures/notification-block/NotificationOptions";
 import StoryOptions from "../../pages/story/StoryOptions";
 import {
+  closeDeleteStory,
   closeMuteStoryAuthor,
   closeSelectUserAsCancel,
   closeSettings,
@@ -74,6 +76,7 @@ import MuteStoryAuthor from "../../pages/story/MuteStoryAuthor";
 import StoryVisibilitySettings from "../../pages/story/StoryVisibilitySettings";
 import SelectUsers from "../../pages/story/SelectUsers";
 import LogOut from "../../feaures/logout/LogOut";
+import DeleteStory from "../../pages/story/DeleteStory";
 
 export const opaqueOverlayComponents = [
   {
@@ -155,6 +158,11 @@ export const opaqueOverlayComponents = [
     type: logOutType,
     component: <LogOut />,
     closeAction: closeLogOut,
+  },
+  {
+    type: deleteStoryType,
+    component: <DeleteStory />,
+    closeAction: closeDeleteStory,
   },
 ];
 
