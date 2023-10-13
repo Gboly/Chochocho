@@ -41,6 +41,7 @@ import {
   muteStoryType,
   reportType,
   followPosterType,
+  deleteStoryType,
 } from "./types";
 
 import CakeOutlinedIcon from "@mui/icons-material/CakeOutlined";
@@ -55,7 +56,10 @@ import {
   faInstagram,
   faLinkedinIn,
 } from "@fortawesome/free-brands-svg-icons";
-import { openMuteStoryAuthor } from "../app/actions/storyActions";
+import {
+  openDeleteStory,
+  openMuteStoryAuthor,
+} from "../app/actions/storyActions";
 import {
   faUsers,
   faUserGroup,
@@ -150,6 +154,13 @@ export const storyOptions = [
     desc: muteStoryType,
     icon: <DoNotDisturbOnTotalSilenceIcon style={iconStyle} />,
     action: openMuteStoryAuthor,
+  },
+];
+export const authStoryOptions = [
+  {
+    desc: deleteStoryType,
+    icon: <DeleteOutlineIcon style={iconStyle} />,
+    action: openDeleteStory,
   },
 ];
 

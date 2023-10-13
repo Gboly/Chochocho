@@ -60,6 +60,7 @@ export const pendingType = "pending";
 export const rejectedType = "rejected";
 export const reportStoryType = "Report story";
 export const muteStoryType = "mute";
+export const deleteStoryType = "Delete story";
 export const postOptionsType = "post options";
 export const postShareType = "post share";
 export const playbackSpeedType = "playback speed";

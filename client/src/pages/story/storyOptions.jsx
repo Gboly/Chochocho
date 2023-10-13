@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   closePopupOnTransparentOverlay,
   showPopupOnOpaqueOverlay,
 } from "../../util/functions";
-import { storyOptions } from "../../util/iconDescContent";
+import { storyOptions, authStoryOptions } from "../../util/iconDescContent";
 import { useParams } from "react-router-dom";
 import { muteStoryType } from "../../util/types";
 import { capitalize } from "../../util/functions";
 import { closeStoryOptions } from "../../app/actions/storyActions";
+import { GeneralContext } from "../../routes/Router";
 
 const StoryOptions = () => {
   const { username, storyId } = useParams();
+  const { authUser } = useContext(GeneralContext);
 
   const handleClick = (e, option) => {
     e && e.stopPropagation && e.stopPropagation();
@@ -21,7 +23,9 @@ const StoryOptions = () => {
     closePopupOnTransparentOverlay(closeStoryOptions);
   };
 
-  const content = storyOptions.map((option) => {
+  const content = (
+    username === authUser.username ? authStoryOptions : storyOptions
+  ).map((option) => {
     const { icon, desc } = option;
 
     return (
