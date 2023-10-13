@@ -180,7 +180,7 @@ const UserStory = ({
         <div className="story-item" onClick={handleClick}>
           {story.mediaType === videoType ? (
             <video
-              src={video}
+              src={story.media || video}
               alt="last story post vid"
               className={`${viewed ? "viewed" : ""}`}
             />
