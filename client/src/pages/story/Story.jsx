@@ -40,18 +40,27 @@ const Story = () => {
   } = useGetStoryByIdQuery(storyId);
   const { data: user, isLoading: userFetchIsLoading } = useGetUserByIdQuery(
     story?.userId,
-    { skip: !story?.userId }
+    { skip: !story?.userId || authUser.username === username }
   );
 
-  const [storyIndex, userIndex, users, isBlocked] = useMemo(() => {
-    const userStories = user?.myStories || [];
+  const [storyIndex, userIndex, users, isBlocked, isAuthUser] = useMemo(() => {
+    const isAuthUser = authUser.username === username;
+
+    const userStories = isAuthUser ? authUser.myStories : user?.myStories || [];
     const storyIndex = userStories.findIndex(
       (myStory) => myStory.storyId === storyId
     );
-    const { userIndex, users } = getStoryUserDetails(authUser, user?.id);
+    const authUserStoryDetails = {
+      userIndex: 0,
+      users: [{ userId: authUser.id }],
+    };
+    const { userIndex, users } = isAuthUser
+      ? authUserStoryDetails
+      : getStoryUserDetails(authUser, user?.id);
+
     const isBlocked = getIsBlockedStatus(user?.id);
-    return [storyIndex, userIndex, users, isBlocked];
-  }, [user, storyId, authUser, getIsBlockedStatus]);
+    return [storyIndex, userIndex, users, isBlocked, isAuthUser];
+  }, [user, storyId, authUser, getIsBlockedStatus, username]);
 
   const currentParams = { username, storyId };
   const [{ prevParams, nextParams }, setParams] = useState({
@@ -85,7 +94,7 @@ const Story = () => {
       value={{
         setParams,
         handleTransition,
-        user,
+        user: isAuthUser ? authUser : user,
         story,
         storyId,
         users,
@@ -104,13 +113,18 @@ const Story = () => {
         <PrevSlide />
         <section>
           <div>
-            {!storyFetchFailed && story && user && (
+            {!storyFetchFailed && story && (isAuthUser ? authUser : user) && (
               <>
                 <StoryHeader ref={videoRef} />
                 {isBlocked ? (
                   <BlockedUserStory userId={user.id} />
                 ) : story.mediaType === videoType ? (
-                  <video ref={videoRef} src={video} alt="story" autoPlay />
+                  <video
+                    ref={videoRef}
+                    src={story.media || video}
+                    alt="story"
+                    autoPlay
+                  />
                 ) : (
                   <img src={story.media} alt="story" />
                 )}

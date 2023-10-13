@@ -147,17 +147,17 @@ const UserStory = ({
   // Could have just passed the authUserId as the userId prop and myStories from authUser as allStories prop, Only that for some reason, the authUser was not fetched.
   const user = useSelector((state) => selectFetchedUsersById(state, userId));
   const {
-    authUser: { id, myStories: authUserStories },
+    authUser: { username: authUsername, myStories: authUserStories },
   } = useContext(GeneralContext);
 
   const [myStories, allStories, username, posterStoryId] = useMemo(() => {
     const myStories = isAuthUser ? authUserStories : user?.myStories;
     const allStories = isAuthUser ? authUserStories : otherStories;
-    const username = isAuthUser ? "You" : user?.username;
+    const username = isAuthUser ? authUsername : user?.username;
     const posterStoryId = myStories[myStories.length - 1].storyId;
 
     return [myStories, allStories, username, posterStoryId];
-  }, [user, authUserStories, isAuthUser, otherStories]);
+  }, [user, authUserStories, isAuthUser, otherStories, authUsername]);
 
   const { data: story, isLoading: storyIsLoading } =
     useGetStoryByIdQuery(posterStoryId);
@@ -192,7 +192,7 @@ const UserStory = ({
             />
           )}
           <article>
-            <div>{username}</div>
+            <div>{isAuthUser ? "You" : username}</div>
             <div>{convertToUserFriendlyTime(story.createdAt)}</div>
           </article>
         </div>

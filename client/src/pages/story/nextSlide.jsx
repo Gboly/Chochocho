@@ -35,7 +35,11 @@ const NextSlide = () => {
     const userStories = user?.myStories || [];
     const nextUserStories = nextUser?.myStories || [];
     return {
-      username: lastUserStory ? nextUser?.username : user?.username,
+      username: lastStory
+        ? user?.username
+        : lastUserStory
+        ? nextUser?.username
+        : user?.username,
       storyId: lastStory
         ? storyId
         : lastUserStory
