@@ -15,12 +15,14 @@ const successTypes = {
   report: "Report successfully created",
   [coverPhotoType]: "Successfully updated your Cover photo",
   [avatarType]: "Successfully updated your Avatar",
+  story: "Added story successfully",
 };
 const progressTypes = {
   post: "Creating post",
   report: "Reporting user",
   [coverPhotoType]: "Updating your Cover photo",
   [avatarType]: "Updating your Avatar",
+  story: "Adding story",
 };
 const noCheck = ["mediaSize", "avatarSize", "error"];
 

@@ -4,14 +4,19 @@ import { iconStyle } from "../../util/iconDescContent";
 import UserCameo from "../../components/user-cameo/UserCameo";
 import { GeneralContext } from "../../routes/Router";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   changeVisibilityType,
   openSettings,
   removeMedia,
 } from "../../app/actions/storyActions";
 import { storyVisibilitySettingsType } from "../../util/types";
-import { showPopupOnOpaqueOverlay } from "../../util/functions";
+import {
+  showPopupOnOpaqueOverlay,
+  effectConfirmation,
+} from "../../util/functions";
+import { useCreateStoryMutation } from "../../app/api-slices/storiesApiSlice";
+import { getUploadedMedia } from "./storySlice";
 
 const StoryPreviewSidebar = () => {
   const navigate = useNavigate();
@@ -19,10 +24,22 @@ const StoryPreviewSidebar = () => {
   const {
     authUser: { id, username, displayName, profileImage, storyVisibility },
   } = useContext(GeneralContext);
+  const { type, src } = useSelector(getUploadedMedia);
+
+  const [shareStory, { error }] = useCreateStoryMutation();
 
   const discard = () => {
     dispatch(removeMedia());
     navigate(-1);
+  };
+
+  const handleShare = (e) => {
+    e && e.preventDefault();
+    const body = { mediaType: type, media: src };
+    dispatch(removeMedia());
+    type && src && shareStory({ body });
+    navigate(-1);
+    effectConfirmation("story");
   };
 
   const showSettings = () => {
@@ -50,7 +67,7 @@ const StoryPreviewSidebar = () => {
       />
       <div className="sps-buttons">
         <button onClick={discard}>Discard</button>
-        <button>Share to story</button>
+        <button onClick={handleShare}>Share to story</button>
       </div>
     </aside>
   );
