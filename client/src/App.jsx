@@ -67,7 +67,8 @@ export default function App({ children }) {
     authUser &&
       (authUser.otherStoryAuthors = getStoryAuthors(
         authUser?.otherStories,
-        isFollowing
+        isFollowing,
+        authUser?.mutedStoryAuthors
       ));
     const groupedUsers = sortByViewedStatus(authUser);
 

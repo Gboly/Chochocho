@@ -475,7 +475,15 @@ export const getFullDate = (date, { time, day, month, year }) => {
   return organizedFullDate;
 };
 
-export const getStoryAuthors = (otherStories, isFollowing) => {
+export const getStoryAuthors = (
+  otherStories,
+  isFollowing,
+  mutedStoryAuthors
+) => {
+  const mutedStoryAuthorIds = getAnArrayOfSpecificKeyPerObjectInArray(
+    mutedStoryAuthors,
+    "userId"
+  );
   const authorIds = getAnArrayOfSpecificKeyPerObjectInArray(
     otherStories,
     "userId"
@@ -484,7 +492,9 @@ export const getStoryAuthors = (otherStories, isFollowing) => {
   return (
     uniqueAuthorIds
       // This filtering is done to serve as an optimistic update for whenever a user is unfollowed. The user should be removed from the story author list
-      .filter((userId) => isFollowing(userId))
+      .filter(
+        (userId) => isFollowing(userId) || !mutedStoryAuthorIds.includes(userId)
+      )
       .map((userId) => ({ userId }))
   );
 };
