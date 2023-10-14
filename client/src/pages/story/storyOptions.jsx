@@ -9,16 +9,23 @@ import { muteStoryType } from "../../util/types";
 import { capitalize } from "../../util/functions";
 import { closeStoryOptions } from "../../app/actions/storyActions";
 import { GeneralContext } from "../../routes/Router";
+import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
 
 const StoryOptions = () => {
   const { username, storyId } = useParams();
+  // The story must have already been fetched in the actual story component. So, this would just provide the cached data
+  const { data: story } = useGetStoryByIdQuery(storyId);
   const { authUser } = useContext(GeneralContext);
 
   const handleClick = (e, option) => {
     e && e.stopPropagation && e.stopPropagation();
     const { desc, action } = option;
     if (action) {
-      showPopupOnOpaqueOverlay(action, desc, { username, storyId });
+      showPopupOnOpaqueOverlay(action, desc, {
+        username,
+        storyId,
+        userId: story?.userId,
+      });
     }
     closePopupOnTransparentOverlay(closeStoryOptions);
   };
