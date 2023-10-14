@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   options: { isOpen: false, storyId: "" },
   mute: { isOpen: false, storyId: "", username: "" },
-  deleteStory: { isOpen: false, storyId: "", username: "" },
+  deleteStory: { isOpen: false, storyId: "", username: "", isActive: false },
   uploadedMedia: { type: "", src: "", reading: false },
   settings: {
     isOpen: false,
@@ -41,6 +41,11 @@ export const storySlice = createSlice({
     },
     closeDeleteStory: (state) => {
       state.deleteStory = initialState.deleteStory;
+      return state;
+    },
+    activateDelete: (state, action) => {
+      state.deleteStory.isActive = true;
+      state.deleteStory.storyId = action.payload;
       return state;
     },
     readUploadedMedia: (state, action) => {

@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import { selectFetchedUsersById } from "../../app/api-slices/usersApiSlice";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { iconStyle } from "../../util/iconDescContent";
+import { getDeleteStoryState } from "./storySlice";
+import { useDeleteStoryMutation } from "../../app/api-slices/storiesApiSlice";
+import { closePopupOnOpaqueOverlay } from "../../util/functions";
+import { closeDeleteStory } from "../../app/actions/storyActions";
 
 const NextSlide = () => {
   const {
@@ -60,6 +64,19 @@ const NextSlide = () => {
   const handleMouseOut = () => {
     setNextHover(false);
   };
+
+  //Deleting a story
+  const { isActive, storyId: storyIdToDelete } =
+    useSelector(getDeleteStoryState);
+  const [deleteStory, { error }] = useDeleteStoryMutation();
+
+  useEffect(() => {
+    if (isActive) {
+      handleTransition("next");
+      closePopupOnOpaqueOverlay(closeDeleteStory);
+      deleteStory({ storyId: storyIdToDelete });
+    }
+  }, [isActive, handleTransition, storyIdToDelete, deleteStory]);
 
   return (
     <aside

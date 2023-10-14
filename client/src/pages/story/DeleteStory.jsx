@@ -1,10 +1,21 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { closeDeleteStory } from "../../app/actions/storyActions";
+import {
+  closeDeleteStory,
+  activateDelete,
+} from "../../app/actions/storyActions";
 import { closePopupOnOpaqueOverlay } from "../../util/functions";
+import { useDispatch } from "react-redux";
 
 const DeleteStory = () => {
-  const { username } = useParams();
+  const { storyId } = useParams();
+  const dispatch = useDispatch();
+
+  const handleDelete = (e) => {
+    e && e.preventDefault();
+    // Actual delete function is in the NextSlide component
+    dispatch(activateDelete(storyId));
+  };
 
   return (
     <div className="ffPost-container">
@@ -22,7 +33,12 @@ const DeleteStory = () => {
           >
             Cancel
           </button>
-          <button className="ffPost-button ffPost-submit">Delete</button>
+          <button
+            className="ffPost-button ffPost-submit"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
         </footer>
       </div>
     </div>
