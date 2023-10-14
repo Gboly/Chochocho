@@ -2,6 +2,8 @@ import { apiSlice } from "../api";
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import axios from "axios";
 import { updateProgress } from "../actions/layoutActions";
+import { extendedUsersApiSlice } from "./usersApiSlice";
+import { showErrorAlert } from "../../util/functions";
 
 const storiesAdapter = createEntityAdapter({});
 
@@ -49,8 +51,41 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
         { type: "Users", id: "auth" },
       ],
     }),
+    deleteStory: builder.mutation({
+      query: ({ storyId }) => ({
+        url: `/stories/${storyId}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+      async onQueryStarted(
+        { storyId },
+        { dispatch, queryFulfilled, getState }
+      ) {
+        const patchResult = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              const myStories = draft.myStories;
+              draft.myStories = myStories.filter(
+                (myStory) => myStory.storyId !== storyId
+              );
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          showErrorAlert();
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
-export const { useGetStoryByIdQuery, useCreateStoryMutation } =
-  extendedStoriesApiSlice;
+export const {
+  useGetStoryByIdQuery,
+  useCreateStoryMutation,
+  useDeleteStoryMutation,
+} = extendedStoriesApiSlice;
