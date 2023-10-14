@@ -123,8 +123,8 @@ const muteStoryAuthor = async (req, res) => {
     const updateUser = await User.updateOne(
       { _id: authUserId },
       muteRecord
-        ? { $pull: { blocked: muteRecord } }
-        : { $push: { blocked: { userId } } }
+        ? { $pull: { mutedStoryAuthors: muteRecord } }
+        : { $push: { mutedStoryAuthors: { userId, date: new Date() } } }
     );
 
     // notification
