@@ -2,7 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   options: { isOpen: false, storyId: "" },
-  mute: { isOpen: false, storyId: "", username: "", userId: "" },
+  mute: {
+    isOpen: false,
+    storyId: "",
+    username: "",
+    userId: "",
+    isActive: false,
+  },
   deleteStory: { isOpen: false, storyId: "", username: "", isActive: false },
   uploadedMedia: { type: "", src: "", reading: false },
   settings: {
@@ -32,6 +38,10 @@ export const storySlice = createSlice({
     },
     closeMuteStoryAuthor: (state) => {
       state.mute = initialState.mute;
+      return state;
+    },
+    activateMuteStoryAuthor: (state, action) => {
+      state.mute.isActive = true;
       return state;
     },
     openDeleteStory: (state, action) => {

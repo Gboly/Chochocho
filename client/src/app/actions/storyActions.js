@@ -5,6 +5,7 @@ export const {
   closeStoryOptions,
   openMuteStoryAuthor,
   closeMuteStoryAuthor,
+  activateMuteStoryAuthor,
   openDeleteStory,
   closeDeleteStory,
   activateDelete,
