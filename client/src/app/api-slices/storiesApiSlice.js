@@ -3,7 +3,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import axios from "axios";
 import { updateProgress } from "../actions/layoutActions";
 import { extendedUsersApiSlice } from "./usersApiSlice";
-import { showErrorAlert } from "../../util/functions";
+import { removeFromAnArray, showErrorAlert } from "../../util/functions";
 
 const storiesAdapter = createEntityAdapter({});
 
@@ -81,6 +81,36 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    muteStoryAuthor: builder.mutation({
+      query: ({ userId }) => ({
+        url: `/stories/${userId}/mute`,
+        method: "PUT",
+        credentials: "include",
+      }),
+      async onQueryStarted({ userId }, { dispatch, queryFulfilled, getState }) {
+        const patchResult = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              let authors = draft?.mutedStoryAuthors;
+              const isMuted = (authors || []).some(
+                (author) => author.userId === userId
+              );
+              isMuted
+                ? (authors = removeFromAnArray(authors, "userId", userId))
+                : (authors = [...authors, { userId }]);
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          showErrorAlert();
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -88,4 +118,5 @@ export const {
   useGetStoryByIdQuery,
   useCreateStoryMutation,
   useDeleteStoryMutation,
+  useMuteStoryAuthorMutation,
 } = extendedStoriesApiSlice;
