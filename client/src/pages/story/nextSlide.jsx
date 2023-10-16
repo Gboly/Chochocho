@@ -4,12 +4,24 @@ import { useSelector } from "react-redux";
 import { selectFetchedUsersById } from "../../app/api-slices/usersApiSlice";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { iconStyle } from "../../util/iconDescContent";
-import { getDeleteStoryState } from "./storySlice";
-import { useDeleteStoryMutation } from "../../app/api-slices/storiesApiSlice";
+import { getDeleteStoryState, getMuteStoryAuthorState } from "./storySlice";
+import {
+  useDeleteStoryMutation,
+  useMuteStoryAuthorMutation,
+} from "../../app/api-slices/storiesApiSlice";
 import { closePopupOnOpaqueOverlay } from "../../util/functions";
-import { closeDeleteStory } from "../../app/actions/storyActions";
+import {
+  closeDeleteStory,
+  closeMuteStoryAuthor,
+} from "../../app/actions/storyActions";
 
 const NextSlide = () => {
+  const { isActive: deleteIsActive, storyId: storyIdToDelete } =
+    useSelector(getDeleteStoryState);
+  const { isActive: muteIsActive, userId: userIdToMute } = useSelector(
+    getMuteStoryAuthorState
+  );
+
   const {
     setParams,
     handleTransition,
@@ -24,12 +36,13 @@ const NextSlide = () => {
   const [nextUserId, lastStory, lastUserStory] = useMemo(() => {
     const userStories = user?.myStories || [];
     const lastUser = userIndex === users.length - 1 || userIndex < 0;
+    // Whenever a user is about to be muted. Regardless of its storyIndex, let current story be registered as the lastUserStory
     const lastUserStory =
-      storyIndex === userStories.length - 1 || storyIndex < 0;
+      muteIsActive || storyIndex === userStories.length - 1 || storyIndex < 0;
     const lastStory = (lastUser && lastUserStory) || isBlocked;
     const nextUserId = users[lastUser ? userIndex : userIndex + 1]?.userId;
     return [nextUserId, lastStory, lastUserStory];
-  }, [user, users, storyIndex, userIndex, isBlocked]);
+  }, [user, users, storyIndex, userIndex, isBlocked, muteIsActive]);
 
   const nextUser = useSelector((state) =>
     selectFetchedUsersById(state, nextUserId)
@@ -66,17 +79,29 @@ const NextSlide = () => {
   };
 
   //Deleting a story
-  const { isActive, storyId: storyIdToDelete } =
-    useSelector(getDeleteStoryState);
   const [deleteStory, { error }] = useDeleteStoryMutation();
+  const [muteStoryAuthor] = useMuteStoryAuthorMutation();
 
   useEffect(() => {
-    if (isActive) {
+    if (deleteIsActive) {
       handleTransition("next");
       closePopupOnOpaqueOverlay(closeDeleteStory);
       deleteStory({ storyId: storyIdToDelete });
     }
-  }, [isActive, handleTransition, storyIdToDelete, deleteStory]);
+    if (muteIsActive) {
+      handleTransition("next");
+      closePopupOnOpaqueOverlay(closeMuteStoryAuthor);
+      muteStoryAuthor({ userId: userIdToMute });
+    }
+  }, [
+    deleteIsActive,
+    handleTransition,
+    storyIdToDelete,
+    deleteStory,
+    muteStoryAuthor,
+    muteIsActive,
+    userIdToMute,
+  ]);
 
   return (
     <aside
