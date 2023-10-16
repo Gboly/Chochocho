@@ -98,8 +98,12 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
                 (author) => author.userId === userId
               );
               isMuted
-                ? (authors = removeFromAnArray(authors, "userId", userId))
-                : (authors = [...authors, { userId }]);
+                ? (draft.mutedStoryAuthors = removeFromAnArray(
+                    authors,
+                    "userId",
+                    userId
+                  ))
+                : (draft.mutedStoryAuthors = [...authors, { userId }]);
             }
           )
         );
