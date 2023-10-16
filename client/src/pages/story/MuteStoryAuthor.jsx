@@ -1,10 +1,21 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { closeMuteStoryAuthor } from "../../app/actions/storyActions";
+import {
+  activateMuteStoryAuthor,
+  closeMuteStoryAuthor,
+} from "../../app/actions/storyActions";
 import { closePopupOnOpaqueOverlay } from "../../util/functions";
+import { useDispatch } from "react-redux";
 
 const MuteStoryAuthor = () => {
   const { username } = useParams();
+  const dispatch = useDispatch();
+
+  const handleMute = (e) => {
+    e && e.preventDefault();
+    // Actual delete function is in the NextSlide component
+    dispatch(activateMuteStoryAuthor());
+  };
 
   return (
     <div className="ffPost-container">
@@ -23,7 +34,9 @@ const MuteStoryAuthor = () => {
           >
             Cancel
           </button>
-          <button className="ffPost-button ffPost-submit">Mute</button>
+          <button className="ffPost-button ffPost-submit" onClick={handleMute}>
+            Mute
+          </button>
         </footer>
       </div>
     </div>
