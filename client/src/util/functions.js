@@ -493,7 +493,7 @@ export const getStoryAuthors = (
     uniqueAuthorIds
       // This filtering is done to serve as an optimistic update for whenever a user is unfollowed. The user should be removed from the story author list
       .filter(
-        (userId) => isFollowing(userId) || !mutedStoryAuthorIds.includes(userId)
+        (userId) => isFollowing(userId) && !mutedStoryAuthorIds.includes(userId)
       )
       .map((userId) => ({ userId }))
   );
