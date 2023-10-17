@@ -19,6 +19,7 @@ export default function FormRadioOptions({
   valueId,
   setValue,
   labelStyle,
+  isNonTypoLabel,
 }) {
   return (
     <>
@@ -43,7 +44,13 @@ export default function FormRadioOptions({
                       sx={options[valueId] === option ? sx : {}}
                     />
                   }
-                  label={<Typography style={labelStyle}>{option}</Typography>}
+                  label={
+                    isNonTypoLabel ? (
+                      option
+                    ) : (
+                      <Typography style={labelStyle}>{option}</Typography>
+                    )
+                  }
                   key={index}
                   sx={sxx}
                 />

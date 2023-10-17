@@ -74,6 +74,7 @@ const StoryVisibilitySettings = () => {
               (option) => option.type === visibilityType
             ),
             setValue,
+            isNonTypoLabel: true,
           }}
         />
       </section>
