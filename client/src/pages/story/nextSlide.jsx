@@ -18,9 +18,11 @@ import {
 const NextSlide = () => {
   const { isActive: deleteIsActive, storyId: storyIdToDelete } =
     useSelector(getDeleteStoryState);
-  const { isActive: muteIsActive, userId: userIdToMute } = useSelector(
-    getMuteStoryAuthorState
-  );
+  const {
+    isOpen: userIsToBeMuted,
+    isActive: muteIsActive,
+    userId: userIdToMute,
+  } = useSelector(getMuteStoryAuthorState);
 
   const {
     setParams,
@@ -38,11 +40,13 @@ const NextSlide = () => {
     const lastUser = userIndex === users.length - 1 || userIndex < 0;
     // Whenever a user is about to be muted. Regardless of its storyIndex, let current story be registered as the lastUserStory
     const lastUserStory =
-      muteIsActive || storyIndex === userStories.length - 1 || storyIndex < 0;
+      userIsToBeMuted ||
+      storyIndex === userStories.length - 1 ||
+      storyIndex < 0;
     const lastStory = (lastUser && lastUserStory) || isBlocked;
     const nextUserId = users[lastUser ? userIndex : userIndex + 1]?.userId;
     return [nextUserId, lastStory, lastUserStory];
-  }, [user, users, storyIndex, userIndex, isBlocked, muteIsActive]);
+  }, [user, users, storyIndex, userIndex, isBlocked, userIsToBeMuted]);
 
   const nextUser = useSelector((state) =>
     selectFetchedUsersById(state, nextUserId)
