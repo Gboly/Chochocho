@@ -7,9 +7,13 @@ import {
   createContext,
   useRef,
   useContext,
+  useEffect,
 } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetStoryByIdQuery } from "../../app/api-slices/storiesApiSlice";
+import {
+  useGetStoryByIdQuery,
+  useViewStoryMutation,
+} from "../../app/api-slices/storiesApiSlice";
 import { useGetUserByIdQuery } from "../../app/api-slices/usersApiSlice";
 import video from "../../assets/video.mp4";
 import {
@@ -27,8 +31,11 @@ import { GeneralContext } from "../../routes/Router";
 
 export const StoryContext = createContext();
 const Story = () => {
-  const { authUser, isBlocked: getIsBlockedStatus } =
-    useContext(GeneralContext);
+  const {
+    authUser,
+    isBlocked: getIsBlockedStatus,
+    isViewedStory,
+  } = useContext(GeneralContext);
   const navigate = useNavigate();
   const { username, storyId } = useParams();
   const videoRef = useRef();
@@ -43,6 +50,16 @@ const Story = () => {
     { skip: !story?.userId || authUser.username === username }
   );
 
+  // View story
+  const [canView, setCanView] = useState(false);
+  const [viewStory] = useViewStoryMutation();
+  useEffect(() => {
+    story && setCanView(true);
+    return () =>
+      canView && !isViewedStory(story._id) && viewStory({ storyId: story._id });
+  }, [story, canView, isViewedStory, viewStory]);
+
+  // state values
   const [storyIndex, userIndex, users, isBlocked, isAuthUser] = useMemo(() => {
     const isAuthUser = authUser.username === username;
 

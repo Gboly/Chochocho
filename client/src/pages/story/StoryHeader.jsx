@@ -195,24 +195,40 @@ const StoryActions = forwardRef(
 );
 
 const StoryProgress = ({ userStory, value, max }) => {
+  // const {
+  //   authUser: { otherStories },
+  // } = useContext(GeneralContext);
   const {
-    authUser: { otherStories },
-  } = useContext(GeneralContext);
+    user: { myStories },
+  } = useContext(StoryContext);
 
   const { storyId } = useParams();
 
-  const isViewed = useMemo(() => {
-    return otherStories.find(
-      (story) => story.storyId === userStory.storyId && story.viewed
+  // Regardless of the fact that the story is viewed or not, whenever you navigate to a later story of the user, all older stories are deemed viewed and the max progress is displayed.
+  // This is the Whatsapp user experience.
+  const isMaxProgress = useMemo(() => {
+    const activeStoryIndex = myStories.findIndex(
+      (story) => story.storyId === storyId
     );
-  }, [otherStories, userStory]);
+    const thisStoryProgressIndex = myStories.findIndex(
+      (story) => story.storyId === userStory.storyId
+    );
+
+    return thisStoryProgressIndex < activeStoryIndex;
+  }, [myStories, userStory, storyId]);
+
+  // const isViewed = useMemo(() => {
+  //   return otherStories.find(
+  //     (story) => story.storyId === userStory.storyId && story.viewed
+  //   );
+  // }, [otherStories, userStory]);
 
   return (
     <progress
       key={userStory.storyId}
       min={0}
       max={max}
-      value={userStory.storyId === storyId ? value : isViewed ? max : 0}
+      value={userStory.storyId === storyId ? value : isMaxProgress ? max : 0}
       className="story-progress"
     />
   );

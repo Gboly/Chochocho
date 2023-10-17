@@ -86,16 +86,40 @@ const addNewStory = async (req, res) => {
 // *****
 //story view update
 const viewStory = async (req, res) => {
+  const { id: storyId } = req.params;
+  const { otherStories, _id } = req.user;
+
+  // This ensures that whenever a story is being viewed, all preceeding stories are also deemed viewed.
+  // The whatsapp UX.
+  let userId;
+  const storyIndex = otherStories.findIndex((story) => {
+    story.storyId.equals(storyId) && (userId = story.userId);
+    return story.storyId.equals(storyId);
+  });
+  const updatedOtherStories = [...otherStories].map((story, idx) =>
+    story.userId.equals(userId) && idx <= storyIndex
+      ? { ...JSON.parse(JSON.stringify(story)), viewed: true, date: story.date }
+      : story
+  );
+
   try {
     const updatedUser = await User.updateOne(
-      { _id: req.user.id },
+      { _id },
       {
-        "otherStories.$[item].viewed": true,
-      },
-      {
-        arrayFilters: [{ "item.storyId": req.params.id }],
+        otherStories: updatedOtherStories,
       }
     );
+
+    // const updatedUser = await User.updateOne(
+    //   { _id },
+    //   {
+    //     "otherStories.$[item].viewed": true,
+    //   },
+    //   {
+    //     arrayFilters: [{ "item.storyId": req.params.id }],
+    //   }
+    // );
+
     res.status(200).json(updatedUser);
   } catch (error) {
     console.log(error);

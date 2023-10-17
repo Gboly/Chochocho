@@ -115,6 +115,37 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    viewStory: builder.mutation({
+      query: ({ storyId }) => ({
+        url: `/stories/${storyId}`,
+        method: "PATCH",
+        credentials: "include",
+      }),
+      // async onQueryStarted(
+      //   { storyId },
+      //   { dispatch, queryFulfilled, getState }
+      // ) {
+      //   const patchResult = dispatch(
+      //     extendedUsersApiSlice.util.updateQueryData(
+      //       "getAuthUser",
+      //       undefined,
+      //       (draft) => {
+      //         const otherStories = draft?.otherStories;
+      //         const updated = otherStories.map((story) =>
+      //           story.storyId === storyId ? { ...story, viewed: true } : story
+      //         );
+      //         draft.otherStories = updated;
+      //       }
+      //     )
+      //   );
+      //   try {
+      //     await queryFulfilled;
+      //   } catch (error) {
+      //     showErrorAlert();
+      //     patchResult.undo();
+      //   }
+      // },
+    }),
   }),
 });
 
@@ -123,4 +154,5 @@ export const {
   useCreateStoryMutation,
   useDeleteStoryMutation,
   useMuteStoryAuthorMutation,
+  useViewStoryMutation,
 } = extendedStoriesApiSlice;
