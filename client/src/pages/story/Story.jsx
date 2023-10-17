@@ -133,7 +133,7 @@ const Story = () => {
             {storyFetchIsLoading && userFetchIsLoading && <Spinner />}
             {storyFetchFailed && <WrongLinkAlert />}
           </div>
-          <input type="text" name="" id="" placeholder="Reply" />
+          {/* <input type="text" name="" id="" placeholder="Reply" /> */}
         </section>
         <NextSlide />
       </main>
