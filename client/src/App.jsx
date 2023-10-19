@@ -47,6 +47,7 @@ export default function App({ children }) {
     isAuth,
     isBookmarked,
     groupedUsers,
+    isViewedStory,
   } = useMemo(() => {
     const authUser = JSON.parse(JSON.stringify(data || ""));
     const isFollowing = (userId) =>
@@ -62,6 +63,11 @@ export default function App({ children }) {
       );
     const isBookmarked = (postId) =>
       findByIdKey(authUser?.bookmarks, "postId", postId);
+
+    const isViewedStory = (storyId) =>
+      authUser?.otherStories.some(
+        (story) => story.storyId === storyId && story.viewed
+      );
 
     // The temporary json-server had otherStoryAuthors in the user schema. I worked with this. I Withdrew this from the mongoDB schema, so in order to avoid modifying the codebase, I would simply mutate the authUser to include this property.
     authUser &&
@@ -80,6 +86,7 @@ export default function App({ children }) {
       isAuth,
       isBookmarked,
       groupedUsers,
+      isViewedStory,
     };
   }, [data]);
 
@@ -108,6 +115,7 @@ export default function App({ children }) {
         isBlocked,
         isAuth,
         isBookmarked,
+        isViewedStory,
         pageNodes,
         pageRefresh,
         setPageRefresh,
