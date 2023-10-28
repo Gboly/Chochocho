@@ -122,7 +122,7 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
       async onQueryStarted(
-        { storyId },
+        { storyId, isAuthUser: isAuthStory },
         { dispatch, queryFulfilled, getState }
       ) {
         const patchResult = dispatch(
@@ -130,18 +130,29 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
             "getAuthUser",
             undefined,
             (draft) => {
-              const otherStories = draft?.otherStories;
-              let userId;
-              const storyIndex = otherStories.findIndex((story) => {
-                story.storyId === storyId && (userId = story.userId);
-                return story.storyId === storyId;
-              });
-              const updatedOtherStories = otherStories.map((story, idx) =>
-                story.userId === userId && idx <= storyIndex
-                  ? { ...story, viewed: true }
-                  : story
-              );
-              draft.otherStories = updatedOtherStories;
+              if (isAuthStory) {
+                const myStories = draft?.myStories;
+                const storyIndex = myStories.findIndex(
+                  (story) => story.storyId === storyId
+                );
+                const updatedStories = myStories.map((story, idx) =>
+                  idx <= storyIndex ? { ...story, viewed: true } : story
+                );
+                draft.myStories = updatedStories;
+              } else {
+                const otherStories = draft?.otherStories;
+                let userId;
+                const storyIndex = otherStories.findIndex((story) => {
+                  story.storyId === storyId && (userId = story.userId);
+                  return story.storyId === storyId;
+                });
+                const updatedOtherStories = otherStories.map((story, idx) =>
+                  story.userId === userId && idx <= storyIndex
+                    ? { ...story, viewed: true }
+                    : story
+                );
+                draft.otherStories = updatedOtherStories;
+              }
             }
           )
         );

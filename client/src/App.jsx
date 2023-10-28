@@ -64,8 +64,8 @@ export default function App({ children }) {
     const isBookmarked = (postId) =>
       findByIdKey(authUser?.bookmarks, "postId", postId);
 
-    const isViewedStory = (storyId) =>
-      authUser?.otherStories.some(
+    const isViewedStory = (storyId, isAuthStory) =>
+      authUser[isAuthStory ? "myStories" : "otherStories"].some(
         (story) => story.storyId === storyId && story.viewed
       );
 

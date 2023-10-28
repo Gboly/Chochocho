@@ -50,15 +50,6 @@ const Story = () => {
     { skip: !story?.userId || authUser.username === username }
   );
 
-  // View story
-  const [canView, setCanView] = useState(false);
-  const [viewStory] = useViewStoryMutation();
-  useEffect(() => {
-    story && setCanView(true);
-    return () =>
-      canView && !isViewedStory(story._id) && viewStory({ storyId: story._id });
-  }, [story, canView, isViewedStory, viewStory]);
-
   // state values
   const [storyIndex, userIndex, users, isBlocked, isAuthUser] = useMemo(() => {
     const isAuthUser = authUser.username === username;
@@ -105,6 +96,17 @@ const Story = () => {
     },
     [nextParams, navigate, prevParams, username, storyId, isBlocked]
   );
+
+  // View story
+  const [canView, setCanView] = useState(false);
+  const [viewStory] = useViewStoryMutation();
+  useEffect(() => {
+    story && setCanView(true);
+    return () =>
+      canView &&
+      !isViewedStory(story._id, isAuthUser) &&
+      viewStory({ storyId: story._id, isAuthUser });
+  }, [story, canView, isViewedStory, viewStory, isAuthUser]);
 
   return (
     <StoryContext.Provider
