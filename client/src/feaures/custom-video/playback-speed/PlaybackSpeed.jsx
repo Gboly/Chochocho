@@ -4,22 +4,18 @@ import {
   playbackSpeedOptions,
   playbackSpeedOptionsStyle,
 } from "../../../util/formRadioOptions";
-import { playbackSpeedInNumber } from "../../../util/functions";
-import { useEffect, useState, forwardRef, useContext } from "react";
-import { useRef } from "react";
-
+import { forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getPlaybackRateState } from "../../posts/post-excerpt/postExcerptSlice";
 import {
   closePlaybackSpeed,
   setPlaybackRate,
 } from "../../../app/actions/homeActions";
-import { GeneralContext } from "../../../routes/Router";
+import { closePopupOnTransparentOverlay } from "../../../util/functions";
 
 const PlayBackSpeed = forwardRef(() => {
   const dispatch = useDispatch();
   const { rateId: playbackRateId } = useSelector(getPlaybackRateState);
-  const { videoPostNode } = useContext(GeneralContext);
 
   return (
     <div className="playback-speed-container">
@@ -32,10 +28,8 @@ const PlayBackSpeed = forwardRef(() => {
               sxx: playbackSpeedOptionsStyle,
               valueId: playbackRateId,
               setValue: (rateId) => {
-                videoPostNode.current.videoPost.playbackRate =
-                  playbackSpeedInNumber(rateId);
                 dispatch(setPlaybackRate(rateId));
-                dispatch(closePlaybackSpeed());
+                closePopupOnTransparentOverlay(closePlaybackSpeed);
               },
             }}
           />

@@ -4,7 +4,7 @@ import { useState, useRef, useImperativeHandle, useContext } from "react";
 import { useEffect } from "react";
 import { iconStyle } from "../../util/iconDescContent";
 import video from "../../assets/video.mp4";
-import { timing } from "../../util/functions";
+import { playbackSpeedInNumber, timing } from "../../util/functions";
 
 import { useSelector } from "react-redux";
 import { getPlaybackRateState } from "../posts/post-excerpt/postExcerptSlice";
@@ -17,7 +17,8 @@ export default function CustomVideo({ src, postId }) {
   const [controls, setControls] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [duration, setDuration] = useState("0:00");
-  const { isOpen: playbackIsOpen } = useSelector(getPlaybackRateState);
+  const { isOpen: playbackIsOpen, rateId: playbackRateId } =
+    useSelector(getPlaybackRateState);
 
   const videoNode = useRef();
   const { videoPostNode } = useContext(GeneralContext);
@@ -56,6 +57,10 @@ export default function CustomVideo({ src, postId }) {
       setPlaying(false);
     });
   };
+
+  useEffect(() => {
+    videoNode.current.playbackRate = playbackSpeedInNumber(playbackRateId);
+  }, [playbackRateId]);
 
   return (
     <div
