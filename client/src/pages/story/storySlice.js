@@ -89,8 +89,8 @@ export const storySlice = createSlice({
     },
     closeSelectUserAsCancel: (state, action) => {
       state.settings.selectUserIsOpen = false;
-      //action.payload is the default selected users from backend
-      state.settings.users = [...action.payload];
+      // //action.payload is the default selected users from backend
+      // state.settings.users = [...action.payload];
     },
     closeSelectUserAsDone: (state) => {
       state.settings.selectUserIsOpen = false;

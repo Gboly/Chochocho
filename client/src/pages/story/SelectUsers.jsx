@@ -20,6 +20,8 @@ import { GeneralContext } from "../../routes/Router";
 import {
   closeNestedPopupOnOpaqueOverlay,
   closePopupOnOpaqueOverlay,
+  getAnArrayOfSpecificKeyPerObjectInArray,
+  prepareIdsForQuery,
   prepareUserIdsForQuery,
 } from "../../util/functions";
 import { storyVisibilitySettingsType } from "../../util/types";
@@ -31,11 +33,22 @@ const SelectUsers = () => {
   const {
     authUser: { storyVisibility, followers },
   } = useContext(GeneralContext);
+  const { visibilityType, users } = useSelector(getStorySettingsState);
   const [searchText, setSearchText] = useState("");
 
   useEffect(() => {
-    dispatch(supplyCheckedUsers(storyVisibility.users));
-  }, [dispatch, storyVisibility]);
+    visibilityType === storyVisibility.type &&
+      dispatch(
+        supplyCheckedUsers(
+          getAnArrayOfSpecificKeyPerObjectInArray(
+            storyVisibility.users,
+            "userId"
+          )
+        )
+      );
+
+    return () => dispatch(supplyCheckedUsers([]));
+  }, [dispatch, storyVisibility, visibilityType]);
 
   // searchbar
   const handleChange = (e) => {
@@ -45,14 +58,14 @@ const SelectUsers = () => {
   const handleClose = () => {
     location.pathname.includes("settings")
       ? closePopupOnOpaqueOverlay(
-          closeSelectUserAsCancel,
-          storyVisibility.users
+          closeSelectUserAsCancel
+          // storyVisibility.users
         )
       : closeNestedPopupOnOpaqueOverlay(
           closeSelectUserAsCancel,
-          storyVisibilitySettingsType,
+          storyVisibilitySettingsType
           // Passing the pre registered users back
-          storyVisibility.users
+          // storyVisibility.users
         );
   };
 
@@ -69,7 +82,7 @@ const SelectUsers = () => {
 
   const { isLoading: followersFetchIsLoading, data: followersFetchResult } =
     useGetUsersByIdQuery({
-      userIds: prepareUserIdsForQuery(followers),
+      userIds: prepareIdsForQuery(followers, "userId"),
       start: skip,
       end: limit,
     });
@@ -91,7 +104,7 @@ const SelectUsers = () => {
       />
       <section>
         {/* Make this infinite scroll like */}
-        {followers.map((userId) => {
+        {followers.map(({ userId }) => {
           return (
             isFetched(userId) && (
               <CheckboxPerUser
@@ -156,7 +169,7 @@ const CheckboxPerUser = ({ userId, searchText }) => {
             {...{
               userId,
               avatarProp: { size: 3, src },
-              header: displayName,
+              header: displayName || username,
               sub: username,
               alignItems: true,
               single: true,
