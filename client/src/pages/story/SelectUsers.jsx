@@ -22,10 +22,10 @@ import {
   closePopupOnOpaqueOverlay,
   getAnArrayOfSpecificKeyPerObjectInArray,
   prepareIdsForQuery,
-  prepareUserIdsForQuery,
 } from "../../util/functions";
 import { storyVisibilitySettingsType } from "../../util/types";
 import { getStorySettingsState } from "./storySlice";
+import { useUpdateStoryVisibilityMutation } from "../../app/api-slices/storiesApiSlice";
 
 const SelectUsers = () => {
   const dispatch = useDispatch();
@@ -69,13 +69,16 @@ const SelectUsers = () => {
         );
   };
 
+  const [updateVisibility, { error }] = useUpdateStoryVisibilityMutation();
   const handleDone = () => {
-    location.pathname.includes("settings")
-      ? closePopupOnOpaqueOverlay(closeSelectUserAsDone)
-      : closeNestedPopupOnOpaqueOverlay(
-          closeSelectUserAsDone,
-          storyVisibilitySettingsType
-        );
+    const update = {
+      storyVisibility: {
+        type: visibilityType,
+        users: users.map((userId) => ({ userId, date: new Date() })),
+      },
+    };
+    updateVisibility(update);
+    closePopupOnOpaqueOverlay(closeSelectUserAsDone);
   };
 
   const [{ skip, limit }, setRefetch] = useState({ skip: 0, limit: 10 });
