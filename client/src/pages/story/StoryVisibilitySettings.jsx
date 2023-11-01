@@ -17,6 +17,7 @@ import { getStorySettingsState } from "./storySlice";
 import { selectUsersType } from "../../util/types";
 import { customTypes } from "../../util/iconDescContent";
 import { visibilityOptionsData } from "../../util/iconDescContent";
+import { useUpdateStoryVisibilityMutation } from "../../app/api-slices/storiesApiSlice";
 
 const VisibilityOption = ({ icon, type, desc }) => {
   return (
@@ -48,16 +49,28 @@ storyVisibilityOptionsStyle = {
 
 const StoryVisibilitySettings = () => {
   const dispatch = useDispatch();
-  const { visibilityType } = useSelector(getStorySettingsState);
+  const { visibilityType, users } = useSelector(getStorySettingsState);
 
   const setValue = (optionIndex) => {
-    const selectedOption = visibilityOptionsData[optionIndex].type;
+    const selectedOption = visibilityOptionsData[optionIndex]?.type;
     dispatch(changeVisibilityType(selectedOption));
     customTypes.includes(selectedOption) &&
       showPopupOnOpaqueOverlay(openSelectUser, selectUsersType);
   };
 
   const handleClose = () => closePopupOnOpaqueOverlay(closeSettings);
+
+  const [updateVisibility, { error }] = useUpdateStoryVisibilityMutation();
+  const handleDone = () => {
+    const update = {
+      storyVisibility: {
+        type: visibilityType,
+        users: users.map((userId) => ({ userId, date: new Date() })),
+      },
+    };
+    updateVisibility(update);
+    handleClose();
+  };
 
   return (
     <div className="story-visibility-settings">
@@ -75,6 +88,7 @@ const StoryVisibilitySettings = () => {
             ),
             setValue,
             isNonTypoLabel: true,
+            isClickType: true,
           }}
         />
       </section>
@@ -83,7 +97,9 @@ const StoryVisibilitySettings = () => {
         <button className="report-cancel report-button" onClick={handleClose}>
           Cancel
         </button>
-        <button className="report-submit report-button">Done</button>
+        <button className="report-submit report-button" onClick={handleDone}>
+          Done
+        </button>
       </div>
     </div>
   );
