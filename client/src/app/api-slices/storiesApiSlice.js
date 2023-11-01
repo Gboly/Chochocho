@@ -164,6 +164,32 @@ const extendedStoriesApiSlice = apiSlice.injectEndpoints({
         }
       },
     }),
+    updateStoryVisibility: builder.mutation({
+      query: (body) => ({
+        url: `/users/authUser`,
+        method: "PATCH",
+        body,
+        credentials: "include",
+      }),
+      async onQueryStarted(body, { dispatch, queryFulfilled, getState }) {
+        const patchResult = dispatch(
+          extendedUsersApiSlice.util.updateQueryData(
+            "getAuthUser",
+            undefined,
+            (draft) => {
+              const update = body.storyVisibility;
+              draft && (draft.storyVisibility = update);
+            }
+          )
+        );
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          showErrorAlert();
+          patchResult.undo();
+        }
+      },
+    }),
   }),
 });
 
@@ -173,4 +199,5 @@ export const {
   useDeleteStoryMutation,
   useMuteStoryAuthorMutation,
   useViewStoryMutation,
+  useUpdateStoryVisibilityMutation,
 } = extendedStoriesApiSlice;
