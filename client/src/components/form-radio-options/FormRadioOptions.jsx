@@ -20,6 +20,7 @@ export default function FormRadioOptions({
   setValue,
   labelStyle,
   isNonTypoLabel,
+  isClickType,
 }) {
   return (
     <>
@@ -31,7 +32,12 @@ export default function FormRadioOptions({
             name="controlled-radio-buttons-group"
             value={valueId}
             onChange={(e) => {
-              setValue && setValue(e.target.value);
+              !isClickType && setValue && setValue(e.target.value);
+            }}
+            // For the storySettings where reclicking the current value (custom) should show the select user popup.
+            onClick={(e) => {
+              const value = e.target.value;
+              isClickType && setValue && setValue(value);
             }}
           >
             {options.map((option, index) => {
