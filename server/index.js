@@ -23,7 +23,7 @@ const app = express();
 //cors
 const allowedOrigins = [
   "https://chochocho.vercel.app",
-  "http://localhost:5173",
+  "http://localhost:3000",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
