@@ -20,17 +20,26 @@ const app = express();
 // followers and following becomes an array of objects and then the userId key is used to get the ids
 // There's no more otherStoryAuthors field in the user document. Each userId is attached to their record in the otherStories field.
 
+//cors
+const allowedOrigins = [
+  "https://chochocho.vercel.app",
+  "http://localhost:5173",
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) >= 0) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
 //Middlewares
 app.use(cookieParser());
 app.use(express.urlencoded({ limit: "100mb", extended: true }));
 app.use(express.json({ limit: "100mb" }));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: "GET,POST,PUT,PATCH,DELETE,HEAD",
-    credentials: true,
-  })
-);
+app.use(cors(corsOptions));
 app.use(helmet());
 app.use(morgan("combined"));
 
