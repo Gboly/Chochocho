@@ -22,17 +22,20 @@ const app = express();
 
 //cors
 const allowedOrigins = [
-  "https://chochocho.vercel.app",
   "http://localhost:3000",
+  "https://chochocho.vercel.app",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) >= 0) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  origin: "http://localhost:3000",
+  methods: "GET,POST,PUT,PATCH,DELETE,HEAD",
+  credentials: true,
 };
 
 //Middlewares
