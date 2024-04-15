@@ -75,7 +75,7 @@ export default function EditPost() {
         <div className="create-top-styled">
           <div className="create-top">
             <span className="create-top-description">Edit post</span>
-            <div className="create-select-section">
+            {/* <div className="create-select-section">
               <label htmlFor="visibleFor" className="create-top-instruction">
                 Visible for
               </label>
@@ -89,7 +89,7 @@ export default function EditPost() {
                   }}
                 />
               </div>
-            </div>
+            </div> */}
             <i
               id="create-close-icon"
               className="create-close-icon"
