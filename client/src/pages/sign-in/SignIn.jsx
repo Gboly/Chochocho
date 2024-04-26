@@ -3,10 +3,6 @@ import { iconStyle } from "../../util/iconDescContent";
 import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 import illustration3 from "../../assets/illustration3.jpg";
 import illustration4 from "../../assets/illustration4.jpg";
-import illustration1 from "../../assets/illustration1.jpg";
-import illustration2 from "../../assets/illustration2.jpg";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { Checkbox, Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import {
   PasswordInput,
