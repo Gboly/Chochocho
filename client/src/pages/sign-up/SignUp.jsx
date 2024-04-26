@@ -112,7 +112,7 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    isSuccess && data && navigate("/settings/profile");
+    isSuccess && data && (window.location.href = "/settings/profile");
   }, [isSuccess, data, navigate]);
 
   return (

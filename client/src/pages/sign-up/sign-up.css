@@ -3,11 +3,11 @@
     display: flex;
     align-items: center;
     position: relative;
-    top: 3rem;
+    /* top: 3rem; */
 }
 .signup-container > section{
     width: 100%;
-    height: calc(100vh - 3rem);
+    /* height: calc(100vh - 3rem); */
     display: flex;
     justify-content: center;
     align-items: center;

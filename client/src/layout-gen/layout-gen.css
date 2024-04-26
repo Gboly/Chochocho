@@ -1,4 +1,9 @@
 .layout-gen-container{
     background-color: #fff;
-    height: 100vh;
+    /* height: 100vh; */
+    /* overflow: visible !important; */
+    min-height: 100vh;
+}
+.layout-gen-container .nav-container {
+    position: relative;
 }

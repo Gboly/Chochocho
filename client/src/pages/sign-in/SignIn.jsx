@@ -28,7 +28,7 @@ const signUpInputData = [
   },
   {
     type: "password",
-    placeholder: "Create your password",
+    placeholder: "Your password",
     name: "password",
   },
 ];
@@ -69,7 +69,7 @@ export default function SignIn() {
   };
 
   useEffect(() => {
-    isSuccess && data && navigate("/");
+    isSuccess && data && (window.location.href = "/");
     error &&
       (error.status === 401 || error.originalStatus === 401) &&
       setIncorrectDetail(true);
