@@ -1,6 +1,7 @@
 import Header from "./header/Header";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./sidebar/Sidebar";
+import "./layout.css";
 
 export default function Layout() {
   return (
