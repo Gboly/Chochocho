@@ -22,9 +22,10 @@ import {
   convertToUserFriendlyTime,
   showPopupOnTransparentOverlay,
 } from "../../util/functions";
-import { GeneralContext } from "../../routes/Router";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { openStoryOptions } from "../../app/actions/storyActions";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import { iconStyle } from "../../util/iconDescContent";
 
 const initialProgressState = {
   value: 0,
@@ -32,6 +33,7 @@ const initialProgressState = {
   progressing: true,
 };
 const StoryHeader = forwardRef((_, videoRef) => {
+  const navigate = useNavigate();
   const {
     user: { id, profileImage, displayName, username, myStories },
     story,
@@ -99,6 +101,8 @@ const StoryHeader = forwardRef((_, videoRef) => {
     videoRef,
   ]);
 
+  const goBack = () => navigate(-1);
+
   return (
     <aside className="story-desc-actions">
       <div className="story-progress-container">
@@ -113,6 +117,9 @@ const StoryHeader = forwardRef((_, videoRef) => {
           ))}
       </div>
       <div className="story-user-actions">
+        <div className="back-button" onClick={goBack}>
+          <ArrowBackIosNewIcon style={iconStyle} />
+        </div>
         <UserCameo
           {...{
             userId: id,

@@ -291,9 +291,17 @@
     border-radius: 50%;
 }
 .story-user-actions{
-    /* display: flex;
-    align-items: center; */
+    display: flex;
+    align-items: center;
     width: 100%;
+    gap: 0.5rem;
+}
+.story-user-actions .back-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -0.5rem; /* Instead of modifying the icon itself */
+    font-size: 1.6rem;
 }
 .story-flex-container{
     display: flex;
